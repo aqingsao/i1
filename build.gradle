@@ -1,29 +1,37 @@
 allprojects {
     group = 'com.thoughtworks.i1'
     version = '0.1.0-SNAPSHOT'
+
+    apply plugin: 'java'
 }
 
 subprojects {
     repositories {
         mavenCentral()
-        maven {
-            url 'https://github.com/aqingsao/i1/raw/master/repository'
-        }
+        mavenRepo url: "http://download.java.net/maven/2", artifactUrls: ["http://maven.springframework.org/milestone", "https://repository.jboss.org/nexus/content/groups/public/", "http://mvnrepository.com/artifact"]
+
     }
-
-    project.ext {
-        slf4jVersion = '1.7.2'
-
-        greenmailVersion = '1.3.1b'
-
-        junitVersion = '4.10'
-        mockitoVersion = '1.9.5-rc1'
-    }
-
     apply plugin: 'java'
     apply plugin: 'maven'
 
     sourceCompatibility = '1.7'
+
+    project.ext {
+    }
+
+    dependencies {
+        def slf4jVersion = '1.7.2'
+        def junitVersion = '4.10'
+        def mockitoVersion = '1.9.5-rc1'
+        def hamCrestVersion = '1.1'
+
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
+
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-all:$mockitoVersion"
+        testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
+    }
 
     uploadArchives {
         repositories {
@@ -31,22 +39,5 @@ subprojects {
                 repository(url: uri('../repository'))
             }
         }
-    }
-
-}
-
-configure(subprojects.findAll {}) {
-    dependencies {
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
-        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
-
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.mockito:mockito-all:$mockitoVersion"
-    }
-}
-
-project(':email-sender') {
-    dependencies {
-        compile "com.icegreen:greenmail:$greenmailVersion"
     }
 }
