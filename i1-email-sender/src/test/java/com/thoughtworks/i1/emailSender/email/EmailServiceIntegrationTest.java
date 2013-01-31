@@ -1,4 +1,4 @@
-package com.thoughtworks.ms.email;
+package com.thoughtworks.i1.emailSender.email;
 
 import com.icegreen.greenmail.user.UserException;
 import com.icegreen.greenmail.util.GreenMail;

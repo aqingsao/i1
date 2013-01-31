@@ -1,6 +1,6 @@
-package com.thoughtworks.i1.email.model;
+package com.thoughtworks.i1.emailSender.email.model;
 
-import com.thoughtworks.i1.email.EmailService;
+import com.thoughtworks.i1.emailSender.email.EmailService;
 import org.slf4j.LoggerFactory;
 
 import javax.activation.DataHandler;
@@ -12,8 +12,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import static com.thoughtworks.i1.email.model.Recipients.oneRecipients;
-import static com.thoughtworks.i1.email.model.Sender.aSender;
+import static com.thoughtworks.i1.emailSender.email.model.Recipients.oneRecipients;
+import static com.thoughtworks.i1.emailSender.email.model.Sender.aSender;
 
 public class Email {
 

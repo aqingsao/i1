@@ -11,7 +11,7 @@
         <description></description>
         <display-name>EmailServlet</display-name>
         <servlet-name>EmailServlet</servlet-name>
-        <servlet-class>com.thoughtworks.i1.web.EmailServlet</servlet-class>
+        <servlet-class>com.thoughtworks.i1.emailSender.web.EmailServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>EmailServlet</servlet-name>
@@ -28,6 +28,6 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>com.thoughtworks.i1.web.MyGuiceServletContextListener</listener-class>
+        <listener-class>com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener</listener-class>
     </listener>
 </web-app>

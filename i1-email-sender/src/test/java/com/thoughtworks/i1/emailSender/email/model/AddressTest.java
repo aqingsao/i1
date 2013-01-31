@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.email.model;
+package com.thoughtworks.i1.emailSender.email.model;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.web;
+package com.thoughtworks.i1.emailSender.web;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

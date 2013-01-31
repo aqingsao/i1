@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.web;
+package com.thoughtworks.i1.emailSender.web;
 
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;

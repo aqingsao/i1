@@ -1,6 +1,6 @@
-package com.thoughtworks.i1.email;
+package com.thoughtworks.i1.emailSender.email;
 
-import com.thoughtworks.i1.email.model.Email;
+import com.thoughtworks.i1.emailSender.email.model.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
