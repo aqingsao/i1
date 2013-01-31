@@ -17,22 +17,29 @@ public class EmailService implements TransportListener {
     private static final String MAIL_SMTP_PORT = "mail.smtp.port";
 
     private static final String SMTP = "smtp";
-    private EmailConfiguration props;
+    private EmailConfiguration configuration;
 
-    public EmailService(EmailConfiguration props) {
-        this.props = props;
+    public EmailService(EmailConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public boolean sendEmail(Email mail) {
         LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToList().size()));
 
-        Properties properties = initProperties(props);
-        Session session = openSession(properties, props);
+        Properties properties = initProperties(configuration);
+        Session session = openSession(properties, configuration.getAuthenticationUserName(), configuration.getAuthenticationPassword());
 
         try {
             LOGGER.debug(String.format("Start to send email with subject %s", mail.getSubject()));
             MimeMessage message = mail.buildMessage(session);
-            sendEmail(session, message);
+
+            Transport transport = session.getTransport(SMTP);
+            try {
+                transport.connect(configuration.getMailServerHost(), configuration.getMailServerPort(), configuration.getAuthenticationUserName(), configuration.getAuthenticationPassword());
+                transport.sendMessage(message, message.getAllRecipients());
+            } finally {
+                transport.close();
+            }
             LOGGER.debug(String.format("Finished to send email."));
             return true;
         } catch (MessagingException e) {
@@ -41,13 +48,13 @@ public class EmailService implements TransportListener {
         }
     }
 
-    private Session openSession(Properties properties, final EmailConfiguration props) {
-        Session session = Session.getDefaultInstance(properties, new Authenticator() {
+    private Session openSession(Properties properties, final String authenticationUserName, final String authenticationPassword) {
+        Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(
-                        props.getAuthenticationUserName(),
-                        props.getAuthenticationPassword());
+                        authenticationUserName,
+                        authenticationPassword);
             }
         });
         session.setDebug(true);
@@ -63,17 +70,6 @@ public class EmailService implements TransportListener {
             properties.put(MAIL_SMTP_AUTH, "true");
         }
         return properties;
-    }
-
-    private void sendEmail(Session session, MimeMessage message) throws MessagingException {
-        message.saveChanges();
-
-        Transport transport = session.getTransport(SMTP);
-        transport.addTransportListener(this);
-//        transport.connect(props.getMailServerHost(), props.getMailServerPort(), props.getAuthenticationUserName(), props.getAuthenticationPassword());
-
-        transport.send(message);
-        transport.close();
     }
 
     @Override
