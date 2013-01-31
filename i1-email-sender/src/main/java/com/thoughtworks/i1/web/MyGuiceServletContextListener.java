@@ -1,4 +1,4 @@
-package com.thoughtworks.ms.web;
+package com.thoughtworks.i1.web;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

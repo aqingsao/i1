@@ -1,4 +1,4 @@
-package com.thoughtworks.ms.email;
+package com.thoughtworks.i1.email;
 
 public class EmailConfiguration {
 

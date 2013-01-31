@@ -1,4 +1,4 @@
-package com.thoughtworks.ms.email.model;
+package com.thoughtworks.i1.email.model;
 
 public class Sender {
     private Address from;

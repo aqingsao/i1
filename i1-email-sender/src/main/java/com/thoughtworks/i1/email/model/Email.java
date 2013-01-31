@@ -1,6 +1,6 @@
-package com.thoughtworks.ms.email.model;
+package com.thoughtworks.i1.email.model;
 
-import com.thoughtworks.ms.email.EmailService;
+import com.thoughtworks.i1.email.EmailService;
 import org.slf4j.LoggerFactory;
 
 import javax.activation.DataHandler;
@@ -11,13 +11,9 @@ import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-import static com.thoughtworks.ms.email.model.Recipients.oneRecipients;
-import static com.thoughtworks.ms.email.model.Sender.aSender;
+import static com.thoughtworks.i1.email.model.Recipients.oneRecipients;
+import static com.thoughtworks.i1.email.model.Sender.aSender;
 
 public class Email {
 
