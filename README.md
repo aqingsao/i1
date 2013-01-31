@@ -1,16 +1,21 @@
-### Why this project
+# i1
 
-A Java implementation for [jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload).
+## Introduction
 
-This project is originally forked from [sudr/jQuery-File-Upload-Java](https://github.com/sudr/jQuery-File-Upload-Java), but rewrote all code:
+We are trying to reuse code on various levels: method/class level, plugin/library level or module level. However it's well known that the finer the granularity is, the easier it its to reuse. This project is a trial to reuse on service level, also known as micro services, which could be deployed and called by enterprise applications without reinventing the wheel.
 
-1. Changed it to an IDEA project. Of course, you could use other IDE as well.
-2. Introduce framework [Guice](http://code.google.com/p/google-guice/)
-3. File location could be configured in property file app.properties
-4. Introduce build tool [Gradle](http://www.gradle.org), and this project could run in an embedded Jetty plugin.
+The name "i1" means that there will always be some functions that we have to develop on the first several iterations. 
 
-### How to run it
+## Project List
 
-1. Install gradle on your machine, if you don't know how to install, please refer to [Gradle installation](http://www.gradle.org/installation)
-2. Run `gradle jettyRun`, the app will start
+So far we have developing following projects:
 
+* **i1-email-sender**
+  It's not a smtp server, but a web application that could be used to send email with existing smtp server. It provides 
+
+* **i1-file-uploader**
+  A web application that could be used to upload files. It also provides some client JavaScript sample code for usage.
+
+## To Start
+
+In default we use gradle as build toold and IDEA as IDE. After downloading code, run "gradle cleanIdea idea" to setup the project.
