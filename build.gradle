@@ -3,21 +3,18 @@ allprojects {
     version = '0.1.0-SNAPSHOT'
 
     apply plugin: 'java'
+    apply plugin: 'idea'
 }
 
 subprojects {
+    apply plugin: 'maven'
+
     repositories {
         mavenCentral()
         mavenRepo url: "http://download.java.net/maven/2", artifactUrls: ["http://maven.springframework.org/milestone", "https://repository.jboss.org/nexus/content/groups/public/", "http://mvnrepository.com/artifact"]
-
     }
-    apply plugin: 'java'
-    apply plugin: 'maven'
 
     sourceCompatibility = '1.7'
-
-    project.ext {
-    }
 
     dependencies {
         def slf4jVersion = '1.7.2'
@@ -31,6 +28,15 @@ subprojects {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-all:$mockitoVersion"
         testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
+    }
+
+    idea {
+        module {
+            inheritOutputDirs = false
+            print project.name + " output dir: " + sourceSets.main.output.resourcesDir
+            outputDir = file("out")
+            testOutputDir = file("out")
+        }
     }
 
     uploadArchives {

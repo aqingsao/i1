@@ -19,6 +19,10 @@ public class Address {
         return new Address(userName, userAddress);
     }
 
+    public static Address anAddress(String userAddress) {
+        return new Address(userAddress.split("@")[0], userAddress);
+    }
+
     public String getUserName() {
         return userName;
     }

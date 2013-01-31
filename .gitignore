@@ -3,4 +3,11 @@ target/
 .classpath
 .settings/
 .project
+.gradle
 *.iml
+*.ipr
+*.iws
+**/out/*
+**/build/*
+build/
+
