@@ -1,11 +1,10 @@
-package com.thoughtworks.i1.web;
+package com.thoughtworks.i1.fileUploader.web;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.thoughtworks.i1.upload.UploadServlet;
 
 import java.util.Properties;
 import java.util.logging.Level;

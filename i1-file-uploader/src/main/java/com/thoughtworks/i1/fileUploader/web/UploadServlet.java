@@ -1,7 +1,8 @@
-package com.thoughtworks.i1.upload;
+package com.thoughtworks.i1.fileUploader.web;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.thoughtworks.i1.fileUploader.domain.UploadResult;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;

@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.upload;
+package com.thoughtworks.i1.fileUploader.domain;
 
 import org.apache.commons.fileupload.FileItem;
 
