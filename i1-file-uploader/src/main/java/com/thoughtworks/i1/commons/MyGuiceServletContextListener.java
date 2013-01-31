@@ -1,11 +1,11 @@
-package com.thoughtworks.micro.commons;
+package com.thoughtworks.i1.commons;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.thoughtworks.micro.upload.UploadServlet;
+import com.thoughtworks.i1.upload.UploadServlet;
 
 import java.util.Properties;
 import java.util.logging.Level;

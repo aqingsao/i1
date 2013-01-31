@@ -1,4 +1,4 @@
-package com.thoughtworks.micro.upload;
+package com.thoughtworks.i1.upload;
 
 import org.apache.commons.fileupload.FileItem;
 

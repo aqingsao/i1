@@ -1,4 +1,4 @@
-package com.thoughtworks.micro.upload;
+package com.thoughtworks.i1.upload;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

@@ -16,7 +16,7 @@
         <description></description>
         <display-name>UploadServlet</display-name>
         <servlet-name>UploadServlet</servlet-name>
-        <servlet-class>com.thoughtworks.micro.upload.UploadServlet</servlet-class>
+        <servlet-class>com.thoughtworks.i1.upload.UploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
@@ -33,6 +33,6 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>com.thoughtworks.micro.commons.MyGuiceServletContextListener</listener-class>
+        <listener-class>com.thoughtworks.i1.commons.MyGuiceServletContextListener</listener-class>
     </listener>
 </web-app>
