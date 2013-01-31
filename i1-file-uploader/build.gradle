@@ -8,20 +8,18 @@ project.ext{
 dependencies {
     def apache = ["org.apache.commons:commons-io:1.3.2",
             "commons-fileupload:commons-fileupload:1.2.2"]
-    def guice = ["com.google.inject.extensions:guice-servlet:3.0"]
-    def guice3 = files("src/main/webapp/WEB-INF/libs/guice-3.0.jar")
     def javax = files("src/main/webapp/WEB-INF/lib/javax.annotation.jar",
-            "src/main/webapp/WEB-INF/lib/javax.ejb.jar",
-            "src/main/webapp/WEB-INF/lib/javax.inject.jar",
-            "src/main/webapp/WEB-INF/lib/javax.jms.jar",
-            "src/main/webapp/WEB-INF/lib/javax.persistence.jar",
-            "src/main/webapp/WEB-INF/lib/javax.resource.jar",
-            "src/main/webapp/WEB-INF/lib/javax.servlet.jar",
-            "src/main/webapp/WEB-INF/lib/javax.servlet.jsp.jar",
-            "src/main/webapp/WEB-INF/lib/javax.servlet.jsp.jstl.jar",
-            "src/main/webapp/WEB-INF/lib/javax.transaction.jar");
+            "src/main/webapp/WEB-INF/libs/javax.ejb.jar",
+            "src/main/webapp/WEB-INF/libs/javax.inject.jar",
+            "src/main/webapp/WEB-INF/libs/javax.jms.jar",
+            "src/main/webapp/WEB-INF/libs/javax.persistence.jar",
+            "src/main/webapp/WEB-INF/libs/javax.resource.jar",
+            "src/main/webapp/WEB-INF/libs/javax.servlet.jar",
+            "src/main/webapp/WEB-INF/libs/javax.servlet.jsp.jar",
+            "src/main/webapp/WEB-INF/libs/javax.servlet.jsp.jstl.jar",
+            "src/main/webapp/WEB-INF/libs/javax.transaction.jar");
 
     def javaee6 = ["javax:javaee-api:6.0"]
-    compile apache, javaee6, guice, guice3, javax
+    compile apache, javaee6, javax
 }
 

@@ -18,11 +18,18 @@ subprojects {
 
     dependencies {
         def slf4jVersion = '1.7.2'
+        def guavaVersion = '13.0.1'
+        def jerseyVersion = '1.16'
+
         def junitVersion = '4.10'
         def mockitoVersion = '1.9.5-rc1'
         def hamCrestVersion = '1.1'
 
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.inject.extensions:guice-servlet:3.0"
+        compile "com.google.inject:guice:3.0'"
+        compile "com.sun.jersey:jersey-core:$jerseyVersion"
+        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
         compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
 
         testCompile "junit:junit:$junitVersion"
