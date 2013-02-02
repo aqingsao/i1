@@ -1,7 +1,7 @@
 package com.thoughtworks.i1.emailSender.api;
 
-import com.thoughtworks.i1.emailSender.email.model.Address;
-import com.thoughtworks.i1.emailSender.email.model.Email;
+import com.thoughtworks.i1.emailSender.domain.Address;
+import com.thoughtworks.i1.emailSender.domain.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

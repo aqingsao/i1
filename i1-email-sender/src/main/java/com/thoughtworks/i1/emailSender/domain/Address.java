@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.emailSender.email.model;
+package com.thoughtworks.i1.emailSender.domain;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

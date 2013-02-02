@@ -1,20 +1,17 @@
-package com.thoughtworks.i1.emailSender.email;
+package com.thoughtworks.i1.emailSender.service;
 
-import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.user.UserException;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import com.thoughtworks.i1.emailSender.email.model.Email;
+import com.thoughtworks.i1.emailSender.domain.Email;
 import org.junit.*;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import java.util.Enumeration;
-
-import static com.thoughtworks.i1.emailSender.email.model.Address.anAddress;
-import static com.thoughtworks.i1.emailSender.email.model.Email.anEmail;
+import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
+import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

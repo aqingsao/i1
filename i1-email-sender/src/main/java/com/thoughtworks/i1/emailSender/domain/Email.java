@@ -1,6 +1,6 @@
-package com.thoughtworks.i1.emailSender.email.model;
+package com.thoughtworks.i1.emailSender.domain;
 
-import com.thoughtworks.i1.emailSender.email.EmailService;
+import com.thoughtworks.i1.emailSender.service.EmailService;
 import org.slf4j.LoggerFactory;
 
 import javax.activation.DataHandler;
@@ -13,8 +13,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.persistence.Entity;
 
-import static com.thoughtworks.i1.emailSender.email.model.Recipients.oneRecipients;
-import static com.thoughtworks.i1.emailSender.email.model.Sender.aSender;
+import static com.thoughtworks.i1.emailSender.domain.Sender.aSender;
 
 @Entity
 public class Email {
@@ -38,7 +37,7 @@ public class Email {
     }
 
     public static Email anEmail(Address from, String subject, String message, Address to, String... attachments) {
-        return new Email(aSender(from), subject, message, oneRecipients(to), attachments);
+        return new Email(Sender.aSender(from), subject, message, Recipients.oneRecipients(to), attachments);
     }
 
     public static Email anEmail(Sender sender, String subject, String message, Recipients recipients, String... attachments) {

@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.emailSender.email.model;
+package com.thoughtworks.i1.emailSender.domain;
 
 import javax.mail.internet.InternetAddress;
 import java.util.Arrays;

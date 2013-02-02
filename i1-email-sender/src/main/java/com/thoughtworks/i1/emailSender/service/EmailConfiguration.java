@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.emailSender.email;
+package com.thoughtworks.i1.emailSender.service;
 
 public class EmailConfiguration {
 

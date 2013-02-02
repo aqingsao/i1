@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.emailSender.email.model;
+package com.thoughtworks.i1.emailSender.domain;
 
 public class Sender {
     private Address from;

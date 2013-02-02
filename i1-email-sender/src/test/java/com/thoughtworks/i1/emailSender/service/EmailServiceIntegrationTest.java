@@ -1,10 +1,10 @@
-package com.thoughtworks.i1.emailSender.email;
+package com.thoughtworks.i1.emailSender.service;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static com.thoughtworks.i1.emailSender.email.model.Address.anAddress;
-import static com.thoughtworks.i1.emailSender.email.model.Email.anEmail;
+import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
+import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
