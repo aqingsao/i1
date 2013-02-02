@@ -1,16 +1,10 @@
 package com.thoughtworks.i1.emailSender.email;
 
-import com.icegreen.greenmail.user.UserException;
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetupTest;
-import com.thoughtworks.ms.email.model.Email;
-import org.junit.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import javax.mail.MessagingException;
-
-import static com.thoughtworks.ms.email.model.Address.anAddress;
-import static com.thoughtworks.ms.email.model.Email.anEmail;
-import static junit.framework.Assert.assertEquals;
+import static com.thoughtworks.i1.emailSender.email.model.Address.anAddress;
+import static com.thoughtworks.i1.emailSender.email.model.Email.anEmail;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 

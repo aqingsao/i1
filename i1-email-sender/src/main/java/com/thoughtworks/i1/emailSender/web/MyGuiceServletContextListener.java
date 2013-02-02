@@ -15,23 +15,6 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new ServletModule() {
-            protected void configureServlets() {
-                Names.bindProperties(binder(), loadProperties());
-                serve("/upload").with(EmailServlet.class);
-            }
-        });
-    }
-
-    private Properties loadProperties() {
-        Properties properties = new Properties();
-
-        String propertyFile = "/app.properties";
-        try {
-            properties.load(getClass().getResourceAsStream(propertyFile));
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to load property file " + propertyFile);
-        }
-        return properties;
+        return Guice.createInjector(new ServletModule());
     }
 }

@@ -5,7 +5,7 @@ import com.icegreen.greenmail.user.UserException;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import com.thoughtworks.ms.email.model.Email;
+import com.thoughtworks.i1.emailSender.email.model.Email;
 import org.junit.*;
 
 import javax.mail.MessagingException;
@@ -13,8 +13,8 @@ import javax.mail.internet.MimeMessage;
 
 import java.util.Enumeration;
 
-import static com.thoughtworks.ms.email.model.Address.anAddress;
-import static com.thoughtworks.ms.email.model.Email.anEmail;
+import static com.thoughtworks.i1.emailSender.email.model.Address.anAddress;
+import static com.thoughtworks.i1.emailSender.email.model.Email.anEmail;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

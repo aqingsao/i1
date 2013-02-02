@@ -17,24 +17,36 @@ subprojects {
     sourceCompatibility = '1.7'
 
     dependencies {
-        def slf4jVersion = '1.7.2'
+        compile 'javax.servlet:javax.servlet-api:3.0.1'
+
         def guavaVersion = '13.0.1'
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.inject.extensions:guice-servlet:3.0"
+        compile "com.google.inject:guice:3.0'"
+
         def jerseyVersion = '1.16'
+        compile "com.sun.jersey:jersey-core:$jerseyVersion"
+        compile "com.sun.jersey:jersey-grizzly2:$jerseyVersion"
+        compile "com.sun.jersey:jersey-server:$jerseyVersion"
+
+        def slf4jVersion = '1.7.2'
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
+
+        def jacksonVersion = '2.1.2'
+        compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+        runtime "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
+
 
         def junitVersion = '4.10'
         def mockitoVersion = '1.9.5-rc1'
         def hamCrestVersion = '1.1'
-
-        compile "com.google.guava:guava:$guavaVersion"
-        compile "com.google.inject.extensions:guice-servlet:3.0"
-        compile "com.google.inject:guice:3.0'"
-        compile "com.sun.jersey:jersey-core:$jerseyVersion"
-        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
-        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
-
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-all:$mockitoVersion"
         testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
+        testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
     }
 
     idea {

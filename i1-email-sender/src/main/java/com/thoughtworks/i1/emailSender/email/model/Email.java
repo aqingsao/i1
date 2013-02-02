@@ -11,10 +11,12 @@ import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.persistence.Entity;
 
 import static com.thoughtworks.i1.emailSender.email.model.Recipients.oneRecipients;
 import static com.thoughtworks.i1.emailSender.email.model.Sender.aSender;
 
+@Entity
 public class Email {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
