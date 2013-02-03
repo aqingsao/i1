@@ -1,30 +1,39 @@
 package com.thoughtworks.i1.emailSender.service;
 
+import com.sun.jersey.api.core.InjectParam;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.mail.*;
 import javax.mail.event.TransportEvent;
 import javax.mail.event.TransportListener;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-public class EmailService implements TransportListener {
+@Singleton
+public class EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
     private static final String MAIL_SMTP_HOST = "mail.smtp.host";
     private static final String MAIL_SMTP_PORT = "mail.smtp.port";
 
     private static final String SMTP = "smtp";
+
     private EmailConfiguration configuration;
+
+    public EmailService() {
+        this(new EmailConfiguration());
+    }
 
     public EmailService(EmailConfiguration configuration) {
         this.configuration = configuration;
     }
 
     public boolean sendEmail(Email mail) {
-        LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToList().size()));
+        LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToAddresses().size()));
 
         Properties properties = initProperties(configuration);
         Session session = openSession(properties, configuration.getAuthenticationUserName(), configuration.getAuthenticationPassword());
@@ -70,20 +79,5 @@ public class EmailService implements TransportListener {
             properties.put(MAIL_SMTP_AUTH, "true");
         }
         return properties;
-    }
-
-    @Override
-    public void messageDelivered(TransportEvent e) {
-        LOGGER.info("Message was delivered successfully.");
-    }
-
-    @Override
-    public void messageNotDelivered(TransportEvent e) {
-        LOGGER.warn("Message was not delivered: " + e.getType());
-    }
-
-    @Override
-    public void messagePartiallyDelivered(TransportEvent e) {
-        LOGGER.warn("Message was partially delivered: " + e.getType());
     }
 }

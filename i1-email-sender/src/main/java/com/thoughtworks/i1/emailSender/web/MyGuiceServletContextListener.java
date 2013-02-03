@@ -5,6 +5,8 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.thoughtworks.i1.emailSender.domain.Email;
+import com.thoughtworks.i1.emailSender.service.EmailService;
 
 import java.util.Properties;
 import java.util.logging.Level;
@@ -15,6 +17,12 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new ServletModule());
+        return Guice.createInjector(new ServletModule() {
+            @Override
+            protected void configureServlets() {
+                bind(Email.class).to(Email.class);
+                bind(EmailService.class).to(EmailService.class);
+            }
+        });
     }
 }

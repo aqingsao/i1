@@ -4,6 +4,8 @@ public class Sender {
     private Address from;
     private Address replyTo;
 
+    private Sender(){
+    }
     private Sender(Address from, Address replyTo) {
         this.from = from;
         this.replyTo = replyTo;

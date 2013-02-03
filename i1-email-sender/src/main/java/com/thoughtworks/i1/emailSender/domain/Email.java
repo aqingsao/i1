@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.persistence.Entity;
 
-import static com.thoughtworks.i1.emailSender.domain.Sender.aSender;
+import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses;
 
 @Entity
 public class Email {
@@ -34,6 +34,9 @@ public class Email {
         this.recipients = recipients;
         this.message = message;
         this.attachments = attachments;
+    }
+
+    private Email(){
     }
 
     public static Email anEmail(Address from, String subject, String message, Address to, String... attachments) {
@@ -84,9 +87,9 @@ public class Email {
         if (sender.getReplyTo() != null) {
             message.setReplyTo(new javax.mail.Address[]{sender.getReplyTo().toInternetAddress()});
         }
-        message.setRecipients(Message.RecipientType.TO, recipients.getToAddresses());
-        message.setRecipients(Message.RecipientType.CC, recipients.getCCAddresses());
-        message.setRecipients(Message.RecipientType.BCC, recipients.getBCCAddresses());
+        message.setRecipients(Message.RecipientType.TO, toInternetAddresses(recipients.getToAddresses()));
+        message.setRecipients(Message.RecipientType.CC, toInternetAddresses(recipients.getCCAddresses()));
+        message.setRecipients(Message.RecipientType.BCC, toInternetAddresses(recipients.getBCCAddresses()));
 
         return message;
     }
@@ -101,5 +104,9 @@ public class Email {
 
     public Recipients getRecipients() {
         return this.recipients;
+    }
+
+    public Sender getSender() {
+        return sender;
     }
 }

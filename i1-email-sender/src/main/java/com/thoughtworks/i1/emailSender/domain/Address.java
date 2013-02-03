@@ -5,11 +5,14 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 public class Address {
     private String userName;
     private String userAddress;
 
+    private Address(){
+    }
     private Address(String userName, String userAddress) {
         this.userName = userName;
         this.userAddress = userAddress;
@@ -21,6 +24,16 @@ public class Address {
 
     public static Address anAddress(String userAddress) {
         return new Address(userAddress.split("@")[0], userAddress);
+    }
+
+    static InternetAddress[] toInternetAddresses(List<Address> addresses) {
+        InternetAddress[] internetAddresses = new InternetAddress[addresses.size()];
+        int count = 0;
+        for (Address address : addresses) {
+            internetAddresses[count++] = address.toInternetAddress();
+        }
+
+        return internetAddresses;
     }
 
     public String getUserName() {

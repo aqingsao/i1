@@ -18,7 +18,7 @@ public abstract class AbstractResourceTest {
     }
 
     private HttpServer createHttpServer() {
-        ResourceConfig rc = new PackagesResourceConfig("com.thoughtworks.i1.emailSender.api");
+        ResourceConfig rc = new PackagesResourceConfig("com.thoughtworks.i1.emailSender");
         try {
             return GrizzlyServerFactory.createHttpServer(BASE_URI, rc);
         } catch (IOException e) {

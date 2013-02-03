@@ -6,14 +6,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class Recipients {
-    private List<Address> toList;
-    private List<Address> ccList;
-    private List<Address> bccList;
+    private List<Address> toAddresses;
+    private List<Address> ccAddresses;
+    private List<Address> bccAddresses;
 
-    private Recipients(List<Address> toList, List<Address> ccList, List<Address> bccList) {
-        this.toList = toList;
-        this.ccList = ccList;
-        this.bccList = bccList;
+    private Recipients() {
+    }
+
+    private Recipients(List<Address> toAddresses, List<Address> ccAddresses, List<Address> bccAddresses) {
+        this.toAddresses = toAddresses;
+        this.ccAddresses = ccAddresses;
+        this.bccAddresses = bccAddresses;
     }
 
     public static Recipients oneRecipients(Address recipient) {
@@ -26,49 +29,43 @@ public class Recipients {
 
     public void addToAddress(Address... addresses) {
         for (Address address : addresses) {
-            toList.add(address);
+            toAddresses.add(address);
         }
     }
 
     public void addCcAddress(Address... addresses) {
         for (Address address : addresses) {
-            ccList.add(address);
+            ccAddresses.add(address);
         }
     }
 
     public void addBccAddress(Address... addresses) {
         for (Address address : addresses) {
-            bccList.add(address);
+            bccAddresses.add(address);
         }
     }
 
-    public Address getToAddress() {
-        return this.toList.get(0);
+    public void setToAddresses(List<Address> toAddresses) {
+        this.toAddresses = toAddresses;
     }
 
-    public InternetAddress[] getToAddresses() {
-        return getAddresses(this.toList);
+    public void setCCAddresses(List<Address> bccAddresses) {
+        this.bccAddresses = bccAddresses;
     }
 
-    public InternetAddress[] getCCAddresses() {
-        return getAddresses(this.ccList);
+    public void setBCCAddresses(List<Address> bccAddresses) {
+        this.bccAddresses = bccAddresses;
     }
 
-    public InternetAddress[] getBCCAddresses() {
-        return getAddresses(this.bccList);
+    public List<Address> getToAddresses() {
+        return this.toAddresses;
     }
 
-    private InternetAddress[] getAddresses(List<Address> addresses) {
-        InternetAddress[] internetAddresses = new InternetAddress[addresses.size()];
-        int count = 0;
-        for (Address address : addresses) {
-            internetAddresses[count++] = address.toInternetAddress();
-        }
-
-        return internetAddresses;
+    public List<Address> getCCAddresses() {
+        return this.ccAddresses;
     }
 
-    public List<Address> getToList() {
-        return toList;
+    public List<Address> getBCCAddresses() {
+        return this.bccAddresses;
     }
 }

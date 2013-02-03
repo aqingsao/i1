@@ -1,5 +1,8 @@
 package com.thoughtworks.i1.emailSender.service;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class EmailConfiguration {
 
     public final int MAIL_PORT_DEFAULT_VALUE = 25;
@@ -19,7 +22,6 @@ public class EmailConfiguration {
     public String authenticationPassword = null;
 
     public EmailConfiguration() {
-
     }
 
     public void setMailServerPort(int smtpPort) {
