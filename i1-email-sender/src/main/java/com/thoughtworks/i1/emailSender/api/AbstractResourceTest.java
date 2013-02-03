@@ -11,13 +11,13 @@ import java.net.URI;
 
 public abstract class AbstractResourceTest {
     protected static final URI BASE_URI = baseURI();
-    protected HttpServer httpServer = createHttpServer();
+    protected static HttpServer httpServer = createHttpServer();
 
     private static URI baseURI() {
         return UriBuilder.fromUri("http://localhost/").port(9998).build();
     }
 
-    private HttpServer createHttpServer() {
+    private static HttpServer createHttpServer() {
         ResourceConfig rc = new PackagesResourceConfig("com.thoughtworks.i1.emailSender");
         try {
             return GrizzlyServerFactory.createHttpServer(BASE_URI, rc);

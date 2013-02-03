@@ -1,19 +1,29 @@
 package com.thoughtworks.i1.emailSender.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.Preconditions;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
     private String userName;
     private String userAddress;
 
-    private Address(){
+    private Address() {
     }
+
     private Address(String userName, String userAddress) {
+        Preconditions.checkNotNull(userAddress);
         this.userName = userName;
         this.userAddress = userAddress;
     }
@@ -27,6 +37,10 @@ public class Address {
     }
 
     static InternetAddress[] toInternetAddresses(List<Address> addresses) {
+        if (addresses == null) {
+            return new InternetAddress[0];
+        }
+
         InternetAddress[] internetAddresses = new InternetAddress[addresses.size()];
         int count = 0;
         for (Address address : addresses) {
@@ -63,5 +77,9 @@ public class Address {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    public boolean isValid() {
+        return EMAIL_PATTERN.matcher(this.userAddress).matches();
     }
 }

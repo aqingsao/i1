@@ -1,5 +1,7 @@
 package com.thoughtworks.i1.emailSender.domain;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.thoughtworks.i1.emailSender.service.EmailService;
 import org.slf4j.LoggerFactory;
 
@@ -19,16 +21,20 @@ import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses
 public class Email {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+    private static final String TYPE_HTML_UTF_8 = "text/html; charset=UTF-8";
 
-    protected String subject = null;
+    protected String subject;
     private String message;
     private String[] attachments = new String[0];
     private Recipients recipients;
-
-    private static final String TYPE_HTML_UTF_8 = "text/html; charset=UTF-8";
     private Sender sender;
 
     private Email(Sender sender, String subject, String message, Recipients recipients, String... attachments) {
+        Preconditions.checkNotNull(sender, "Missing sender");
+        Preconditions.checkNotNull(recipients, "Missing recipient");
+        Preconditions.checkNotNull(subject, "Missing subject");
+        Preconditions.checkNotNull(message, "Missing message");
+
         this.sender = sender;
         this.subject = subject;
         this.recipients = recipients;
@@ -36,7 +42,7 @@ public class Email {
         this.attachments = attachments;
     }
 
-    private Email(){
+    private Email() {
     }
 
     public static Email anEmail(Address from, String subject, String message, Address to, String... attachments) {
@@ -108,5 +114,16 @@ public class Email {
 
     public Sender getSender() {
         return sender;
+    }
+
+    public void validate() {
+        this.sender.validate();
+        this.recipients.validate();
+        if(Strings.isNullOrEmpty(this.subject)){
+            throw new IllegalArgumentException("Missing mail subject");
+        }
+        if(Strings.isNullOrEmpty(this.message)){
+            throw new IllegalArgumentException("Missing mail body");
+        }
     }
 }

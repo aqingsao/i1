@@ -1,6 +1,7 @@
 package com.thoughtworks.i1.emailSender.api;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.sun.jersey.api.core.InjectParam;
 import com.thoughtworks.i1.emailSender.domain.Address;
 import com.thoughtworks.i1.emailSender.domain.Email;
@@ -27,20 +28,18 @@ public class EmailResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response sendEmail(Email email) {
-        if (email.getSender() == null || email.getSender().getFrom() == null) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(withError("Missing from user")).build();
-        }
-        if (Strings.isNullOrEmpty(email.getSubject())) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(withError("Missing mail subject")).build();
-        }
-        if (Strings.isNullOrEmpty(email.getMessage())) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(withError("Missing mail body")).build();
-        }
-        boolean result = emailService.sendEmail(email);
-        if (result) {
+        try {
+            email.validate();
+
+            boolean result = emailService.sendEmail(email);
+            if (result) {
+                return Response.ok().build();
+            }
             return Response.ok().build();
+        } catch (Exception e) {
+            LOGGER.warn("Failed to send email: " + e.getMessage(), e);
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new SendingEmailError(e.getMessage())).build();
         }
-        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     private SendingEmailError withError(String message) {

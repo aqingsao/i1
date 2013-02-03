@@ -1,9 +1,10 @@
 package com.thoughtworks.i1.emailSender.domain;
 
-import javax.mail.internet.InternetAddress;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Recipients {
     private List<Address> toAddresses;
@@ -20,6 +21,7 @@ public class Recipients {
     }
 
     public static Recipients oneRecipients(Address recipient) {
+        checkNotNull(recipient, "Missing recipient");
         return manyRecipients(Arrays.asList(recipient), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
     }
 
@@ -49,8 +51,8 @@ public class Recipients {
         this.toAddresses = toAddresses;
     }
 
-    public void setCCAddresses(List<Address> bccAddresses) {
-        this.bccAddresses = bccAddresses;
+    public void setCCAddresses(List<Address> ccAddresses) {
+        this.ccAddresses = ccAddresses;
     }
 
     public void setBCCAddresses(List<Address> bccAddresses) {
@@ -67,5 +69,24 @@ public class Recipients {
 
     public List<Address> getBCCAddresses() {
         return this.bccAddresses;
+    }
+
+    public void validate() {
+        for (Address toAddress : toAddresses) {
+            if(!toAddress.isValid()){
+                throw new IllegalArgumentException("Invalid to address");
+            }
+        }
+
+        for (Address ccAddress : ccAddresses) {
+            if(!ccAddress.isValid()){
+                throw new IllegalArgumentException("Invalid cc address");
+            }
+        }
+        for (Address bccAddress : bccAddresses) {
+            if(!bccAddress.isValid()){
+                throw new IllegalArgumentException("Invalid bcc address");
+            }
+        }
     }
 }
