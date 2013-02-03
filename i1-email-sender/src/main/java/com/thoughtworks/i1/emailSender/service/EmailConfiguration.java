@@ -1,25 +1,22 @@
 package com.thoughtworks.i1.emailSender.service;
 
+import com.google.inject.name.Named;
+
 import javax.inject.Singleton;
 
 @Singleton
 public class EmailConfiguration {
+    @Named("smtpPort")
+    public int smtpPort;
+    @Named("mailServerHost")
+    public String mailServerHost;
 
-    public final int MAIL_PORT_DEFAULT_VALUE = 25;
-
-    public int smtpPort = MAIL_PORT_DEFAULT_VALUE;
-
-    public String mailServerHost = "localhost";
-
-    /**
-     * If authentication is enabled (true), you must enter values ​​for properties:
-     * authenticationPassword, authenticationUserName
-     */
-    public boolean authenticationNeeded = false;
-
-    public String authenticationUserName = null;
-
-    public String authenticationPassword = null;
+    @Named("authenticationNeeded")
+    public boolean authenticationNeeded;
+    @Named("authenticationUserName")
+    public String authenticationUserName;
+    @Named("authenticationPassword")
+    public String authenticationPassword;
 
     public EmailConfiguration() {
     }
@@ -56,11 +53,11 @@ public class EmailConfiguration {
         this.authenticationNeeded = authenticationNeeded;
     }
 
-    boolean isAuthenticationRequired() {
+    public boolean isAuthenticationRequired() {
         return authenticationNeeded;
     }
 
-    int getMailServerPort() {
+    public int getMailServerPort() {
         return smtpPort;
     }
 }

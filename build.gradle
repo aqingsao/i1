@@ -47,6 +47,7 @@ subprojects {
         testCompile "org.mockito:mockito-all:$mockitoVersion"
         testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
         testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
+        testCompile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
     }
 
     idea {

@@ -1,5 +1,6 @@
 package com.thoughtworks.i1.emailSender.service;
 
+import com.google.common.base.Preconditions;
 import com.sun.jersey.api.core.InjectParam;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import org.slf4j.Logger;
@@ -8,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.mail.*;
-import javax.mail.event.TransportEvent;
-import javax.mail.event.TransportListener;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
@@ -22,10 +21,10 @@ public class EmailService {
 
     private static final String SMTP = "smtp";
 
+    @InjectParam
     private EmailConfiguration configuration;
 
     public EmailService() {
-        this(new EmailConfiguration());
     }
 
     public EmailService(EmailConfiguration configuration) {
@@ -71,6 +70,9 @@ public class EmailService {
     }
 
     private Properties initProperties(EmailConfiguration props) {
+        Preconditions.checkNotNull(props.getMailServerHost(), "Mail server host cannot be null");
+        Preconditions.checkNotNull(props.getMailServerPort() > 0, "Mail server port cannot be 0");
+
         Properties properties = new Properties();
         properties.put(MAIL_SMTP_HOST, props.getMailServerHost());
         properties.put(MAIL_SMTP_PORT, props.getMailServerPort());

@@ -1,6 +1,5 @@
-package com.thoughtworks.i1.emailSender.service.model;
+package com.thoughtworks.i1.emailSender.domain;
 
-import com.thoughtworks.i1.emailSender.domain.Address;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;

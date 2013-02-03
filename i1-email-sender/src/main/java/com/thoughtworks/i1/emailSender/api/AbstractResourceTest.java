@@ -9,7 +9,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 
-public abstract class AbstractResourceTest {
+public abstract class AbstractResourceTest{
     protected static final URI BASE_URI = baseURI();
     protected static HttpServer httpServer = createHttpServer();
 
@@ -24,6 +24,9 @@ public abstract class AbstractResourceTest {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    public AbstractResourceTest(){
     }
 
     protected URI uri(String path) {
