@@ -35,10 +35,7 @@ public class EmailResource {
         try {
             email.validate();
 
-            boolean result = emailService.sendEmail(email);
-            if (result) {
-                return Response.ok().build();
-            }
+            emailService.sendEmail(email);
             return Response.ok().build();
         } catch (Exception e) {
             LOGGER.warn("Failed to send email: " + e.getMessage(), e);

@@ -33,7 +33,7 @@ public class EmailResourceTest extends AbstractResourceTest {
 
     @Test
     public void test_send_email_successfully() throws IOException {
-        Email email = Email.anEmail(anAddress("a@b.com"), "subject", "message", anAddress("b@c.com"));
+        Email email = Email.anEmail(anAddress("i1_test@163.com"), "subject", "message", anAddress("b@c.com"));
         WebResource webResource = Client.create().resource(uri("/api/email"));
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, email);
 
@@ -42,7 +42,7 @@ public class EmailResourceTest extends AbstractResourceTest {
 
     @Test
     public void test_failed_to_send_email_when_from_user_is_null() throws IOException {
-        WebResource webResource = Client.create().resource(uri("/email"));
+        WebResource webResource = Client.create().resource(uri("/api/email"));
         Email email = Email.anEmail(anAddress(""), "subject", "message", anAddress("b@c.com"));
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, email);
 
@@ -53,7 +53,7 @@ public class EmailResourceTest extends AbstractResourceTest {
 
     @Test
     public void test_failed_to_send_email_when_to_user_is_null() throws IOException {
-        WebResource webResource = Client.create().resource(uri("/email"));
+        WebResource webResource = Client.create().resource(uri("/api/email"));
         Email email = Email.anEmail(anAddress("a@b.com"), "subject", "message", anAddress(""));
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, email);
 
@@ -64,7 +64,7 @@ public class EmailResourceTest extends AbstractResourceTest {
 
     @Test
     public void test_failed_to_send_email_when_subject_is_empty() throws IOException {
-        WebResource webResource = Client.create().resource(uri("/email"));
+        WebResource webResource = Client.create().resource(uri("/api/email"));
         Email email = Email.anEmail(anAddress("a@b.com"), "", "body", anAddress("b@c.com"));
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, email);
 
@@ -75,7 +75,7 @@ public class EmailResourceTest extends AbstractResourceTest {
 
     @Test
     public void test_failed_to_send_email_when_message_is_empty() throws IOException {
-        WebResource webResource = Client.create().resource(uri("/email"));
+        WebResource webResource = Client.create().resource(uri("/api/email"));
         Email email = Email.anEmail(anAddress("a@b.com"), "subject", "", anAddress("b@c.com"));
 
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, email);

@@ -1,12 +1,12 @@
 package com.thoughtworks.i1.emailSender.service;
 
+import com.thoughtworks.i1.emailSender.commons.BusinessException;
+import com.thoughtworks.i1.emailSender.commons.SystemException;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 public class EmailServiceIntegrationTest {
 
@@ -15,11 +15,30 @@ public class EmailServiceIntegrationTest {
 
     @Test
     public void should_send_email_with_163_as_smtp_server() {
-        emailConfiguration = new EmailConfiguration(25, "smtp.163.com", true, "i1_test", "ThoughtWorks");
-        emailService = new EmailService(emailConfiguration);
+        emailService = new EmailService(new EmailConfiguration(25, "smtp.163.com", true, "i1_test", "ThoughtWorks"));
 
-        boolean result = emailService.sendEmail(anEmail(anAddress("Admin", "i1_test@163.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@qq.com")));
-        assertThat(result, is(true));
+        emailService.sendEmail(anEmail(anAddress("Admin", "i1_test@163.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@qq.com")));
+    }
+
+    @Test(expected = BusinessException.class)
+    public void should_throw_business_exception_when_password_is_incorrect() {
+        emailService = new EmailService(new EmailConfiguration(25, "smtp.163.com", true, "i1_test", "invalid password"));
+
+        emailService.sendEmail(anEmail(anAddress("Admin", "i1_test@163.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@qq.com")));
+    }
+
+    @Test(expected = BusinessException.class)
+    public void should_throw_business_exception_when_address_does_not_exist() {
+        emailService = new EmailService(new EmailConfiguration(25, "smtp.163.com", true, "i1_test", "ThoughtWorks"));
+
+        emailService.sendEmail(anEmail(anAddress("__$$__#$$#$fdfa@163.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@qq.com")));
+    }
+
+    @Test(expected = SystemException.class)
+    public void should_throw_system_exception_when_there_are_system_errors() {
+        emailService = new EmailService(new EmailConfiguration(25, "smtp.163.com", false, "i1_test", "ThoughtWorks"));
+
+        emailService.sendEmail(anEmail(anAddress("__$$__#$$#$fdfa@163.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@qq.com")));
     }
 
     @Ignore("Should setup qq mail to support smtp")
@@ -27,7 +46,6 @@ public class EmailServiceIntegrationTest {
         emailConfiguration = new EmailConfiguration(25, "smtp.qq.com", true, "i1_test", "ThoughtWorks");
         emailService = new EmailService(emailConfiguration);
 
-        boolean result = emailService.sendEmail(anEmail(anAddress("Admin", "i1_test@qq.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@163.com")));
-        assertThat(result, is(true));
+        emailService.sendEmail(anEmail(anAddress("Admin", "i1_test@qq.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@163.com")));
     }
 }

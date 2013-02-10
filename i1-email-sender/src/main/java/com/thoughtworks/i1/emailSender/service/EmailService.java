@@ -1,7 +1,8 @@
 package com.thoughtworks.i1.emailSender.service;
 
 import com.google.common.base.Preconditions;
-import com.sun.jersey.api.core.InjectParam;
+import com.thoughtworks.i1.emailSender.commons.BusinessException;
+import com.thoughtworks.i1.emailSender.commons.SystemException;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.mail.*;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
@@ -28,7 +30,7 @@ public class EmailService {
         this.configuration = configuration;
     }
 
-    public boolean sendEmail(Email mail) {
+    public void sendEmail(Email mail) {
         LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToAddresses().size()));
 
         Properties properties = initProperties(configuration);
@@ -46,10 +48,10 @@ public class EmailService {
                 transport.close();
             }
             LOGGER.debug(String.format("Finished to send email."));
-            return true;
-        } catch (MessagingException e) {
-            LOGGER.warn("Failed to send eamil: " + e.getMessage(), e);
-            return false;
+        } catch (AuthenticationFailedException | AddressException e) {
+            throw new BusinessException(e.getMessage(),  e);
+        }  catch (MessagingException e){
+            throw new SystemException(e.getMessage(),  e);
         }
     }
 
