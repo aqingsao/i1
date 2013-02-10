@@ -1,34 +1,69 @@
 package com.thoughtworks.i1.emailSender;
 
-import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
-import org.glassfish.grizzly.http.server.HttpServer;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Scopes;
+import com.google.inject.servlet.GuiceFilter;
+import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.ServletModule;
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.thoughtworks.i1.emailSender.api.EmailResource;
+import com.thoughtworks.i1.emailSender.service.EmailConfiguration;
+import com.thoughtworks.i1.emailSender.service.EmailService;
+import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
+import javax.servlet.DispatcherType;
 import javax.ws.rs.core.UriBuilder;
-import java.io.IOException;
 import java.net.URI;
+import java.util.EnumSet;
+
+import static com.google.inject.name.Names.bindProperties;
+import static com.sun.jersey.api.core.PackagesResourceConfig.PROPERTY_PACKAGES;
+import static com.sun.jersey.api.json.JSONConfiguration.FEATURE_POJO_MAPPING;
+import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
 public class Main {
-    private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost/").port(9998).build();
+    public static final String CONTEXT_PATH = "/email-sender";
+    public static final int PORT = 8051;
+
+    private static URI baseURI() {
+        return UriBuilder.fromUri("http://localhost/").port(PORT).path(CONTEXT_PATH).build();
     }
 
-    public static final URI BASE_URI = getBaseURI();
+    protected static Server createServer() {
+        Server server = new Server(PORT);
 
-    protected static HttpServer startServer() throws IOException {
-        System.out.println("Starting grizzly...");
-        ResourceConfig rc = new PackagesResourceConfig("com.thoughtworks.i1.emailSender.api");
-        return GrizzlyServerFactory.createHttpServer(BASE_URI, rc);
+        ServletContextHandler handler = new ServletContextHandler(server, CONTEXT_PATH, NO_SESSIONS);
+        handler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+
+        // Must add DefaultServlet for embedded Jetty, failing to do this will cause 404 errors.
+        // This is not needed if web.xml is used instead.
+        handler.addServlet(DefaultServlet.class, "/*");
+        handler.addEventListener(new GuiceServletContextListener(){
+            @Override
+            protected Injector getInjector() {
+                return Guice.createInjector(new JerseyServletModule() {
+                    @Override
+                    protected void configureServlets() {
+                        bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
+                        serve("/api/*").with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
+                                .put(PROPERTY_PACKAGES, "com.thoughtworks.i1.emailSender.api").put(FEATURE_POJO_MAPPING, "true").build());
+                    }
+                });
+            }
+        });
+        return server;
     }
 
-    public static void main(String[] args) throws IOException {
-        HttpServer httpServer = startServer();
-        System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nTry out %shelloworld\nHit enter to stop it...",
-                BASE_URI, BASE_URI));
+    public static void main(String[] args) throws Exception {
+        createServer().start();
         System.in.read();
-        httpServer.stop();
     }
 
 }

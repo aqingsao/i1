@@ -7,12 +7,13 @@ import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.domain.SendingEmailError;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Iterables.getLast;
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -20,19 +21,20 @@ import static org.junit.Assert.assertThat;
 public class EmailResourceTest extends AbstractResourceTest {
 
     @BeforeClass
-    public static void beforeClass() throws IOException {
-        httpServer.start();
+    public static void beforeClass() throws Exception {
+        server.start();
     }
 
     @AfterClass
-    public static void afterClass() {
-        httpServer.stop();
+    public static void afterClass() throws Exception {
+        server.stop();
+        server.join();
     }
 
-    @Ignore("Not implemented yet")
+    @Test
     public void test_send_email_successfully() throws IOException {
-        WebResource webResource = Client.create().resource(uri("/email"));
         Email email = Email.anEmail(anAddress("a@b.com"), "subject", "message", anAddress("b@c.com"));
+        WebResource webResource = Client.create().resource(uri("/api/email"));
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, email);
 
         assertThat(response.getClientResponseStatus(), is(ClientResponse.Status.OK));

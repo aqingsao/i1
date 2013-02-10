@@ -1,13 +1,14 @@
 package com.thoughtworks.i1.emailSender.api;
 
-import com.sun.jersey.api.core.InjectParam;
 import com.thoughtworks.i1.emailSender.domain.Address;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.domain.SendingEmailError;
+import com.thoughtworks.i1.emailSender.service.EmailConfiguration;
 import com.thoughtworks.i1.emailSender.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,8 +22,12 @@ import javax.ws.rs.core.Response;
 public class EmailResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailResource.class);
 
-    @InjectParam
     private EmailService emailService;
+
+    @Inject
+    public EmailResource(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -39,10 +44,6 @@ public class EmailResource {
             LOGGER.warn("Failed to send email: " + e.getMessage(), e);
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new SendingEmailError(e.getMessage())).build();
         }
-    }
-
-    private SendingEmailError withError(String message) {
-        return new SendingEmailError(message);
     }
 
     @GET

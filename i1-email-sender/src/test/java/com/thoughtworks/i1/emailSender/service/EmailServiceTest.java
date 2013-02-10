@@ -5,14 +5,15 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.thoughtworks.i1.emailSender.domain.Email;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -24,7 +25,7 @@ public class EmailServiceTest {
 
     @Before
     public void before() {
-        emailConfiguration = new EmailConfiguration();
+        emailConfiguration = new EmailConfiguration(25, "localhost", true, "i1.test", "ThoughtWorks");
         emailConfiguration.setMailServerPort(ServerSetupTest.SMTP.getPort());
         emailService = new EmailService(emailConfiguration);
 

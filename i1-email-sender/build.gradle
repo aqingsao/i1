@@ -4,9 +4,11 @@ apply plugin: "jetty"
 dependencies {
     compile 'javax.mail:mail:1.4.5'
     compile 'javax.persistence:persistence-api:1.0.2'
+    compile "org.eclipse.jetty:jetty-servlet:9.0.0.M3"
 
     compile "commons-lang:commons-lang:2.6"
 
     def greenmailVersion = '1.3.1b'
     testCompile "com.icegreen:greenmail:$greenmailVersion"
+    testCompile "com.sun.jersey:jersey-server:1.16"
 }

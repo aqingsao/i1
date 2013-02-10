@@ -2,23 +2,28 @@ package com.thoughtworks.i1.emailSender.service;
 
 import com.google.inject.name.Named;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class EmailConfiguration {
-    @Named("smtpPort")
     public int smtpPort;
-    @Named("mailServerHost")
     public String mailServerHost;
 
-    @Named("authenticationNeeded")
     public boolean authenticationNeeded;
-    @Named("authenticationUserName")
     public String authenticationUserName;
-    @Named("authenticationPassword")
     public String authenticationPassword;
 
-    public EmailConfiguration() {
+    @Inject
+    public EmailConfiguration(@Named("smtpPort") int smtpPort, @Named("mailServerHost") String mailServerHost,
+                              @Named("authenticationNeeded") boolean authenticationNeeded,
+                              @Named("authenticationUserName") String authenticationUserName,
+                              @Named("authenticationPassword")String authenticationPassword) {
+        this.smtpPort = smtpPort;
+        this.mailServerHost = mailServerHost;
+        this.authenticationNeeded = authenticationNeeded;
+        this.authenticationUserName = authenticationUserName;
+        this.authenticationPassword = authenticationPassword;
     }
 
     public void setMailServerPort(int smtpPort) {

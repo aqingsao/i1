@@ -21,12 +21,9 @@ public class EmailService {
 
     private static final String SMTP = "smtp";
 
-    @InjectParam
     private EmailConfiguration configuration;
 
-    public EmailService() {
-    }
-
+    @Inject
     public EmailService(EmailConfiguration configuration) {
         this.configuration = configuration;
     }
@@ -81,5 +78,9 @@ public class EmailService {
             properties.put(MAIL_SMTP_AUTH, "true");
         }
         return properties;
+    }
+
+    public void setConfiguration(EmailConfiguration configuration) {
+        this.configuration = configuration;
     }
 }

@@ -26,18 +26,20 @@ subprojects {
 
         def jerseyVersion = '1.16'
         compile "com.sun.jersey:jersey-core:$jerseyVersion"
-        compile "com.sun.jersey:jersey-grizzly2:$jerseyVersion"
         compile "com.sun.jersey:jersey-server:$jerseyVersion"
+        compile "com.sun.jersey:jersey-servlet:$jerseyVersion"
+        compile "com.sun.jersey:jersey-json:$jerseyVersion"
+        compile "com.sun.jersey.contribs:jersey-guice:$jerseyVersion"
 
         def slf4jVersion = '1.7.2'
         compile "org.slf4j:slf4j-api:$slf4jVersion"
-        compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
+        compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
 
         def jacksonVersion = '2.1.2'
         compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
         compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-        runtime "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
+        compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
 
 
         def junitVersion = '4.10'

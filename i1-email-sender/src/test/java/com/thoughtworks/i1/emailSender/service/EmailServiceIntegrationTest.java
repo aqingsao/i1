@@ -15,12 +15,7 @@ public class EmailServiceIntegrationTest {
 
     @Test
     public void should_send_email_with_163_as_smtp_server() {
-        emailConfiguration = new EmailConfiguration();
-        emailConfiguration.setMailServerHost("smtp.163.com");
-
-        emailConfiguration.setAuthenticationUserName("i1_test");
-        emailConfiguration.setAuthenticationPassword("ThoughtWorks");
-        emailConfiguration.setAuthenticationNeeded(true);
+        emailConfiguration = new EmailConfiguration(25, "smtp.163.com", true, "i1_test", "ThoughtWorks");
         emailService = new EmailService(emailConfiguration);
 
         boolean result = emailService.sendEmail(anEmail(anAddress("Admin", "i1_test@163.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@qq.com")));
@@ -29,12 +24,7 @@ public class EmailServiceIntegrationTest {
 
     @Ignore("Should setup qq mail to support smtp")
     public void should_send_email_with_qq_as_smtp_server() {
-        emailConfiguration = new EmailConfiguration();
-        emailConfiguration.setMailServerHost("smtp.qq.com");
-
-        emailConfiguration.setAuthenticationUserName("i1_test");
-        emailConfiguration.setAuthenticationPassword("ThoughtWorks");
-        emailConfiguration.setAuthenticationNeeded(true);
+        emailConfiguration = new EmailConfiguration(25, "smtp.qq.com", true, "i1_test", "ThoughtWorks");
         emailService = new EmailService(emailConfiguration);
 
         boolean result = emailService.sendEmail(anEmail(anAddress("Admin", "i1_test@qq.com"), "a test email", "test body", anAddress("Xiaoqing Zhang", "i1_test@163.com")));
