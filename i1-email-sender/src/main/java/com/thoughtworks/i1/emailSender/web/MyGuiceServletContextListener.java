@@ -5,12 +5,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
-import com.google.inject.name.Names;
+import com.google.inject.persist.PersistFilter;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.thoughtworks.i1.emailSender.api.EmailResource;
-import com.thoughtworks.i1.emailSender.domain.Email;
+import com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration;
+import com.thoughtworks.i1.emailSender.commons.H2;
+import com.thoughtworks.i1.emailSender.commons.Hibernate;
 import com.thoughtworks.i1.emailSender.service.EmailConfiguration;
 import com.thoughtworks.i1.emailSender.service.EmailService;
 import org.slf4j.LoggerFactory;
@@ -24,8 +26,10 @@ import static com.sun.jersey.api.json.JSONConfiguration.FEATURE_POJO_MAPPING;
 
 public class MyGuiceServletContextListener extends GuiceServletContextListener {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MyGuiceServletContextListener.class);
+    private DatabaseConfiguration configuration;
 
-    public MyGuiceServletContextListener() {
+    public MyGuiceServletContextListener(DatabaseConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     @Override
@@ -37,6 +41,10 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
                 bind(EmailService.class);
                 bind(EmailConfiguration.class);
                 bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
+
+                install(new JpaPersistModule("domain").properties(configuration.toProperties()));
+                filter("/*").through(PersistFilter.class);
+
                 serve("/api/*").with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
                         .put(PROPERTY_PACKAGES, "com.thoughtworks.i1.emailSender.api").put(FEATURE_POJO_MAPPING, "true").build());
             }

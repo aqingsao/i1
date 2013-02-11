@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.EntityManager;
 import java.util.Properties;
 
 @Singleton
@@ -24,14 +25,18 @@ public class EmailService {
     private static final String SMTP = "smtp";
 
     private EmailConfiguration configuration;
+    private EntityManager entityManager;
 
     @Inject
-    public EmailService(EmailConfiguration configuration) {
+    public EmailService(EmailConfiguration configuration, EntityManager entityManager) {
         this.configuration = configuration;
+        this.entityManager = entityManager;
     }
 
     public void sendEmail(Email mail) {
         LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToAddresses().size()));
+
+        entityManager.persist(mail);
 
         Properties properties = initProperties(configuration);
         Session session = openSession(properties, configuration.getAuthenticationUserName(), configuration.getAuthenticationPassword());

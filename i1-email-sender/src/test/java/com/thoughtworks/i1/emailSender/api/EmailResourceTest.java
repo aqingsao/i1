@@ -12,8 +12,6 @@ import org.junit.Test;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.Iterables.getLast;
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -33,7 +31,7 @@ public class EmailResourceTest extends AbstractResourceTest {
 
     @Test
     public void test_send_email_successfully() throws IOException {
-        Email email = Email.anEmail(anAddress("i1_test@163.com"), "subject", "message", anAddress("b@c.com"));
+        Email email = Email.anEmail(anAddress("i1_test@163.com"), "subject", "message", anAddress("i1_test@qq.com"));
         WebResource webResource = Client.create().resource(uri("/api/email"));
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, email);
 

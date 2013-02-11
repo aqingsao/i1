@@ -41,6 +41,8 @@ subprojects {
         compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
         compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
 
+        compile 'javax.validation:validation-api:1.0.0.GA'
+        compile 'com.google.code.findbugs:jsr305:2.0.1'
 
         def junitVersion = '4.10'
         def mockitoVersion = '1.9.5-rc1'

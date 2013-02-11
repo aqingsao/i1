@@ -13,7 +13,7 @@ import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses;
 
@@ -22,12 +22,25 @@ public class Email {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String TYPE_HTML_UTF_8 = "text/html; charset=UTF-8";
+    @Id
+    @GeneratedValue
+    private long id;
 
+    @Column(name = "SUBJECT")
     protected String subject;
+    @Column(name = "MESSAGE")
     private String message;
-    private String[] attachments = new String[0];
-    private Recipients recipients;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="from", column=@Column(name = "EMAIL_FROM")),
+            @AttributeOverride(name="replyTo", column=@Column(name = "EMAIL_REPLY_TO"))
+    })
     private Sender sender;
+    @OneToOne
+    @JoinColumn(name="EMAIL_RECIPIENT_ID", unique=true, nullable=false, updatable=false)
+    private Recipients recipients;
+
+    private String[] attachments = new String[0];
 
     private Email(Sender sender, String subject, String message, Recipients recipients, String... attachments) {
         Preconditions.checkNotNull(sender, "Missing sender");

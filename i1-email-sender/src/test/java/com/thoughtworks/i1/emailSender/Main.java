@@ -11,6 +11,9 @@ import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.thoughtworks.i1.emailSender.api.EmailResource;
+import com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration;
+import com.thoughtworks.i1.emailSender.commons.H2;
+import com.thoughtworks.i1.emailSender.commons.Hibernate;
 import com.thoughtworks.i1.emailSender.service.EmailConfiguration;
 import com.thoughtworks.i1.emailSender.service.EmailService;
 import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
@@ -32,10 +35,6 @@ public class Main {
     public static final String CONTEXT_PATH = "/email-sender";
     public static final int PORT = 8051;
 
-    private static URI baseURI() {
-        return UriBuilder.fromUri("http://localhost/").port(PORT).path(CONTEXT_PATH).build();
-    }
-
     protected static Server createServer() {
         Server server = new Server(PORT);
 
@@ -45,19 +44,10 @@ public class Main {
         // Must add DefaultServlet for embedded Jetty, failing to do this will cause 404 errors.
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
-        handler.addEventListener(new GuiceServletContextListener(){
-            @Override
-            protected Injector getInjector() {
-                return Guice.createInjector(new JerseyServletModule() {
-                    @Override
-                    protected void configureServlets() {
-                        bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
-                        serve("/api/*").with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
-                                .put(PROPERTY_PACKAGES, "com.thoughtworks.i1.emailSender.api").put(FEATURE_POJO_MAPPING, "true").build());
-                    }
-                });
-            }
-        });
+        DatabaseConfiguration configuration = DatabaseConfiguration.database().user("user").password("")
+                .with(H2.driver, H2.privateMemoryDB, H2.compatible("Oracle"), Hibernate.createDrop, Hibernate.dialect("Oracle10g"), Hibernate.showSql).build();
+        handler.addEventListener(new MyGuiceServletContextListener(configuration));
+
         return server;
     }
 

@@ -1,14 +1,26 @@
 package com.thoughtworks.i1.emailSender.domain;
 
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Entity(name = "EMAIL_RECIPIENTS")
 public class Recipients {
+    @Id
+    @GeneratedValue
+    private long id;
+
+    @OneToOne(mappedBy = "recipients")
+    private Email email;
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Address> toAddresses;
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Address> ccAddresses;
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Address> bccAddresses;
 
     private Recipients() {

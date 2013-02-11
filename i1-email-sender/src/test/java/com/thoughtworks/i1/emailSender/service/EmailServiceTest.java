@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.EntityManager;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
@@ -22,12 +23,13 @@ public class EmailServiceTest {
     private EmailService emailService;
     private EmailConfiguration emailConfiguration;
     private GreenMail mailServer;
+    private EntityManager entityManager;
 
     @Before
     public void before() {
         emailConfiguration = new EmailConfiguration(25, "localhost", true, "i1.test", "ThoughtWorks");
         emailConfiguration.setMailServerPort(ServerSetupTest.SMTP.getPort());
-        emailService = new EmailService(emailConfiguration);
+        emailService = new EmailService(emailConfiguration, entityManager);
 
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
