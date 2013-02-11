@@ -6,6 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
@@ -14,7 +15,7 @@ public class EmailServiceIntegrationTest {
 
     private EmailService emailService;
     private EmailConfiguration emailConfiguration;
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManager;
 
     @Test
     public void should_send_email_with_163_as_smtp_server() {

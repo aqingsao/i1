@@ -39,8 +39,10 @@ public abstract class AbstractResourceTest{
         // Must add DefaultServlet for embedded Jetty, failing to do this will cause 404 errors.
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
-        DatabaseConfiguration configuration = DatabaseConfiguration.database().user("user").password("")
-                .with(H2.driver, H2.fileDB("/Users/twer/Projects/i1/h2_i0.db"), H2.compatible("Oracle"), Hibernate.createDrop, Hibernate.dialect("Oracle10g"), Hibernate.showSql).build();
+//        H2.fileDB("/Users/twer/Projects/i1/h2_i0.db");
+        DatabaseConfiguration configuration = DatabaseConfiguration.database().user("sa").password("")
+                .with(H2.driver, H2.fileDB("/Users/twer/Projects/i1/email-sender"), H2.compatible("Oracle"), Hibernate.create, Hibernate.dialect("Oracle10g"), Hibernate.showSql)
+                .migration().auto(true).locations("migration/").end().build();
 
         handler.addEventListener(new MyGuiceServletContextListener(configuration));
         return server;

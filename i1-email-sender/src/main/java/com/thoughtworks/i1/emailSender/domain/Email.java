@@ -30,14 +30,16 @@ public class Email {
     protected String subject;
     @Column(name = "MESSAGE")
     private String message;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name="from", column=@Column(name = "EMAIL_FROM")),
-            @AttributeOverride(name="replyTo", column=@Column(name = "EMAIL_REPLY_TO"))
-    })
+//    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name="from", column=@Column(name = "EMAIL_FROM")),
+//            @AttributeOverride(name="replyTo", column=@Column(name = "EMAIL_REPLY_TO"))
+//    })
+    @Transient
     private Sender sender;
-    @OneToOne
-    @JoinColumn(name="EMAIL_RECIPIENT_ID", unique=true, nullable=false, updatable=false)
+//    @OneToOne
+//    @JoinColumn(name="EMAIL_RECIPIENT_ID", unique=true, nullable=false, updatable=false)
+    @Transient
     private Recipients recipients;
 
     private String[] attachments = new String[0];

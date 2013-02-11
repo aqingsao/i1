@@ -7,7 +7,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Entity(name = "EMAIL_RECIPIENTS")
+//@Entity(name = "EMAIL_RECIPIENTS")
 public class Recipients {
     @Id
     @GeneratedValue

@@ -13,6 +13,7 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.Properties;
 
 @Singleton
@@ -25,18 +26,33 @@ public class EmailService {
     private static final String SMTP = "smtp";
 
     private EmailConfiguration configuration;
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManager;
 
     @Inject
-    public EmailService(EmailConfiguration configuration, EntityManager entityManager) {
+    public EmailService(EmailConfiguration configuration, EntityManagerFactory entityManager) {
         this.configuration = configuration;
         this.entityManager = entityManager;
     }
 
+//    @Inject
+//    public EmailService(EmailConfiguration configuration, EntityManager entityManager) {
+//        this.configuration = configuration;
+//        this.entityManager = entityManager;
+//    }
+
     public void sendEmail(Email mail) {
         LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToAddresses().size()));
 
-        entityManager.persist(mail);
+        EntityManager entityManager1 = entityManager.createEntityManager();
+        entityManager1.getTransaction().begin();
+        try {
+            entityManager1.persist(mail);
+            entityManager1.getTransaction().commit();
+            LOGGER.info("persist mail successfully");
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            entityManager1.getTransaction().rollback();
+        }
 
         Properties properties = initProperties(configuration);
         Session session = openSession(properties, configuration.getAuthenticationUserName(), configuration.getAuthenticationPassword());
@@ -54,9 +70,9 @@ public class EmailService {
             }
             LOGGER.debug(String.format("Finished to send email."));
         } catch (AuthenticationFailedException | AddressException e) {
-            throw new BusinessException(e.getMessage(),  e);
-        }  catch (MessagingException e){
-            throw new SystemException(e.getMessage(),  e);
+            throw new BusinessException(e.getMessage(), e);
+        } catch (MessagingException e) {
+            throw new SystemException(e.getMessage(), e);
         }
     }
 

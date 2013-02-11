@@ -1,0 +1,1 @@
+create table EMAIL_ADDRESS (id number(19,0) not null, USER_ADDRESS varchar2(255 char), USER_NAME varchar2(255 char), primary key (id));

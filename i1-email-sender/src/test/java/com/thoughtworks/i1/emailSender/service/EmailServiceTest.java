@@ -12,6 +12,7 @@ import org.junit.Test;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
@@ -23,7 +24,7 @@ public class EmailServiceTest {
     private EmailService emailService;
     private EmailConfiguration emailConfiguration;
     private GreenMail mailServer;
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManager;
 
     @Before
     public void before() {

@@ -1,0 +1,1 @@
+create table Email (id number(19,0) not null, attachments raw(255), MESSAGE varchar2(255 char), SUBJECT varchar2(255 char), primary key (id));

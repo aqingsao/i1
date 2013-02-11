@@ -19,6 +19,20 @@ public class Hibernate {
         }
     };
 
+    public static Setting validate = new Setting() {
+        @Override
+        public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
+            config.property("hibernate.hbm2ddl.auto", "validate");
+        }
+    };
+
+    public static Setting create = new Setting() {
+        @Override
+        public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
+            config.property("hibernate.hbm2ddl.auto", "create");
+        }
+    };
+
     public static Setting showSql = new Setting() {
         @Override
         public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {

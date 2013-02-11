@@ -13,6 +13,7 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration;
 import com.thoughtworks.i1.emailSender.commons.H2;
 import com.thoughtworks.i1.emailSender.commons.Hibernate;
+import com.thoughtworks.i1.emailSender.commons.Migration;
 import com.thoughtworks.i1.emailSender.service.EmailConfiguration;
 import com.thoughtworks.i1.emailSender.service.EmailService;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,10 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
                 bind(EmailService.class);
                 bind(EmailConfiguration.class);
                 bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
+
+                if(configuration.getMigration().isPresent()){
+                    Migration.migrate(configuration);
+                }
 
                 install(new JpaPersistModule("domain").properties(configuration.toProperties()));
                 filter("/*").through(PersistFilter.class);
