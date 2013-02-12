@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Entity(name = "EMAIL_ADDRESS")
-@Table(name = "EMAIL_ADDRESS", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL_ADDRESS_NAME", "EMAIL_ADDRESS_ADDRESS"}))
+@Entity(name = "I1_EMAIL_ADDRESS")
+@Table(name = "i1_EMAIL_ADDRESS", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL_ADDRESS_NAME", "EMAIL_ADDRESS_ADDRESS"}))
 public class Address {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
     @Id
     @Column(name = "EMAIL_ADDRESS_ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "emailAddressSeq")
-    @SequenceGenerator(initialValue = 1, name = "emailAddressSeq", sequenceName = "EMAIL_ADDRESS_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "i1EmailAddressSeq")
+    @SequenceGenerator(initialValue = 1, name = "i1EmailAddressSeq", sequenceName = "I1_EMAIL_ADDRESS_SEQUENCE")
     private long id;
 
     @Column(name = "EMAIL_ADDRESS_NAME")

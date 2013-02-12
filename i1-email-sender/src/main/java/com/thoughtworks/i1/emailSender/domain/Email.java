@@ -20,15 +20,15 @@ import java.util.List;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses;
 
-@Entity(name = "EMAIL")
+@Entity(name = "I1_EMAIL")
 public class Email {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String TYPE_HTML_UTF_8 = "text/html; charset=UTF-8";
     @Id
     @Column(name = "EMAIL_ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "emailSeq")
-    @SequenceGenerator(initialValue = 1, name = "emailSeq", sequenceName = "EMAIL_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "i1EmailSeq")
+    @SequenceGenerator(initialValue = 1, name = "i1EmailSeq", sequenceName = "I1_EMAIL_SEQUENCE")
     private long id;
 
     @Column(name = "SUBJECT")
