@@ -3,7 +3,8 @@ package com.thoughtworks.i1.emailSender.service;
 import com.google.common.base.Preconditions;
 import com.thoughtworks.i1.emailSender.commons.BusinessException;
 import com.thoughtworks.i1.emailSender.commons.SystemException;
-import com.thoughtworks.i1.emailSender.domain.Email;
+import com.thoughtworks.i1.emailSender.domain.*;
+import com.thoughtworks.i1.emailSender.domain.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import java.util.Properties;
 
 @Singleton
@@ -44,14 +46,29 @@ public class EmailService {
         LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToAddresses().size()));
 
         EntityManager entityManager1 = entityManager.createEntityManager();
-        entityManager1.getTransaction().begin();
+        EntityTransaction transaction = entityManager1.getTransaction();
         try {
+            transaction.begin();
+
+            for (EmailRecipients emailRecipients : mail.getRecipients().getEmailRecipientsTo()) {
+                emailRecipients.setEmail(mail);
+            }
+            for (EmailRecipients emailRecipients : mail.getRecipients().getEmailRecipientsCC()) {
+                entityManager1.persist(emailRecipients);
+            }
+            for (EmailRecipients emailRecipients : mail.getRecipients().getEmailRecipientsBCC()) {
+                entityManager1.persist(emailRecipients);
+            }
             entityManager1.persist(mail);
-            entityManager1.getTransaction().commit();
+
+            transaction.commit();
             LOGGER.info("persist mail successfully");
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            entityManager1.getTransaction().rollback();
+            try {
+                transaction.rollback();
+            } catch (Exception e2) {
+            }
+            throw new SystemException("Cannot persist mail: " + e.getMessage(), e);
         }
 
         Properties properties = initProperties(configuration);

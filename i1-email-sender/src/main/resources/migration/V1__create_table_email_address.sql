@@ -1,1 +1,2 @@
-create table EMAIL_ADDRESS (id number(19,0) not null, USER_ADDRESS varchar2(255 char), USER_NAME varchar2(255 char), primary key (id));
+create table EMAIL_ADDRESS (EMAIL_ADDRESS_ID number(19,0) not null, EMAIL_ADDRESS_ADDRESS varchar2(255 char) not null, EMAIL_ADDRESS_NAME varchar2(255 char), primary key (EMAIL_ADDRESS_ID), unique (EMAIL_ADDRESS_NAME, EMAIL_ADDRESS_ADDRESS));
+create sequence EMAIL_ADDRESS_SEQUENCE;

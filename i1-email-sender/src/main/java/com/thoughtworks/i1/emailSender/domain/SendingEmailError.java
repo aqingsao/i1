@@ -1,7 +1,5 @@
 package com.thoughtworks.i1.emailSender.domain;
 
-import javax.persistence.Entity;
-
 public class SendingEmailError {
     private String message;
 

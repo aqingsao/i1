@@ -2,31 +2,29 @@ package com.thoughtworks.i1.emailSender.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.mail.internet.InternetAddress;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity(name = "EMAIL_ADDRESS")
+@Table(name = "EMAIL_ADDRESS", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL_ADDRESS_NAME", "EMAIL_ADDRESS_ADDRESS"}))
 public class Address {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
     @Id
-    @GeneratedValue
+    @Column(name = "EMAIL_ADDRESS_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "emailAddressSeq")
+    @SequenceGenerator(initialValue = 1, name = "emailAddressSeq", sequenceName = "EMAIL_ADDRESS_SEQUENCE")
     private long id;
 
-    @Column(name = "USER_NAME")
+    @Column(name = "EMAIL_ADDRESS_NAME")
     private String userName;
-    @Column(name = "USER_ADDRESS")
+    @Column(name = "EMAIL_ADDRESS_ADDRESS", nullable = false)
     private String userAddress;
 
     private Address() {

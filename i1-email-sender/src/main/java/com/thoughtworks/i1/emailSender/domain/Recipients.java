@@ -1,35 +1,49 @@
 package com.thoughtworks.i1.emailSender.domain;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-//@Entity(name = "EMAIL_RECIPIENTS")
+@Embeddable
 public class Recipients {
-    @Id
-    @GeneratedValue
-    private long id;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="EMAIL_RECIPIENTS_EMAIL_ID", insertable=false, updatable=false)
+    @Where(clause="EMAIL_RECIPIENTS_TYPE='TO'")
+    //http://chriswongdevblog.blogspot.com/2009/10/polymorphic-one-to-many-relationships.html
+    private List<EmailRecipientsTo> emailRecipientsTo;
 
-    @OneToOne(mappedBy = "recipients")
-    private Email email;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="EMAIL_RECIPIENTS_EMAIL_ID", insertable=false, updatable=false)
+    @Where(clause="EMAIL_RECIPIENTS_TYPE='CC'")
+    private List<EmailRecipientsCC> emailRecipientsCC;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Address> toAddresses;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Address> ccAddresses;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Address> bccAddresses;
+    @JoinColumn(name="EMAIL_RECIPIENTS_EMAIL_ID", insertable=false, updatable=false)
+    @Where(clause="EMAIL_RECIPIENTS_TYPE='BCC'")
+    private List<EmailRecipientsBCC> emailRecipientsBCC;
 
     private Recipients() {
     }
 
     private Recipients(List<Address> toAddresses, List<Address> ccAddresses, List<Address> bccAddresses) {
-        this.toAddresses = toAddresses;
-        this.ccAddresses = ccAddresses;
-        this.bccAddresses = bccAddresses;
+        this.emailRecipientsTo = new ArrayList<>();
+        for (Address address : toAddresses) {
+            this.emailRecipientsTo.add(new EmailRecipientsTo(address));
+        }
+        this.emailRecipientsCC = new ArrayList<>();
+        for (Address address : ccAddresses) {
+            this.emailRecipientsCC.add(new EmailRecipientsCC(address));
+        }
+        this.emailRecipientsBCC = new ArrayList<>();
+        for (Address address : bccAddresses) {
+            this.emailRecipientsBCC.add(new EmailRecipientsBCC(address));
+        }
     }
 
     public static Recipients oneRecipients(Address recipient) {
@@ -41,62 +55,56 @@ public class Recipients {
         return new Recipients(toAddress, ccList, bccList);
     }
 
-    public void addToAddress(Address... addresses) {
-        for (Address address : addresses) {
-            toAddresses.add(address);
-        }
+    public List<EmailRecipientsTo> getEmailRecipientsTo() {
+        return emailRecipientsTo;
     }
 
-    public void addCcAddress(Address... addresses) {
-        for (Address address : addresses) {
-            ccAddresses.add(address);
-        }
+    public List<EmailRecipientsCC> getEmailRecipientsCC() {
+        return emailRecipientsCC;
     }
 
-    public void addBccAddress(Address... addresses) {
-        for (Address address : addresses) {
-            bccAddresses.add(address);
-        }
-    }
-
-    public void setToAddresses(List<Address> toAddresses) {
-        this.toAddresses = toAddresses;
-    }
-
-    public void setCCAddresses(List<Address> ccAddresses) {
-        this.ccAddresses = ccAddresses;
-    }
-
-    public void setBCCAddresses(List<Address> bccAddresses) {
-        this.bccAddresses = bccAddresses;
+    public List<EmailRecipientsBCC> getEmailRecipientsBCC() {
+        return emailRecipientsBCC;
     }
 
     public List<Address> getToAddresses() {
-        return this.toAddresses;
+        List<Address> ret = new ArrayList<>();
+        for (EmailRecipients recipient : emailRecipientsTo) {
+            ret.add(recipient.getAddress());
+        }
+        return ret;
     }
 
     public List<Address> getCCAddresses() {
-        return this.ccAddresses;
+        List<Address> ret = new ArrayList<>();
+        for (EmailRecipients recipient : emailRecipientsCC) {
+            ret.add(recipient.getAddress());
+        }
+        return ret;
     }
 
     public List<Address> getBCCAddresses() {
-        return this.bccAddresses;
+        List<Address> ret = new ArrayList<>();
+        for (EmailRecipients recipient : emailRecipientsBCC) {
+            ret.add(recipient.getAddress());
+        }
+        return ret;
     }
 
     public void validate() {
-        for (Address toAddress : toAddresses) {
-            if(!toAddress.isValid()){
+        for (EmailRecipients address : emailRecipientsTo) {
+            if (!address.getAddress().isValid()) {
                 throw new IllegalArgumentException("Invalid to address");
             }
         }
 
-        for (Address ccAddress : ccAddresses) {
-            if(!ccAddress.isValid()){
+        for (EmailRecipients address : emailRecipientsCC) {
+            if (!address.getAddress().isValid()) {
                 throw new IllegalArgumentException("Invalid cc address");
             }
         }
-        for (Address bccAddress : bccAddresses) {
-            if(!bccAddress.isValid()){
+        for (EmailRecipientsBCC bccAddress : emailRecipientsBCC) {
+            if (!bccAddress.getAddress().isValid()) {
                 throw new IllegalArgumentException("Invalid bcc address");
             }
         }

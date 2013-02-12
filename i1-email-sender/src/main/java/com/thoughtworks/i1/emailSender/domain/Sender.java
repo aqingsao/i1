@@ -2,17 +2,16 @@ package com.thoughtworks.i1.emailSender.domain;
 
 import com.google.common.base.Preconditions;
 
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.annotation.Nullable;
+import javax.persistence.*;
 
 @Embeddable
 public class Sender {
-    @OneToOne
-    @JoinColumn(name="EMAIL_FROM", unique=true, nullable=false, updatable=false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "EMAIL_FROM_ADDRESS", nullable = false, updatable = false)
     private Address from;
-    @OneToOne
-    @JoinColumn(name="EMAIL_REPLY_TO", unique=true, nullable=false, updatable=false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "EMAIL_REPLY_TO_ADDRESS", nullable = true, updatable = false)
     private Address replyTo;
 
     private Sender() {

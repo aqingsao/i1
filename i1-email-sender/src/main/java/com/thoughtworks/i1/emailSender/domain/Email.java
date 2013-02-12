@@ -15,31 +15,29 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses;
 
-@Entity
+@Entity(name = "EMAIL")
 public class Email {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String TYPE_HTML_UTF_8 = "text/html; charset=UTF-8";
     @Id
-    @GeneratedValue
+    @Column(name = "EMAIL_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "emailSeq")
+    @SequenceGenerator(initialValue = 1, name = "emailSeq", sequenceName = "EMAIL_SEQUENCE")
     private long id;
 
     @Column(name = "SUBJECT")
     protected String subject;
     @Column(name = "MESSAGE")
     private String message;
-//    @Embedded
-//    @AttributeOverrides({
-//            @AttributeOverride(name="from", column=@Column(name = "EMAIL_FROM")),
-//            @AttributeOverride(name="replyTo", column=@Column(name = "EMAIL_REPLY_TO"))
-//    })
-    @Transient
+    @Embedded
     private Sender sender;
-//    @OneToOne
-//    @JoinColumn(name="EMAIL_RECIPIENT_ID", unique=true, nullable=false, updatable=false)
-    @Transient
+    @Embedded
     private Recipients recipients;
 
     private String[] attachments = new String[0];
@@ -52,8 +50,18 @@ public class Email {
 
         this.sender = sender;
         this.subject = subject;
-        this.recipients = recipients;
         this.message = message;
+        this.recipients = recipients;
+
+        for (EmailRecipientsTo recipient : this.recipients.getEmailRecipientsTo()) {
+            recipient.setEmail(this);
+        }
+        for (EmailRecipientsCC recipient : this.recipients.getEmailRecipientsCC()) {
+            recipient.setEmail(this);
+        }
+        for (EmailRecipientsBCC recipient : this.recipients.getEmailRecipientsBCC()) {
+            recipient.setEmail(this);
+        }
         this.attachments = attachments;
     }
 
@@ -108,8 +116,8 @@ public class Email {
         if (sender.getReplyTo() != null) {
             message.setReplyTo(new javax.mail.Address[]{sender.getReplyTo().toInternetAddress()});
         }
-        message.setRecipients(Message.RecipientType.TO, toInternetAddresses(recipients.getToAddresses()));
-        message.setRecipients(Message.RecipientType.CC, toInternetAddresses(recipients.getCCAddresses()));
+        message.setRecipients(Message.RecipientType.TO, toInternetAddresses(this.recipients.getToAddresses()));
+        message.setRecipients(Message.RecipientType.CC, toInternetAddresses(this.recipients.getCCAddresses()));
         message.setRecipients(Message.RecipientType.BCC, toInternetAddresses(recipients.getBCCAddresses()));
 
         return message;
@@ -134,10 +142,10 @@ public class Email {
     public void validate() {
         this.sender.validate();
         this.recipients.validate();
-        if(Strings.isNullOrEmpty(this.subject)){
+        if (Strings.isNullOrEmpty(this.subject)) {
             throw new IllegalArgumentException("Missing mail subject");
         }
-        if(Strings.isNullOrEmpty(this.message)){
+        if (Strings.isNullOrEmpty(this.message)) {
             throw new IllegalArgumentException("Missing mail body");
         }
     }
