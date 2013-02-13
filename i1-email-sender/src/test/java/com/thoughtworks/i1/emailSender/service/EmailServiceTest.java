@@ -12,22 +12,25 @@ import org.junit.Test;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class EmailServiceTest {
 
     private EmailService emailService;
     private EmailConfiguration emailConfiguration;
     private GreenMail mailServer;
+
     private EntityManager entityManager;
 
     @Before
     public void before() {
+        entityManager = mock(EntityManager.class);
+
         emailConfiguration = new EmailConfiguration(25, "localhost", true, "i1.test", "ThoughtWorks");
         emailConfiguration.setMailServerPort(ServerSetupTest.SMTP.getPort());
         emailService = new EmailService(emailConfiguration, entityManager);

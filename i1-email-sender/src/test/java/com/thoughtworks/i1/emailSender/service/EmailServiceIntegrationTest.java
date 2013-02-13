@@ -6,11 +6,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
 
+@Ignore
 public class EmailServiceIntegrationTest {
 
     private EmailService emailService;

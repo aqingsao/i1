@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import com.google.inject.persist.Transactional;
 import com.thoughtworks.i1.emailSender.commons.BusinessException;
 import com.thoughtworks.i1.emailSender.commons.SystemException;
-import com.thoughtworks.i1.emailSender.domain.*;
-import com.thoughtworks.i1.emailSender.domain.Address;
+import com.thoughtworks.i1.emailSender.domain.Email;
+import com.thoughtworks.i1.emailSender.domain.EmailRecipients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +15,6 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import java.util.Properties;
 
 @Singleton
