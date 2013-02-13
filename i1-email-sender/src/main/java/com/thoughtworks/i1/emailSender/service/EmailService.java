@@ -1,6 +1,7 @@
 package com.thoughtworks.i1.emailSender.service;
 
 import com.google.common.base.Preconditions;
+import com.google.inject.persist.Transactional;
 import com.thoughtworks.i1.emailSender.commons.BusinessException;
 import com.thoughtworks.i1.emailSender.commons.SystemException;
 import com.thoughtworks.i1.emailSender.domain.*;
@@ -28,46 +29,32 @@ public class EmailService {
     private static final String SMTP = "smtp";
 
     private EmailConfiguration configuration;
-    private EntityManagerFactory entityManager;
+    private EntityManager entityManager;
 
     @Inject
-    public EmailService(EmailConfiguration configuration, EntityManagerFactory entityManager) {
+    public EmailService(EmailConfiguration configuration, EntityManager entityManager) {
         this.configuration = configuration;
         this.entityManager = entityManager;
     }
 
-//    @Inject
-//    public EmailService(EmailConfiguration configuration, EntityManager entityManager) {
-//        this.configuration = configuration;
-//        this.entityManager = entityManager;
-//    }
-
+    @Transactional
     public void sendEmail(Email mail) {
         LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToAddresses().size()));
 
-        EntityManager entityManager1 = entityManager.createEntityManager();
-        EntityTransaction transaction = entityManager1.getTransaction();
         try {
-            transaction.begin();
-
             for (EmailRecipients emailRecipients : mail.getRecipients().getEmailRecipientsTo()) {
                 emailRecipients.setEmail(mail);
             }
             for (EmailRecipients emailRecipients : mail.getRecipients().getEmailRecipientsCC()) {
-                entityManager1.persist(emailRecipients);
+                entityManager.persist(emailRecipients);
             }
             for (EmailRecipients emailRecipients : mail.getRecipients().getEmailRecipientsBCC()) {
-                entityManager1.persist(emailRecipients);
+                entityManager.persist(emailRecipients);
             }
-            entityManager1.persist(mail);
+            entityManager.persist(mail);
 
-            transaction.commit();
             LOGGER.info("persist mail successfully");
         } catch (Exception e) {
-            try {
-                transaction.rollback();
-            } catch (Exception e2) {
-            }
             throw new SystemException("Cannot persist mail: " + e.getMessage(), e);
         }
 

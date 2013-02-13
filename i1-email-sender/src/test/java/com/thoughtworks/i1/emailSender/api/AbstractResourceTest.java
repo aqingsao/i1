@@ -41,7 +41,7 @@ public abstract class AbstractResourceTest{
         handler.addServlet(DefaultServlet.class, "/*");
 //        H2.fileDB("/Users/twer/Projects/i1/h2_i0.db");
         DatabaseConfiguration configuration = DatabaseConfiguration.database().user("sa").password("")
-                .with(H2.driver, H2.fileDB("/Users/twer/Projects/i1/email-sender"), H2.compatible("Oracle"), Hibernate.validate, Hibernate.dialect("Oracle10g"), Hibernate.showSql)
+                .with(H2.driver, H2.fileDB("/Users/twer/Projects/i1/email-sender"), H2.compatible("Oracle"), Hibernate.create, Hibernate.dialect("Oracle10g"), Hibernate.showSql)
                 .migration().auto(true).locations("migration/").end().build();
 
         handler.addEventListener(new MyGuiceServletContextListener(configuration));

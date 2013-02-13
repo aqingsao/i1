@@ -15,7 +15,7 @@ public class EmailServiceIntegrationTest {
 
     private EmailService emailService;
     private EmailConfiguration emailConfiguration;
-    private EntityManagerFactory entityManager;
+    private EntityManager entityManager;
 
     @Test
     public void should_send_email_with_163_as_smtp_server() {

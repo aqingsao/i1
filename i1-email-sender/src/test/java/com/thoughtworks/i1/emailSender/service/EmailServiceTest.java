@@ -24,7 +24,7 @@ public class EmailServiceTest {
     private EmailService emailService;
     private EmailConfiguration emailConfiguration;
     private GreenMail mailServer;
-    private EntityManagerFactory entityManager;
+    private EntityManager entityManager;
 
     @Before
     public void before() {
