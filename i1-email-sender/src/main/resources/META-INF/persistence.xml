@@ -5,6 +5,10 @@
     <persistence-unit name="domain" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>com.thoughtworks.i1.emailSender.domain.Email</class>
+        <class>com.thoughtworks.i1.emailSender.domain.Address</class>
+        <class>com.thoughtworks.i1.emailSender.domain.EmailRecipientsTo</class>
+        <class>com.thoughtworks.i1.emailSender.domain.EmailRecipientsCC</class>
+        <class>com.thoughtworks.i1.emailSender.domain.EmailRecipientsBCC</class>
 
         <properties>
             <!--<property name="hibernate.connection.url" value="jdbc:derby:memory:unit-testing-jpa"/>-->

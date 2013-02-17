@@ -11,12 +11,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import javax.servlet.DispatcherType;
 import javax.ws.rs.core.UriBuilder;
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.EnumSet;
-
-import static com.google.common.base.Throwables.propagate;
 
 public abstract class AbstractResourceTest{
     protected static Server server = createServer();
