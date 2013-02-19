@@ -15,9 +15,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses;
 
 @Entity(name = "I1_EMAIL")
