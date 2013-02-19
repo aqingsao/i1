@@ -4,6 +4,7 @@ import com.google.inject.servlet.GuiceFilter;
 import com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration;
 import com.thoughtworks.i1.emailSender.commons.H2;
 import com.thoughtworks.i1.emailSender.commons.Hibernate;
+import com.thoughtworks.i1.emailSender.commons.Migration;
 import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -35,10 +36,11 @@ public abstract class AbstractResourceTest{
         // Must add DefaultServlet for embedded Jetty, failing to do this will cause 404 errors.
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
-//        H2.fileDB("/Users/twer/Projects/i1/h2_i0.db");
         DatabaseConfiguration configuration = DatabaseConfiguration.database().user("sa").password("")
                 .with(H2.driver, H2.fileDB("/Users/twer/Projects/i1/email-sender"), H2.compatible("Oracle"), Hibernate.create, Hibernate.dialect("Oracle10g"), Hibernate.showSql)
-                .migration().auto(true).locations("migration/").end().build();
+                .build();
+
+        Migration.migrate(configuration);
 
         handler.addEventListener(new MyGuiceServletContextListener(configuration));
         return server;

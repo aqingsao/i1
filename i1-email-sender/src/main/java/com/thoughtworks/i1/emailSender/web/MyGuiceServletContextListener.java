@@ -43,10 +43,6 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
                 bind(EmailConfiguration.class);
                 bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
 
-                if(configuration.getMigration().isPresent()){
-                    Migration.migrate(configuration);
-                }
-
                 install(new JpaPersistModule("domain").properties(configuration.toProperties()));
                 filter("/*").through(PersistFilter.class);
 
