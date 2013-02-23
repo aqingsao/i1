@@ -11,6 +11,7 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import javax.servlet.DispatcherType;
+import java.io.File;
 import java.util.EnumSet;
 
 import static com.google.inject.name.Names.bindProperties;
@@ -19,18 +20,21 @@ import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 public class Main {
     public static final String CONTEXT_PATH = "/email-sender";
     public static final int PORT = 8052;
+    public static final String RESOURCE_BASE = new File(new File(Main.class.getClassLoader().getResource(".").getPath()).getParentFile(), "src/main/webapp").getAbsolutePath();
 
     protected static Server createServer() {
         Server server = new Server(PORT);
 
         ServletContextHandler handler = new ServletContextHandler(server, CONTEXT_PATH, NO_SESSIONS);
+        handler.setResourceBase(RESOURCE_BASE);
+
         handler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
 
         // Must add DefaultServlet for embedded Jetty, failing to do this will cause 404 errors.
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
         DatabaseConfiguration configuration = DatabaseConfiguration.database().user("user").password("")
-                .with(H2.driver, H2.privateMemoryDB, H2.compatible("Oracle"), Hibernate.createDrop, Hibernate.dialect("Oracle10g"), Hibernate.showSql).build();
+                .with(H2.driver, H2.tempFileDB, H2.compatible("Oracle"), Hibernate.createDrop, Hibernate.dialect("Oracle10g"), Hibernate.showSql).build();
 
         Migration.migrate(configuration);
 
