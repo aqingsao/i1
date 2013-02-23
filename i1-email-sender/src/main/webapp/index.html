@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en"><head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
     <title>I1 Email Sender</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,44 +9,8 @@
 
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-        body {
-            padding-top: 20px;
-            padding-bottom: 40px;
-        }
-
-            /* Custom container */
-        .container-narrow {
-            margin: 0 auto;
-            max-width: 920px;
-        }
-        .container-narrow > hr {
-            margin: 30px 0;
-        }
-
-            /* Main marketing message and sign up button */
-        .jumbotron {
-            margin: 60px 0;
-        }
-        .jumbotron h1 {
-            text-align: center;
-            font-size: 72px;
-            line-height: 1;
-        }
-        .jumbotron .btn {
-            font-size: 21px;
-            padding: 14px 24px;
-        }
-
-            /* Supporting marketing content */
-        .marketing {
-            margin: 60px 0;
-        }
-        .marketing p + h4 {
-            margin-top: 28px;
-        }
-    </style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -67,8 +32,8 @@
     <div class="masthead">
         <ul class="nav nav-pills pull-right">
             <li class="active"><a href="#">Home</a></li>
+            <li><a href="report.html">Report</a></li>
             <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
         </ul>
         <h3 class="muted">Email Sender</h3>
     </div>
@@ -77,16 +42,19 @@
 
     <div class="jumbotron">
         <h1>Take advantage of micro service</h1>
-        <p class="lead">Email Sender is a simply installing micro service for on purpose of sending emails. For enterprise applications, they could benefit from this service without having to develop again.</p>
-        <p class="lead">Email Sender is a I1 projects, there are some others that will be available soon...</p>
-        <p class="lead">
+
+        <p class="lead">Email Sender is a simply installing micro service on purpose of sending emails. Enterprise
+            applications could benefit from it by not having to develop this feature again.</p>
+
+        <p class="lead">Email Sender is an <a href="#https://github.com/aqingsao/i1">I1 projects</a>, several other
+            micro services will be available soon...</p>
+
         <ul>
             <li>SMS Sender</li>
             <li>User Management</li>
             <li>File Management</li>
         </ul>
-        </p>
-        <a class="btn btn-large btn-success" href="#">View Project on GitHub</a>
+        <a class="btn btn-large btn-success align-center" href="report.html">View Report</a>
     </div>
 
     <hr>
@@ -94,23 +62,29 @@
     <div class="row-fluid marketing">
         <div class="span6">
             <h4>Asynchronous sending</h4>
+
             <p>Asyncrhonous sending when there are large number of emails</p>
 
             <h4>RESTful API</h4>
+
             <p>Providing RESTful API for simple usage</p>
 
             <h4>Resend on failure</h4>
+
             <p>Could report failure reason and ability to resend on failure</p>
         </div>
 
         <div class="span6">
             <h4>Email Template</h4>
+
             <p>Supporting email template</p>
 
             <h4>Monitor</h4>
+
             <p>Monitoring realtime sending process</p>
 
             <h4>Report</h4>
+
             <p>Reporting how many emails have been sent, and how many is successful</p>
         </div>
     </div>
@@ -121,7 +95,8 @@
         <p>©ThoughtWorks 2013</p>
     </div>
 
-</div> <!-- /container -->
+</div>
+<!-- /container -->
 
 <!-- Le javascript
 ================================================== -->
@@ -129,5 +104,5 @@
 <script src="js/jquery.js"></script>
 
 
-
-</body></html>
+</body>
+</html>
