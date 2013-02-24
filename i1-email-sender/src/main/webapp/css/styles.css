@@ -6,7 +6,7 @@ body {
 /* Custom container */
 .container-narrow {
     margin: 0 auto;
-    max-width: 920px;
+    max-width: 1024px;
 }
 
 .container-narrow > hr {
@@ -39,4 +39,14 @@ body {
 
 .marketing p + h4 {
     margin-top: 28px;
+}
+
+.emails .sender{
+    width: 100px;
+}
+.emails .subject{
+    width: 100px;
+}
+.emails .message{
+    width: 150px;
 }
