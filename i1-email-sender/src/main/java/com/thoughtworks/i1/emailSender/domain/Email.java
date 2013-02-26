@@ -17,7 +17,8 @@ import javax.persistence.*;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses;
 
-@Entity(name = "I1_EMAIL")
+@Entity
+@Table(name = "I1_EMAIL")
 public class Email {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmailService.class);

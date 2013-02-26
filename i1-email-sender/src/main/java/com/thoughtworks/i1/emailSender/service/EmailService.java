@@ -15,9 +15,9 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Properties;
 
-@Singleton
 public class EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
@@ -107,5 +107,9 @@ public class EmailService {
 
     public void setConfiguration(EmailConfiguration configuration) {
         this.configuration = configuration;
+    }
+
+    public List<Email> findEmails() {
+        return this.entityManager.createQuery("select e from Email e").getResultList();
     }
 }

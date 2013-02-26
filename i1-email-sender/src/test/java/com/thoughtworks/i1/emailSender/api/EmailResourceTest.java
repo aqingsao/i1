@@ -2,6 +2,7 @@ package com.thoughtworks.i1.emailSender.api;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.domain.SendingEmailError;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.List;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static org.hamcrest.core.Is.is;
@@ -26,7 +28,6 @@ public class EmailResourceTest extends AbstractResourceTest {
     @AfterClass
     public static void afterClass() throws Exception {
         server.stop();
-        server.join();
     }
 
     @Test
@@ -81,5 +82,36 @@ public class EmailResourceTest extends AbstractResourceTest {
         assertThat(response.getClientResponseStatus(), is(ClientResponse.Status.NOT_ACCEPTABLE));
         SendingEmailError entity = response.getEntity(SendingEmailError.class);
         assertThat(entity.getMessage(), is("Missing mail body"));
+    }
+
+    @Test
+    public void test_should_return_empty_emails_when_no_mails_are_sent() {
+        removeAll(Email.class);
+
+        ClientResponse clientResponse = Client.create().resource(uri("/api/email")).get(ClientResponse.class);
+
+        assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
+        List<Email> emails = clientResponse.getEntity(List.class);
+        assertThat(emails.isEmpty(), is(true));
+    }
+
+    @Test
+    public void test_should_return_1_email_when_only_1_mail_is_sent() {
+        removeAll(Email.class);
+
+        Email email = Email.anEmail(anAddress("a@b.com"), "subject", "", anAddress("b@c.com"));
+        persist(email);
+
+        ClientResponse clientResponse = Client.create().resource(uri("/api/email")).get(ClientResponse.class);
+
+        assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
+        List<Email> emails = clientResponse.getEntity(new GenericType<List<Email>>(){
+        });
+        assertThat(emails.size(), is(1));
+        Email actual = emails.get(0);
+        assertThat(actual.getSender().getFrom().getUserAddress(), is("a@b.com"));
+        assertThat(actual.getSubject(), is(email.getSubject()));
+        assertThat(actual.getRecipients().getToAddresses().get(0).getUserAddress(), is("b@c.com"));
+        assertThat(actual.getMessage(), is(""));
     }
 }
