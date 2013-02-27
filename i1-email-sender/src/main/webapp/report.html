@@ -25,7 +25,7 @@
     <link rel="shortcut icon" href="ico/favicon.png">
 </head>
 
-<body>
+<body ng-app>
 
 <div class="container-narrow">
     <div class="masthead">
@@ -39,7 +39,7 @@
 
     <hr>
 
-    <div>
+    <div ng-controller="EmailsCtrl">
         <h2>Emails Sent Today</h2>
         <table class="table table-striped table-bordered table-hover emails">
             <thead>
@@ -53,49 +53,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="error">
-                <td>admin(&lt;admin@i1.com&gt;)</td>
-                <td>Test email</td>
-                <td>This is a sample message</td>
-                <td>xqzhang@thoughtworks.com</td>
-                <td>05:51:02 24/02</td>
-                <td><a class="btn btn-primary">View Detail</a></td>
-            </tr>
-            <tr class="warning">
-                <td>admin(&lt;admin@i1.com&gt;)</td>
-                <td>Another test email</td>
-                <td>This is a sample message</td>
-                <td>a@b.com</td>
-                <td>15:51:02 23/02</td>
-                <td><a class="btn btn-primary">View Detail</a></td>
-            </tr>
-            <tr class="success">
-                <td>admin(&lt;admin@i1.com&gt;)</td>
-                <td>Untitled</td>
-                <td>This is a sample message</td>
-                <td>a@b.com</td>
-                <td>05:51:02 24/02</td>
-                <td><a class="btn btn-primary">View Detail</a></td>
-            </tr>
-            <tr class="success">
-                <td>admin(&lt;admin@i1.com&gt;)</td>
-                <td>Updates on I1 project</td>
-                <td>This is a sample message</td>
-                <td>a@b.com</td>
-                <td>05:51:02 24/02</td>
-                <td><a class="btn btn-primary">View Detail</a></td>
-            </tr>
-            <tr class="success">
-                <td>admin(&lt;admin@i1.com&gt;)</td>
-                <td>Newsletter from I1 project</td>
-                <td>This is a sample message</td>
-                <td>a@b.com</td>
-                <td>05:51:02 24/02</td>
+            <tr class="{{email.result}}" ng-repeat='email in emails'>
+                <td>{{email.sender}}</td>
+                <td>{{email.subject}}</td>
+                <td>{{email.message}}</td>
+                <td>{{email.recipients}}</td>
+                <td>{{email.time}}</td>
                 <td><a class="btn btn-primary">View Detail</a></td>
             </tr>
             </tbody>
         </table>
-        <div><a href="#">View more...</a></div>
+        <div><a href="#">View this week...</a></div>
     </div>
 
     <hr>
@@ -110,7 +78,9 @@
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="js/jquery.js"></script>
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/email.js"></script>
 
 
 </body>
