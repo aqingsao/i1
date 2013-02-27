@@ -3,6 +3,8 @@ function EmailsCtrl($scope) {
     $scope.addEmail = function(email){
         console.log("add email");
         $scope.emails.push(email);
+
+        $scope.emails.sort(function(a, b){return b.time - a.time});
     };
     $.get("api/email", function(emails){
         for(var i in emails){
