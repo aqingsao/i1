@@ -5,22 +5,29 @@ import com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration;
 import com.thoughtworks.i1.emailSender.commons.H2;
 import com.thoughtworks.i1.emailSender.commons.Hibernate;
 import com.thoughtworks.i1.emailSender.commons.Migration;
+import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import javax.servlet.DispatcherType;
 import java.io.File;
 import java.util.EnumSet;
 
 import static com.google.inject.name.Names.bindProperties;
+import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
 public class Main {
     public static final String CONTEXT_PATH = "/email-sender";
     public static final int PORT = 8052;
     public static final String RESOURCE_BASE = new File(new File(Main.class.getClassLoader().getResource(".").getPath()).getParentFile(), "src/main/webapp").getAbsolutePath();
+    private static EntityManager entityManager;
 
     protected static Server createServer() {
         Server server = new Server(PORT);
@@ -35,16 +42,30 @@ public class Main {
         handler.addServlet(DefaultServlet.class, "/*");
         DatabaseConfiguration configuration = DatabaseConfiguration.database().user("user").password("")
                 .with(H2.driver, H2.tempFileDB, H2.compatible("Oracle"), Hibernate.createDrop, Hibernate.dialect("Oracle10g"), Hibernate.showSql).build();
-
         Migration.migrate(configuration);
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("domain", configuration.toProperties());
+        entityManager = entityManagerFactory.createEntityManager();
 
         handler.addEventListener(new MyGuiceServletContextListener(configuration));
 
         return server;
     }
 
+    private static void prepareData() {
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.persist(Email.anEmail(anAddress("admin@i1.com"), "subject", "", anAddress("i1_test@qq.com")).setStatus("SENDING"));
+        entityManager.persist(Email.anEmail(anAddress("admin@thoughtworks.com"), "subject", "", anAddress("i1_test@163.com")).setStatus("SUCCESS"));
+        entityManager.persist(Email.anEmail(anAddress("i1_test@163.com"), "subject", "", anAddress("i1_test@qq.com")).setStatus("ERROR"));
+
+        transaction.commit();
+    }
+
     public static void main(String[] args) throws Exception {
         createServer().start();
+
+        prepareData();
+
         System.in.read();
     }
 }

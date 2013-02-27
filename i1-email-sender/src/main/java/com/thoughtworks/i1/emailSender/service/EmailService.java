@@ -15,6 +15,7 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -35,11 +36,12 @@ public class EmailService {
         this.entityManager = entityManager;
     }
 
-    @Transactional
+    @Transactional(ignore = {RuntimeException.class})
     public void sendEmail(Email mail) {
         LOGGER.info(String.format("Send email %s to %d recipients.", mail.getSubject(), mail.getRecipients().getToAddresses().size()));
 
         try {
+            mail.setStatus("SENDING");
             for (EmailRecipients emailRecipients : mail.getRecipients().getEmailRecipientsTo()) {
                 emailRecipients.setEmail(mail);
             }
@@ -70,10 +72,19 @@ public class EmailService {
             } finally {
                 transport.close();
             }
+            mail.setStatus("SUCCESS");
+            mail.setUpdatedAt(new Date());
+            entityManager.persist(mail);
             LOGGER.debug(String.format("Finished to send email."));
         } catch (AuthenticationFailedException | AddressException e) {
+            mail.setStatus("ERROR");
+            mail.setUpdatedAt(new Date());
+            entityManager.persist(mail);
             throw new BusinessException(e.getMessage(), e);
         } catch (MessagingException e) {
+            mail.setStatus("ERROR");
+            mail.setUpdatedAt(new Date());
+            entityManager.persist(mail);
             throw new SystemException(e.getMessage(), e);
         }
     }

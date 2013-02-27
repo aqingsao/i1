@@ -13,7 +13,8 @@ import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity(name = "I1_EMAIL_ADDRESS")
-@Table(name = "i1_EMAIL_ADDRESS", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL_ADDRESS_NAME", "EMAIL_ADDRESS_ADDRESS"}))
+@Table(name = "i1_EMAIL_ADDRESS")
+//@Table(name = "i1_EMAIL_ADDRESS", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL_ADDRESS_NAME", "EMAIL_ADDRESS_ADDRESS"}))
 public class Address {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
     @Id

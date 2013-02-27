@@ -15,6 +15,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.persistence.*;
 
+import java.util.Date;
+
 import static com.thoughtworks.i1.emailSender.domain.Address.toInternetAddresses;
 
 @Entity
@@ -37,8 +39,15 @@ public class Email {
     private Sender sender;
     @Embedded
     private Recipients recipients;
+    @Column(name = "STATUS")
+    private String status = "SENDING";
 
     private String[] attachments = new String[0];
+
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
+    @Column(name = "UPDATED_AT")
+    private Date updatedAt;
 
     private Email(Sender sender, String subject, String message, Recipients recipients, String... attachments) {
         Preconditions.checkNotNull(sender, "Missing sender");
@@ -61,6 +70,8 @@ public class Email {
             recipient.setEmail(this);
         }
         this.attachments = attachments;
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 
     private Email() {
@@ -146,5 +157,30 @@ public class Email {
         if (Strings.isNullOrEmpty(this.message)) {
             throw new IllegalArgumentException("Missing mail body");
         }
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Email setStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date date) {
+        this.createdAt = date;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
