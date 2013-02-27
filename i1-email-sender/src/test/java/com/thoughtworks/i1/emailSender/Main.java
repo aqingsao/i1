@@ -54,9 +54,9 @@ public class Main {
     private static void prepareData() {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-        entityManager.persist(Email.anEmail(anAddress("admin@i1.com"), "subject", "", anAddress("i1_test@qq.com")).setStatus("SENDING"));
-        entityManager.persist(Email.anEmail(anAddress("admin@thoughtworks.com"), "subject", "", anAddress("i1_test@163.com")).setStatus("SUCCESS"));
-        entityManager.persist(Email.anEmail(anAddress("i1_test@163.com"), "subject", "", anAddress("i1_test@qq.com")).setStatus("ERROR"));
+        entityManager.persist(Email.anEmail(anAddress("admin@i1.com"), "subject", "This is a sample message", anAddress("i1_test@qq.com")).setStatus("SENDING"));
+        entityManager.persist(Email.anEmail(anAddress("admin@thoughtworks.com"), "subject", "Import message from ThoughtWorks admin", anAddress("i1_test@163.com")).setStatus("SUCCESS"));
+        entityManager.persist(Email.anEmail(anAddress("i1_test@163.com"), "subject", "just a test", anAddress("i1_test@qq.com")).setStatus("ERROR"));
 
         transaction.commit();
     }
