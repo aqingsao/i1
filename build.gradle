@@ -23,11 +23,21 @@ subprojects {
     dependencies {
         compile 'javax.servlet:javax.servlet-api:3.0.1'
 
+        // Use guice as IOC framework
+        guiceVersion="3.0"
+        compile "com.google.inject.extensions:guice-persist:$guiceVersion"
+        compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
+        compile "com.google.inject:guice:$guiceVersion"
+
+        // Use flyway as db migration tool
+        flywayVersion = '2.0.2'
+        compile "com.googlecode.flyway:flyway-core:$flywayVersion"
+
+        // Use guava and guice servlet
         def guavaVersion = '13.0.1'
         compile "com.google.guava:guava:$guavaVersion"
-        compile "com.google.inject.extensions:guice-servlet:3.0"
-        compile "com.google.inject:guice:3.0'"
 
+        // Use jersey as RESTful framework
         def jerseyVersion = '1.16'
         compile "com.sun.jersey:jersey-core:$jerseyVersion"
         compile "com.sun.jersey:jersey-server:$jerseyVersion"
@@ -35,19 +45,26 @@ subprojects {
         compile "com.sun.jersey:jersey-json:$jerseyVersion"
         compile "com.sun.jersey.contribs:jersey-guice:$jerseyVersion"
 
+        // Use slf4j as log framework
         def slf4jVersion = '1.7.2'
         compile "org.slf4j:slf4j-api:$slf4jVersion"
         compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
 
+        // Use fastXML as json serializer and deserializer
         def jacksonVersion = '2.1.2'
         compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
         compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
         compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
 
+        // Use javax validation: JSR303
         compile 'javax.validation:validation-api:1.0.0.GA'
+        // Use javax persistence: JSR317
+        compile 'javax.persistence:persistence-api:1.0.2'
+        // Use JSR305
         compile 'com.google.code.findbugs:jsr305:2.0.1'
 
+        // Use JUnit/Mockito/Hamcrest as test and mock framework
         def junitVersion = '4.10'
         def mockitoVersion = '1.9.5-rc1'
         def hamCrestVersion = '1.1'
@@ -56,6 +73,8 @@ subprojects {
         testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
         testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
         testCompile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
+        // Use Jersey client as API test tool
+        testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
     }
 
     idea {
