@@ -8,6 +8,7 @@ target/
 *.ipr
 *.iws
 *.db
+out
 **/out/*
 **/build/*
 build/

@@ -47,7 +47,7 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
                 filter("/*").through(PersistFilter.class);
 
                 serve("/api/*").with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
-                        .put(PROPERTY_PACKAGES, "com.thoughtworks.i1.emailSender.api").put(FEATURE_POJO_MAPPING, "true").build());
+                        .put(PROPERTY_PACKAGES, "com.thoughtworks.i1").put(FEATURE_POJO_MAPPING, "true").build());
             }
         });
     }

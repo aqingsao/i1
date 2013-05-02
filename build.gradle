@@ -77,11 +77,12 @@ subprojects {
         compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
         compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
 
-        compile 'javax.servlet:javax.servlet-api:3.0.1'
+        compile "javax:javaee-api:6.0"
+//        compile 'javax.servlet:javax.servlet-api:3.0.1'
         // Use javax validation: JSR303
-        compile 'javax.validation:validation-api:1.0.0.GA'
+//        compile 'javax.validation:validation-api:1.0.0.GA'
         // Use javax persistence: JSR317
-        compile 'javax.persistence:persistence-api:1.0.2'
+//        compile 'javax.persistence:persistence-api:1.0.2'
         // Use JSR305
         compile 'com.google.code.findbugs:jsr305:2.0.1'
 
