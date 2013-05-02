@@ -1,0 +1,9 @@
+dependencies{
+    compile "junit:junit:$junitVersion"
+    compile "org.mockito:mockito-all:$mockitoVersion"
+    compile "org.hamcrest:hamcrest-all:$hamCrestVersion"
+
+    // Use Jersey client as API test tool
+    compile "com.sun.jersey:jersey-client:$jerseyVersion"
+    compile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
+}
