@@ -1,1 +1,1 @@
-include 'i1-email-sender', 'i1-file-uploader'
+include 'i1-email-sender', 'i1-file-uploader', 'i1-quartz-monitor'
