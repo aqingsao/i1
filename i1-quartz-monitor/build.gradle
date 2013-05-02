@@ -1,0 +1,77 @@
+apply plugin: 'war'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'jetty'
+
+repositories {
+    mavenLocal();
+    mavenCentral();
+    mavenRepo url: "https://code.lds.org/nexus/content/groups/main-repo";
+    mavenRepo url: "http://download.java.net/maven/2", artifactUrls: ["http://maven.springframework.org/milestone", "https://repository.jboss.org/nexus/content/groups/public/", "http://mvnrepository.com/artifact"]
+}
+
+sourceCompatibility = '1.7'
+sourceSets {
+    main {
+        resources {
+            srcDirs += 'src/main/webapp'
+        }
+    }
+}
+
+dependencies{
+    compile 'javax.servlet:javax.servlet-api:3.0.1'
+
+    def guavaVersion = '13.0.1'
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "com.google.inject.extensions:guice-servlet:3.0"
+    compile "com.google.inject:guice:3.0'"
+
+    def jerseyVersion = '1.16'
+    compile "com.sun.jersey:jersey-core:$jerseyVersion"
+    compile "com.sun.jersey:jersey-server:$jerseyVersion"
+    compile "com.sun.jersey:jersey-servlet:$jerseyVersion"
+    compile "com.sun.jersey:jersey-json:$jerseyVersion"
+    compile "com.sun.jersey.contribs:jersey-guice:$jerseyVersion"
+    compile "org.eclipse.jetty:jetty-servlet:9.0.0.M3"
+
+    def slf4jVersion = '1.7.2'
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
+    def jacksonVersion = '2.1.2'
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
+
+    compile 'javax.validation:validation-api:1.0.0.GA'
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+
+    def flywayVersion = '2.0.2'
+    def guiceVersion="3.0"
+    compile "com.google.inject.extensions:guice-persist:$guiceVersion"
+    compile "com.googlecode.flyway:flyway-core:$flywayVersion"
+
+    compile 'javax.mail:mail:1.4.5'
+    compile 'javax.persistence:persistence-api:1.0.2'
+    compile 'com.h2database:h2:1.3.170'
+
+    compile "javax:javaee-api:6.0"
+
+    def quartzVersion = "2.1.7"
+    compile "org.quartz-scheduler:quartz:$quartzVersion"
+    compile "org.quartz-scheduler:quartz-oracle:$quartzVersion"
+
+    def junitVersion = '4.10'
+    testCompile "junit:junit:$junitVersion"
+    testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
+
+//    def ojdbc6Version = '11.2.0.1.0'
+//    testCompile "com.oracle:ojdbc6:$ojdbc6Version"
+}
+
+httpPort = 8051
+war {
+    baseName = "schedule"
+}
