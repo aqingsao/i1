@@ -19,6 +19,14 @@ subprojects {
     }
 
     sourceCompatibility = '1.7'
+    // Since it's a war project, we add src/main/webapp as a resource folder
+    sourceSets {
+        main {
+            resources {
+                srcDirs += 'src/main/webapp'
+            }
+        }
+    }
 
     dependencies {
         compile 'javax.servlet:javax.servlet-api:3.0.1'
@@ -66,15 +74,14 @@ subprojects {
 
         // Use JUnit/Mockito/Hamcrest as test and mock framework
         def junitVersion = '4.10'
-        def mockitoVersion = '1.9.5-rc1'
-        def hamCrestVersion = '1.1'
         testCompile "junit:junit:$junitVersion"
+        def mockitoVersion = '1.9.5-rc1'
         testCompile "org.mockito:mockito-all:$mockitoVersion"
+        def hamCrestVersion = '1.1'
         testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
-        testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
-        testCompile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
         // Use Jersey client as API test tool
         testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
+        testCompile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
     }
 
     idea {
@@ -93,4 +100,7 @@ subprojects {
             }
         }
     }
+
+    // In default we use port 8051 when we run webapp with "gradle clean jettyRun"
+    httpPort = 8051
 }

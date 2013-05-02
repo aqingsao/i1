@@ -13,3 +13,7 @@ dependencies {
     def greenmailVersion = '1.3.1b'
     testCompile "com.icegreen:greenmail:$greenmailVersion"
 }
+
+war {
+    baseName = "emails"
+}
