@@ -1,9 +1,8 @@
 package com.thoughtworks.i1.quartz.service;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
-import org.junit.Test;
+import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
@@ -18,15 +17,27 @@ public class JobsServiceTest {
         Injector injector = Guice.createInjector(new QuartzModule());
         JobsService jobsService = injector.getInstance(JobsService.class);
         try{
-            JobDetail jobDetail = newJob(JobForTest.class)
+            Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName("com.thoughtworks.i1.quartz.jobs.JobForTest");
+            JobDetail jobDetail = newJob(jobClass)
                     .withIdentity("jobName", "jobGroupName")
                     .usingJobData("url", "test-url")
+                    .storeDurably(true)
                     .build();
+            jobsService.addJob(jobDetail);
+
             Trigger trigger = newTrigger()
                     .withIdentity("triggerName", "triggerGroupName")
                     .withSchedule(cronSchedule("0/5 * * * * ? "))
+                    .forJob(jobDetail)
                     .build();
-            jobsService.scheduleJob(jobDetail, trigger);
+            jobsService.scheduleJob(trigger);
+
+            Trigger trigger2 = newTrigger()
+                    .withIdentity("triggerName2", "triggerGroupName")
+                    .withSchedule(cronSchedule("0/3 * * * * ? "))
+                    .forJob(jobDetail)
+                    .build();
+            jobsService.scheduleJob(trigger2);
 
             sleep(20000);
             jobsService.shutdown();

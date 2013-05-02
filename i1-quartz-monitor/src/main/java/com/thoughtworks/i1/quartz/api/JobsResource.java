@@ -1,6 +1,7 @@
 package com.thoughtworks.i1.quartz.api;
 
 import com.thoughtworks.i1.quartz.domain.JobVO;
+import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.service.JobsService;
 import org.quartz.Trigger;
 import org.slf4j.Logger;
@@ -11,7 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("jobs")
+@Path("quartz-jobs")
 public class JobsResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobsResource.class);
     private JobsService jobsService;
@@ -23,18 +24,17 @@ public class JobsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("items")
     public List getServers() {
         return jobsService.findAllJobs();
     }
 
     @POST
-    @Path("schedule-json")
+    @Path("item")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void saveSchedule(JobVO jobVo) {
+    public void saveSchedule(QuartzVO quartzVO) {
         try{
-            for(Trigger trigger : jobVo.getTriggers()){
-                jobsService.scheduleJob(jobVo.getJobDetail(), trigger);
-            }
+           jobsService.saveJob(quartzVO);
         } catch (Exception e){
             LOGGER.error("save job failed!");
         }

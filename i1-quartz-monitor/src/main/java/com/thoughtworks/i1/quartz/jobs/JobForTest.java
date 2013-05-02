@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.quartz.service;
+package com.thoughtworks.i1.quartz.jobs;
 
 import org.quartz.*;
 

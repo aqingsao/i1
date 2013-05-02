@@ -14,6 +14,11 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.*;
 
+import static java.lang.Thread.sleep;
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
+
 public class JobsService {
     private final Scheduler scheduler;
     private static final Logger LOGGER = LoggerFactory.getLogger(JobsService.class);
@@ -34,6 +39,14 @@ public class JobsService {
         return scheduler.scheduleJob(jobDetail, trigger);
     }
 
+    public Date scheduleJob(Trigger trigger) throws SchedulerException {
+        return scheduler.scheduleJob(trigger);
+    }
+
+    public void addJob(JobDetail jobDetail) throws SchedulerException {
+        scheduler.addJob(jobDetail, false);
+    }
+
     public void shutdown() {
         try {
             LOGGER.info("Shutting down scheduler...");
@@ -48,10 +61,10 @@ public class JobsService {
         List<JobVO> jobVOs = getJobVOs();
         List<QuartzVO> quartzVOs = Lists.newArrayList();
 
-        for(JobVO jobVO : jobVOs){
+        for (JobVO jobVO : jobVOs) {
             QuartzVO quartzVO = getQuartzVOFromJob(jobVO.getJobDetail());
 
-            List<TriggerVO>  triggerVOs = getTriggerVOFromJob(jobVO);
+            List<TriggerVO> triggerVOs = getTriggerVOFromJob(jobVO.getTriggers());
             quartzVO.setTriggers(triggerVOs);
 
             quartzVOs.add(quartzVO);
@@ -60,11 +73,49 @@ public class JobsService {
         return quartzVOs;
     }
 
-    private List<TriggerVO> getTriggerVOFromJob(JobVO jobVO) {
+    public void saveJob(QuartzVO quartzVO) {
+        try {
+            Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(quartzVO.getJobClass());
+            JobBuilder jobBuilder = newJob(jobClass)
+                    .withIdentity(quartzVO.getJobName(), quartzVO.getJobGroupName())
+                    .withDescription(quartzVO.getDescription())
+                    .storeDurably(true);
+            Map<String, String> jobData = quartzVO.getJobData();
+            for (String key : jobData.keySet()) {
+                String value = jobData.get(key);
+                jobBuilder.usingJobData(key, value);
+            }
+            JobDetail jobDetail = jobBuilder.build();
+            this.addJob(jobDetail);
+
+            List<TriggerVO> triggerVOs = quartzVO.getTriggers();
+            for(TriggerVO triggerVO : triggerVOs){
+                TriggerBuilder<Trigger> triggerBuilder = newTrigger()
+                        .withIdentity(triggerVO.getTriggerName(), triggerVO.getTriggerGroupName())
+                        .startAt(triggerVO.getStartTime())
+                        .endAt(triggerVO.getEndTime())
+                        .forJob(jobDetail)
+                       ;
+                triggerBuilder.withSchedule(
+                        SimpleScheduleBuilder
+                                .simpleSchedule()
+                                .withRepeatCount(triggerVO.getRepeatCount())
+                                .withIntervalInMilliseconds(triggerVO.getRepeatInterval())
+                );
+                Trigger trigger = triggerBuilder.build();
+
+                scheduleJob(trigger);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) {
         List<TriggerVO> triggerVOs = Lists.newArrayList();
-        List<? extends Trigger> triggers = jobVO.getTriggers();
-        for(Trigger trigger : triggers){
-            TriggerVO triggerVO  = new TriggerVO();
+        for (Trigger trigger : triggers) {
+            TriggerVO triggerVO = new TriggerVO();
             triggerVO.setTriggerName(trigger.getKey().getName());
             triggerVO.setTriggerGroupName(trigger.getKey().getGroup());
             triggerVO.setStartTime(trigger.getStartTime());
@@ -81,7 +132,7 @@ public class JobsService {
         quartzVO.setJobClass(jobDetail.getJobClass().getName());
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
         Map<String, String> jobData = Maps.newHashMap();
-        for(String key : jobDataMap.getKeys()){
+        for (String key : jobDataMap.getKeys()) {
             jobData.put(key, jobDataMap.get(key).toString());
         }
         quartzVO.setJobData(jobData);
