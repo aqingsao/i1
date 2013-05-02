@@ -1,5 +1,6 @@
 dependencies {
-    def apache = ["commons-fileupload:commons-fileupload:1.2.2"]
+    compile "commons-fileupload:commons-fileupload:1.2.2"
+
     def javax = files("src/main/webapp/WEB-INF/lib/javax.annotation.jar",
             "src/main/webapp/WEB-INF/libs/javax.ejb.jar",
             "src/main/webapp/WEB-INF/libs/javax.inject.jar",
@@ -10,9 +11,7 @@ dependencies {
             "src/main/webapp/WEB-INF/libs/javax.servlet.jsp.jar",
             "src/main/webapp/WEB-INF/libs/javax.servlet.jsp.jstl.jar",
             "src/main/webapp/WEB-INF/libs/javax.transaction.jar");
-
-    def javaee6 = ["javax:javaee-api:6.0"]
-    compile apache, javaee6, javax
+    compile javax
 }
 
 war {

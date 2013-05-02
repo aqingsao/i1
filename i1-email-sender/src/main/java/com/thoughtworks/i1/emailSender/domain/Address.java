@@ -2,13 +2,12 @@ package com.thoughtworks.i1.emailSender.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.mail.internet.InternetAddress;
 import javax.persistence.*;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -79,13 +78,14 @@ public class Address {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        final Address other = (Address)o;
 
-        return EqualsBuilder.reflectionEquals(this, o);
+        return Objects.equals(this.id, other.id) && Objects.equals(this.userName, other.userName) && Objects.equals(this.userAddress, other.userAddress);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return Objects.hash(this.id, this.userName, this.userAddress);
     }
 
     public boolean isValid() {
