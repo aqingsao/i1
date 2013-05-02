@@ -56,29 +56,29 @@
                                 class="icon-chevron-right"></i>quartz
                             jobDetail</a>
                     </li>
-                    <li class="">
-                        <a href="#trigger" ng-click="changeContent();triggerShow=true"><i
-                                class="icon-chevron-right"></i>quartz
-                            trigger</a>
-                    </li>
+
                     <li>
                         <a href="#listener" ng-click="changeContent();listenerShow=true"><i
                                 class="icon-chevron-right"></i>quartz
                             Listener</a>
                     </li>
-                    <li>
-                        <a href="#cronpress" ng-click="changeContent();cronpressShow=true"><i
-                                class="icon-chevron-right"></i>cronpress验证</a>
-                    </li>
+
                 </ul>
             </div>
             <div class="span9">
                 <!--Body content-->
                 <section>
+                    <!--server-->
                     <div id="server" ng-show="serverShow">
-                        <!--<div class="gridserverStyle" ng-grid="gridServerData"></div>-->
+                        <table class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <td>server IP</td>
+                                <td>状态</td>
+                            </tr>
+                        </table>
                     </div>
 
+                    <!--添加job-->
                     <div id="jobDetail" ng-show="jobDetailShow">
                         <table class="table table-striped table-bordered table-hover">
                             <tr>
@@ -103,7 +103,8 @@
                             </tr>
                             <tr>
                                 <td colspan="3">
-                                    <button class="btn btn-large btn-primary" ng-click="saveSchedule()" type="button">保存</button>
+                                    <button class="btn btn-large btn-primary" ng-click="savequartz()" type="button">保存
+                                    </button>
                                 </td>
                                 <td></td>
                             </tr>
@@ -164,23 +165,9 @@
                         -->
                         <!--<div class="gridJobDetailStyle" ng-grid="gridJobDetailData"></div>-->
                     </div>
-
-                    <div id="trigger" ng-show="triggerShow">
-                        <div class="gridTriggerStyle" ng-grid="gridTriggerData"></div>
-                    </div>
+                     <!--监听-->
                     <div id="listener" ng-show="listenerShow">
                         <!--<div class="gridListenerStyle" ng-grid="gridListenerData"></div>-->
-                    </div>
-                    <div id="cronpress" ng-show="cronpressShow">
-                        <input id="cronpressValue" placeholder="请输入默认值" type="text">
-                        <table class="table table-striped table-bordered table-hover">
-                            <tr>
-                                <td>12:12:00</td>
-                            </tr>
-                            <tr>
-                                <td>12:12:00</td>
-                            </tr>
-                        </table>
                     </div>
                 </section>
 
