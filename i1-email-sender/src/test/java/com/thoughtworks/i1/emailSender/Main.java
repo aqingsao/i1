@@ -1,10 +1,10 @@
 package com.thoughtworks.i1.emailSender;
 
 import com.google.inject.servlet.GuiceFilter;
-import com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration;
-import com.thoughtworks.i1.emailSender.commons.H2;
-import com.thoughtworks.i1.emailSender.commons.Hibernate;
-import com.thoughtworks.i1.emailSender.commons.Migration;
+import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
+import com.thoughtworks.i1.commons.config.H2;
+import com.thoughtworks.i1.commons.config.Hibernate;
+import com.thoughtworks.i1.commons.db.Migration;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
 import org.eclipse.jetty.server.Server;

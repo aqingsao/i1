@@ -17,7 +17,7 @@ import static com.thoughtworks.i1.commons.config.Configuration.config;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class EmbeddedTest {
+public class EmbeddedJettyTest {
     public static final int PORT = 8051;
     private Embedded server;
 

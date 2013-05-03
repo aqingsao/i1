@@ -1,6 +1,8 @@
-package com.thoughtworks.i1.emailSender.commons;
+package com.thoughtworks.i1.commons.config;
 
-import static com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration.DatabaseConfigurationBuilder.*;
+import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
+
+import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.DatabaseConfigurationBuilder.Setting;
 
 public class Hibernate {
     public static Setting dialect(final String name) {

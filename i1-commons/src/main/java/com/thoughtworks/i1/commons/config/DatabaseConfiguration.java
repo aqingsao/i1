@@ -1,20 +1,22 @@
-package com.thoughtworks.i1.emailSender.commons;
+package com.thoughtworks.i1.commons.config;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.thoughtworks.i1.commons.config.builder.Builder;
+import com.thoughtworks.i1.commons.config.builder.OptionalBuilder;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.collect.Iterables.toArray;
 
+@XmlType
 public class DatabaseConfiguration {
     public static DatabaseConfigurationBuilder database() {
         return new DatabaseConfigurationBuilder();
@@ -40,7 +42,7 @@ public class DatabaseConfiguration {
         this.url = url;
         this.password = password;
         this.user = user;
-        this.properties = properties == null ? ImmutableMap.<String, String>of() : properties;
+        this.properties = properties;
         this.migration = migration;
     }
 
@@ -77,11 +79,15 @@ public class DatabaseConfiguration {
     public Properties toProperties() {
         Properties properties = new Properties();
 
-        properties.put("javax.persistence.jdbc.driver", driver);
-        properties.put("javax.persistence.jdbc.url", url);
-        properties.put("javax.persistence.jdbc.user", user);
-        properties.put("javax.persistence.jdbc.password", password);
-        properties.putAll(this.properties);
+        if (driver != null) properties.put("javax.persistence.jdbc.driver", driver);
+        if (url != null) properties.put("javax.persistence.jdbc.url", url);
+        if (password != null && user != null) {
+            properties.put("javax.persistence.jdbc.user", user);
+            properties.put("javax.persistence.jdbc.password", password);
+        }
+        if (this.properties != null)
+            for (String key : this.properties.keySet())
+                properties.put(key, this.properties.get(key));
         return properties;
     }
 
@@ -104,13 +110,19 @@ public class DatabaseConfiguration {
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, password, user, properties, migration);
+        int result = driver.hashCode();
+        result = 31 * result + url.hashCode();
+        result = 31 * result + password.hashCode();
+        result = 31 * result + user.hashCode();
+        result = 31 * result + properties.hashCode();
+        result = 31 * result + migration.hashCode();
+        return result;
     }
 
     @XmlType
     public static class MigrationConfiguration {
         private boolean auto = true;
-        private String[] locations = new String[0];
+        private String[] locations = new String[]{"db/migration"};
         private Map<String, String> placeholders = ImmutableMap.of();
 
         public MigrationConfiguration() {
@@ -231,7 +243,7 @@ public class DatabaseConfiguration {
             return new DatabaseConfiguration(driver, url, password, user, properties.build(), migration.build());
         }
 
-        public class MigrationConfigurationBuilder implements Builder<DatabaseConfiguration.MigrationConfiguration> {
+        public class MigrationConfigurationBuilder implements Builder<MigrationConfiguration> {
             private boolean auto = true;
             private ImmutableSet.Builder<String> locations = ImmutableSet.builder();
             private ImmutableMap.Builder<String, String> placeholders = ImmutableMap.builder();

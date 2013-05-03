@@ -1,6 +1,7 @@
-package com.thoughtworks.i1.emailSender.commons;
+package com.thoughtworks.i1.commons.db;
 
 import com.googlecode.flyway.core.Flyway;
+import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

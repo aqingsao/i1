@@ -1,13 +1,16 @@
-package com.thoughtworks.i1.emailSender.commons;
+package com.thoughtworks.i1.commons.config;
+
+import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
+
+import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.DatabaseConfigurationBuilder.Setting;
 
 import java.io.File;
 import java.io.IOException;
 
 import static com.google.common.base.Throwables.propagate;
-import static com.thoughtworks.i1.emailSender.commons.DatabaseConfiguration.DatabaseConfigurationBuilder.*;
 
 public class H2 {
-    public static final Setting driver = new Setting() {
+    public static final Setting driver = new DatabaseConfiguration.DatabaseConfigurationBuilder.Setting() {
         @Override
         public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
             config.driver("org.h2.Driver");

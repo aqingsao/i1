@@ -80,9 +80,6 @@ subprojects {
         compile "com.google.inject.extensions:guice-persist:$guiceVersion"
         compile "com.google.inject:guice:$guiceVersion"
 
-        // Use flyway as db migration tool
-        compile "com.googlecode.flyway:flyway-core:$flywayVersion"
-
         // Use jersey as RESTful framework
         compile "com.sun.jersey:jersey-core:$jerseyVersion"
         compile "com.sun.jersey:jersey-servlet:$jerseyVersion"

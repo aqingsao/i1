@@ -7,6 +7,9 @@ dependencies{
     // Use guice servlet for web app
     compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
 
+    // Use flyway as db migration tool
+    compile "com.googlecode.flyway:flyway-core:$flywayVersion"
+
     // Use fastXML as json serializer and deserializer
     compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
