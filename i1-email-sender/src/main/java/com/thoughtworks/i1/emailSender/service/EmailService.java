@@ -2,15 +2,14 @@ package com.thoughtworks.i1.emailSender.service;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.persist.Transactional;
-import com.thoughtworks.i1.emailSender.commons.BusinessException;
-import com.thoughtworks.i1.emailSender.commons.SystemException;
+import com.thoughtworks.i1.commons.BusinessException;
+import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.domain.EmailRecipients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;

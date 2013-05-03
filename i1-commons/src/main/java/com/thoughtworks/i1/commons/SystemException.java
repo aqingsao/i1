@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.quartz.commons;
+package com.thoughtworks.i1.commons;
 
 public class SystemException extends RuntimeException{
     public SystemException(String message, Throwable e) {

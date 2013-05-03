@@ -2,7 +2,7 @@ package com.thoughtworks.i1.quartz.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.thoughtworks.i1.quartz.commons.SystemException;
+import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.*;
 
-import static java.lang.Thread.sleep;
-import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 

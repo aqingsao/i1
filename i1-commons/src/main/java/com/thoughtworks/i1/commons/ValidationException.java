@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.quartz.commons;
+package com.thoughtworks.i1.commons;
 
 public class ValidationException extends RuntimeException {
     public ValidationException(String message, Throwable e) {

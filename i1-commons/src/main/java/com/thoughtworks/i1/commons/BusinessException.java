@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.emailSender.commons;
+package com.thoughtworks.i1.commons;
 
 public class BusinessException extends RuntimeException{
     public BusinessException(String message, Throwable e) {

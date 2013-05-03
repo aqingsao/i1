@@ -1,7 +1,7 @@
 package com.thoughtworks.i1.emailSender.service;
 
-import com.thoughtworks.i1.emailSender.commons.BusinessException;
-import com.thoughtworks.i1.emailSender.commons.SystemException;
+import com.thoughtworks.i1.commons.BusinessException;
+import com.thoughtworks.i1.commons.SystemException;
 import org.junit.Ignore;
 import org.junit.Test;
 
