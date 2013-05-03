@@ -2,8 +2,6 @@ package com.thoughtworks.i1.emailSender;
 
 import com.google.inject.servlet.GuiceFilter;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
-import com.thoughtworks.i1.commons.config.H2;
-import com.thoughtworks.i1.commons.config.Hibernate;
 import com.thoughtworks.i1.commons.db.Migration;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
@@ -41,7 +39,7 @@ public class Main {
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
         DatabaseConfiguration configuration = DatabaseConfiguration.database().user("user").password("")
-                .with(H2.driver, H2.tempFileDB, H2.compatible("Oracle"), Hibernate.createDrop, Hibernate.dialect("Oracle10g"), Hibernate.showSql).build();
+                .with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("Oracle"), DatabaseConfiguration.Hibernate.createDrop, DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).build();
         Migration.migrate(configuration);
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("domain", configuration.toProperties());
         entityManager = entityManagerFactory.createEntityManager();

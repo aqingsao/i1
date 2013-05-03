@@ -9,12 +9,16 @@ import com.thoughtworks.i1.commons.config.builder.OptionalBuilder;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
 import static com.google.common.base.Optional.absent;
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.toArray;
+import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.DatabaseConfigurationBuilder.Setting;
 
 @XmlType
 public class DatabaseConfiguration {
@@ -271,5 +275,89 @@ public class DatabaseConfiguration {
                 return new MigrationConfiguration(auto, toArray(locations.build(), String.class), placeholders.build());
             }
         }
+    }
+
+    public static class H2 {
+        public static final Setting driver = new Setting() {
+            @Override
+            public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
+                config.driver("org.h2.Driver");
+            }
+        };
+        public static final Setting tempFileDB = new Setting() {
+            @Override
+            public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
+                try {
+                    config.url("jdbc:h2:" + File.createTempFile("i0-db-driver", ".db").getAbsolutePath());
+                } catch (IOException e) {
+                    propagate(e);
+                }
+            }
+        };
+
+        public static final Setting fileDB(final String fileName) {
+            return new Setting() {
+                @Override
+                public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
+                    config.url("jdbc:h2:" + fileName);
+                }
+            };
+        }
+
+        public static final Setting privateMemoryDB = new Setting() {
+            @Override
+            public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
+                config.url("jdbc:h2:mem");
+            }
+        };
+
+
+        public static Setting compatible(final String mode) {
+            return new Setting() {
+                @Override
+                public void set(DatabaseConfiguration.DatabaseConfigurationBuilder config) {
+                    config.appendToUrl(";MODE=" + mode);
+                }
+            };
+        }
+    }
+
+    public static class Hibernate {
+        public static Setting dialect(final String name) {
+            return new Setting() {
+                @Override
+                public void set(DatabaseConfigurationBuilder config) {
+                    config.property("hibernate.dialect", "org.hibernate.dialect." + name + "Dialect");
+                }
+            };
+        }
+
+        public static Setting createDrop = new Setting() {
+            @Override
+            public void set(DatabaseConfigurationBuilder config) {
+                config.property("hibernate.hbm2ddl.auto", "create-drop");
+            }
+        };
+
+        public static Setting validate = new Setting() {
+            @Override
+            public void set(DatabaseConfigurationBuilder config) {
+                config.property("hibernate.hbm2ddl.auto", "validate");
+            }
+        };
+
+        public static Setting create = new Setting() {
+            @Override
+            public void set(DatabaseConfigurationBuilder config) {
+                config.property("hibernate.hbm2ddl.auto", "create");
+            }
+        };
+
+        public static Setting showSql = new Setting() {
+            @Override
+            public void set(DatabaseConfigurationBuilder config) {
+                config.property("hibernate.show_sql", "true");
+            }
+        };
     }
 }

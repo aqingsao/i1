@@ -2,8 +2,6 @@ package com.thoughtworks.i1.emailSender.api;
 
 import com.google.inject.servlet.GuiceFilter;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
-import com.thoughtworks.i1.commons.config.H2;
-import com.thoughtworks.i1.commons.config.Hibernate;
 import com.thoughtworks.i1.commons.db.Migration;
 import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
 import org.eclipse.jetty.server.Server;
@@ -39,7 +37,7 @@ public abstract class AbstractResourceTest {
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
         DatabaseConfiguration configuration = DatabaseConfiguration.database().user("sa").password("")
-                .with(H2.driver, H2.fileDB("/Users/twer/Projects/i1/email-sender"), H2.compatible("Oracle"), Hibernate.create, Hibernate.dialect("Oracle10g"), Hibernate.showSql)
+                .with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.fileDB("/Users/twer/Projects/i1/email-sender"), DatabaseConfiguration.H2.compatible("Oracle"), DatabaseConfiguration.Hibernate.create, DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql)
                 .build();
         Migration.migrate(configuration);
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("domain", configuration.toProperties());
