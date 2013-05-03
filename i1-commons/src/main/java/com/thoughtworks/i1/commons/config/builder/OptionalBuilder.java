@@ -2,7 +2,8 @@ package com.thoughtworks.i1.commons.config.builder;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.sun.istack.internal.Nullable;
+
+import javax.annotation.Nullable;
 
 public class OptionalBuilder<T extends Builder<R>, R> implements Builder<Optional<R>> {
     private final T builder;

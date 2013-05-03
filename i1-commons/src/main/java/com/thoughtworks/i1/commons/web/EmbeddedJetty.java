@@ -63,7 +63,9 @@ public class EmbeddedJetty extends Embedded {
 
     @Override
     public Embedded stop() {
-        Preconditions.checkState(server.isRunning(), "Server is not running.");
+        if (!server.isRunning()) {
+            return this;
+        }
 
         try {
             server.stop();

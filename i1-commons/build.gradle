@@ -2,7 +2,7 @@ dependencies{
     // Use guava and guice servlet
     compile "com.google.guava:guava:$guavaVersion"
     // Use jetty DefaultServlet
-    compile "org.eclipse.jetty:jetty-servlet:$jettyVersion"
+    compile "org.eclipse.jetty:jetty-servlet:$jettyVersion" // jetty-servlet depends on jetty-server
 
     // Use guice servlet for web app
     compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
@@ -19,10 +19,22 @@ dependencies{
     compile 'com.google.code.findbugs:jsr305:2.0.1'
 
     // Use javaee-api, including javax.validation...
-    compile "javax:javaee-api:6.0"
+    compile 'javax.servlet:javax.servlet-api:3.0.1'
+    // Use javax validation: JSR303
+    compile 'javax.validation:validation-api:1.0.0.GA'
+    // Use javax persistence: JSR317
+    compile 'javax.persistence:persistence-api:1.0.2'
 
     // Use slf4j as log framework
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
     compile "ch.qos.logback:logback-classic:$logbackVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-all:$mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
+    // Use Jersey client as API test tool
+    testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
+    testCompile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
+    testCompile "org.eclipse.jetty:jetty-client:$jettyVersion"
 }
