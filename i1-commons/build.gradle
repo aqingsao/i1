@@ -1,3 +1,28 @@
 dependencies{
+    // Use guava and guice servlet
+    compile "com.google.guava:guava:$guavaVersion"
+    // Use jetty DefaultServlet
+    compile "org.eclipse.jetty:jetty-servlet:$jettyVersion"
 
+    // Use guice servlet for web app
+    compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
+
+    // Use fastXML as json serializer and deserializer
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
+
+    // Use JSR305
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+
+    // Use javaee-api, including javax.validation...
+    compile "javax:javaee-api:6.0"
+
+    // Use slf4j as log framework
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    compile "ch.qos.logback:logback-classic:$logbackVersion"
 }

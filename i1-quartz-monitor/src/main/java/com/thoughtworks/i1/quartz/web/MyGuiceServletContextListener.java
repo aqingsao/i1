@@ -8,6 +8,7 @@ import com.google.inject.Scopes;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.quartz.service.QuartzModule;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
         return Guice.createInjector(new ServletModule() {
             @Override
             protected void configureServlets() {
-                bindProperties(binder(), loadProperties());
+                bindProperties(binder(), loadProperties("quartz-monitor.properties"));
                 bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
 
                 serve("/api/*").with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
@@ -38,16 +39,15 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
         }, new QuartzModule());
     }
 
-    private Properties loadProperties() {
+    private Properties loadProperties(String propertyFile) {
 
-        String propertyFile = "quartz-monitor.properties";
         try {
             Properties properties = new Properties();
             properties.load(getClass().getClassLoader().getResourceAsStream(propertyFile));
             return properties;
         } catch (IOException e) {
             LOGGER.error("Failed to load property file " + propertyFile);
-            throw new RuntimeException(e.getMessage(), e);
+            throw new SystemException(e.getMessage(), e);
         }
     }
 }
