@@ -73,34 +73,12 @@ public class JobsService {
 
     public void saveJob(QuartzVO quartzVO) {
         try {
-            Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(quartzVO.getJobClass());
-            JobBuilder jobBuilder = newJob(jobClass)
-                    .withIdentity(quartzVO.getJobName(), quartzVO.getJobGroupName())
-                    .withDescription(quartzVO.getDescription())
-                    .storeDurably(true);
-            Map<String, String> jobData = quartzVO.getJobData();
-            for (String key : jobData.keySet()) {
-                String value = jobData.get(key);
-                jobBuilder.usingJobData(key, value);
-            }
-            JobDetail jobDetail = jobBuilder.build();
+            JobDetail jobDetail = getJobDetail(quartzVO);
             this.addJob(jobDetail);
 
             List<TriggerVO> triggerVOs = quartzVO.getTriggers();
             for(TriggerVO triggerVO : triggerVOs){
-                TriggerBuilder<Trigger> triggerBuilder = newTrigger()
-                        .withIdentity(triggerVO.getTriggerName(), triggerVO.getTriggerGroupName())
-                        .startAt(triggerVO.getStartTime())
-                        .endAt(triggerVO.getEndTime())
-                        .forJob(jobDetail)
-                       ;
-                triggerBuilder.withSchedule(
-                        SimpleScheduleBuilder
-                                .simpleSchedule()
-                                .withRepeatCount(triggerVO.getRepeatCount())
-                                .withIntervalInMilliseconds(triggerVO.getRepeatInterval())
-                );
-                Trigger trigger = triggerBuilder.build();
+                Trigger trigger = getTrigger(jobDetail, triggerVO);
 
                 scheduleJob(trigger);
             }
@@ -108,6 +86,38 @@ public class JobsService {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    private Trigger getTrigger(JobDetail jobDetail, TriggerVO triggerVO) {
+        String triggerGroupName = triggerVO.getTriggerGroupName();
+        TriggerBuilder<Trigger> triggerBuilder = newTrigger()
+                .withIdentity(triggerVO.getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
+                .startAt(triggerVO.getStartTime())
+                .endAt(triggerVO.getEndTime())
+                .forJob(jobDetail)
+               ;
+        triggerBuilder.withSchedule(
+                SimpleScheduleBuilder
+                        .simpleSchedule()
+                        .withRepeatCount(triggerVO.getRepeatCount())
+                        .withIntervalInMilliseconds(triggerVO.getRepeatInterval())
+        );
+        return triggerBuilder.build();
+    }
+
+    private JobDetail getJobDetail(QuartzVO quartzVO) throws ClassNotFoundException {
+        Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(quartzVO.getJobClass());
+        String jobGroupName = quartzVO.getJobGroupName();
+        JobBuilder jobBuilder = newJob(jobClass)
+                .withIdentity(quartzVO.getJobName(), jobGroupName.length() == 0 ? "HEREN-JOB-GROUP" : jobGroupName)
+                .withDescription(quartzVO.getDescription())
+                .storeDurably(true);
+        Map<String, String> jobData = quartzVO.getJobData();
+        for (String key : jobData.keySet()) {
+            String value = jobData.get(key);
+            jobBuilder.usingJobData(key, value);
+        }
+        return jobBuilder.build();
     }
 
     private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) {
