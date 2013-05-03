@@ -1,9 +1,7 @@
 package com.thoughtworks.i1.quartz;
 
 import com.thoughtworks.i1.commons.config.Configuration;
-import com.thoughtworks.i1.commons.config.HttpConfiguration;
-import com.thoughtworks.i1.commons.web.Embedded;
-import com.thoughtworks.i1.commons.web.EmbeddedJetty;
+import com.thoughtworks.i1.commons.server.Embedded;
 import com.thoughtworks.i1.quartz.service.QuartzModule;
 
 public class Launcher {

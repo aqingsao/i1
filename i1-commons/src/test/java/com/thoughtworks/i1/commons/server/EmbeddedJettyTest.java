@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.commons.web;
+package com.thoughtworks.i1.commons.server;
 
 import com.google.inject.servlet.ServletModule;
 import com.thoughtworks.i1.commons.config.HttpConfiguration;

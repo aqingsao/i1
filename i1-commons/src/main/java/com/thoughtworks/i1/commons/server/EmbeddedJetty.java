@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.commons.web;
+package com.thoughtworks.i1.commons.server;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
