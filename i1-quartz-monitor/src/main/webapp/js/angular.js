@@ -4666,7 +4666,7 @@ function $DocumentProvider(){
  * The default implementation simply delegates to `$log.error` which logs it into
  * the browser console.
  *
- * In unit tests, if `angular-mocks.js` is loaded, this service is overridden by
+ * In unit tests, if `angular-mocks.quartzjs` is loaded, this service is overridden by
  * {@link ngMock.$exceptionHandler mock $exceptionHandler}
  *
  * @param {Error} exception Exception associated with the error.
@@ -5492,7 +5492,7 @@ function $LocationProvider(){
  *
  * @example
    <example>
-     <file name="script.js">
+     <file name="script.quartzjs">
        function LogCtrl($scope, $log) {
          $scope.$log = $log;
          $scope.message = 'Hello World!';
@@ -7021,7 +7021,7 @@ function $RouteProvider(){
          Chapter Id: {{params.chapterId}}
        </file>
 
-       <file name="script.js">
+       <file name="script.quartzjs">
          angular.module('ngView', [], function($routeProvider, $locationProvider) {
            $routeProvider.when('/Book/:bookId', {
              templateUrl: 'book.html',
@@ -7061,7 +7061,7 @@ function $RouteProvider(){
          }
        </file>
 
-       <file name="scenario.js">
+       <file name="scenario.quartzjs">
          it('should load and compile correct template', function() {
            element('a:contains("Moby: Ch1")').click();
            var content = element('.doc-example-live [ng-view]').text();
@@ -7804,7 +7804,7 @@ function $RootScopeProvider(){
         if (this.$$nextSibling) this.$$nextSibling.$$prevSibling = this.$$prevSibling;
 
         // This is bogus code that works around Chrome's GC leak
-        // see: https://github.com/angular/angular.js/issues/1313#issuecomment-10378451
+        // see: https://github.com/angular/angular.quartzjs/issues/1313#issuecomment-10378451
         this.$parent = this.$$nextSibling = this.$$prevSibling = this.$$childHead =
             this.$$childTail = null;
       },
@@ -8159,7 +8159,7 @@ function $SnifferProvider() {
       // Android has history.pushState, but it does not update location correctly
       // so let's not use the history API at all.
       // http://code.google.com/p/android/issues/detail?id=17471
-      // https://github.com/angular/angular.js/issues/904
+      // https://github.com/angular/angular.quartzjs/issues/904
       history: !!($window.history && $window.history.pushState && !(android < 4)),
       hashchange: 'onhashchange' in $window &&
                   // IE8 compatible mode lies
@@ -8626,7 +8626,7 @@ function $HttpProvider() {
             <pre>http response data: {{data}}</pre>
           </div>
         </file>
-        <file name="script.js">
+        <file name="script.quartzjs">
           function FetchCtrl($scope, $http, $templateCache) {
             $scope.method = 'GET';
             $scope.url = 'http-hello.html';
@@ -8655,7 +8655,7 @@ function $HttpProvider() {
         <file name="http-hello.html">
           Hello, $http!
         </file>
-        <file name="scenario.js">
+        <file name="scenario.quartzjs">
           it('should make an xhr GET request', function() {
             element(':button:contains("Sample GET")').click();
             element(':button:contains("fetch")').click();
@@ -9061,7 +9061,7 @@ function createHttpBackend($browser, XHR, $browserDefer, callbacks, rawDocument,
 
 
     function completeRequest(callback, status, response, headersString) {
-      // URL_MATCH is defined in src/service/location.js
+      // URL_MATCH is defined in src/service/location.quartzjs
       var protocol = (url.match(URL_MATCH) || ['', locationProtocol])[1];
 
       // fix status code for file protocol (it's always 0)
@@ -11662,7 +11662,7 @@ var VALID_CLASS = 'ng-valid',
       }
 
     </file>
-    <file name="script.js">
+    <file name="script.quartzjs">
       angular.module('customControl', []).
         directive('contenteditable', function() {
           return {
@@ -11700,7 +11700,7 @@ var VALID_CLASS = 'ng-valid',
        <textarea ng-model="userContent"></textarea>
       </form>
     </file>
-    <file name="scenario.js">
+    <file name="scenario.quartzjs">
       it('should data-bind and become invalid', function() {
         var contentEditable = element('[contenteditable]');
 
@@ -12334,7 +12334,7 @@ function classDirective(name, selector) {
          color: red;
        }
      </file>
-     <file name="scenario.js">
+     <file name="scenario.quartzjs">
        it('should check ng-class', function() {
          expect(element('.doc-example-live span').prop('className')).not().
            toMatch(/my-class/);
@@ -12389,7 +12389,7 @@ var ngClassDirective = classDirective('', true);
          color: blue;
        }
      </file>
-     <file name="scenario.js">
+     <file name="scenario.quartzjs">
        it('should check ng-class-odd and ng-class-even', function() {
          expect(element('.doc-example-live li:first span').prop('className')).
            toMatch(/odd/);
@@ -12436,7 +12436,7 @@ var ngClassOddDirective = classDirective('Odd', 0);
          color: blue;
        }
      </file>
-     <file name="scenario.js">
+     <file name="scenario.quartzjs">
        it('should check ng-class-odd and ng-class-even', function() {
          expect(element('.doc-example-live li:first span').prop('className')).
            toMatch(/odd/);
@@ -12460,8 +12460,8 @@ var ngClassEvenDirective = classDirective('Even', 1);
  * The directive can be applied to the `<body>` element, but typically a fine-grained application is
  * prefered in order to benefit from progressive rendering of the browser view.
  *
- * `ngCloak` works in cooperation with a css rule that is embedded within `angular.js` and
- *  `angular.min.js` files. Following is the css rule:
+ * `ngCloak` works in cooperation with a css rule that is embedded within `angular.quartzjs` and
+ *  `angular.min.quartzjs` files. Following is the css rule:
  *
  * <pre>
  * [ng\:cloak], [ng-cloak], .ng-cloak {
@@ -12474,7 +12474,7 @@ var ngClassEvenDirective = classDirective('Even', 1);
  * during the compilation of the template it deletes the `ngCloak` element attribute, which
  * makes the compiled element visible.
  *
- * For the best result, `angular.js` script must be loaded in the head section of the html file;
+ * For the best result, `angular.quartzjs` script must be loaded in the head section of the html file;
  * alternatively, the css rule (above) must be included in the external stylesheet of the
  * application.
  *
@@ -12894,7 +12894,7 @@ var ngSubmitDirective = ngDirective(function(scope, element, attrs) {
        <div ng-include src="template.url"></div>
      </div>
     </file>
-    <file name="script.js">
+    <file name="script.quartzjs">
       function Ctrl($scope) {
         $scope.templates =
           [ { name: 'template1.html', url: 'template1.html'}
@@ -12908,7 +12908,7 @@ var ngSubmitDirective = ngDirective(function(scope, element, attrs) {
     <file name="template2.html">
       Content of template2.html
     </file>
-    <file name="scenario.js">
+    <file name="scenario.quartzjs">
       it('should load template1.html', function() {
        expect(element('.doc-example-live [ng-include]').text()).
          toMatch(/Content of template1.html/);
@@ -13063,7 +13063,7 @@ var ngNonBindableDirective = ngDirective({ terminal: true, priority: 1000 });
  * @description
  * # Overview
  * `ngPluralize` is a directive that displays messages according to en-US localization rules.
- * These rules are bundled with angular.js and the rules can be overridden
+ * These rules are bundled with angular.quartzjs and the rules can be overridden
  * (see {@link guide/i18n Angular i18n} dev guide). You configure ngPluralize directive
  * by specifying the mappings between
  * {@link http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html
@@ -13549,7 +13549,7 @@ var ngHideDirective = ngDirective(function(scope, element, attr){
          color: black;
        }
      </file>
-     <file name="scenario.js">
+     <file name="scenario.quartzjs">
        it('should check ng-style', function() {
          expect(element('.doc-example-live span').css('color')).toBe('rgb(0, 0, 0)');
          element('.doc-example-live :button[value=set]').click();
@@ -13783,7 +13783,7 @@ var ngTranscludeDirective = ngDirective({
         Chapter Id: {{params.chapterId}}
       </file>
 
-      <file name="script.js">
+      <file name="script.quartzjs">
         angular.module('ngView', [], function($routeProvider, $locationProvider) {
           $routeProvider.when('/Book/:bookId', {
             templateUrl: 'book.html',
@@ -13815,7 +13815,7 @@ var ngTranscludeDirective = ngDirective({
         }
       </file>
 
-      <file name="scenario.js">
+      <file name="scenario.quartzjs">
         it('should load and compile correct template', function() {
           element('a:contains("Moby: Ch1")').click();
           var content = element('.doc-example-live [ng-view]').text();
