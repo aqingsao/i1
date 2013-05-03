@@ -13,6 +13,9 @@ import com.thoughtworks.i1.commons.config.HttpConfiguration;
 import com.thoughtworks.i1.commons.config.util.Duration;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -20,14 +23,17 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import javax.annotation.Nullable;
 import javax.servlet.DispatcherType;
+import java.io.File;
 import java.util.EnumSet;
 
+import static com.google.common.collect.Iterables.removeAll;
 import static com.google.common.collect.Iterables.toArray;
 import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 import static org.eclipse.jetty.servlet.ServletContextHandler.SESSIONS;
 
 public class EmbeddedJetty extends Embedded {
     private Server server;
+    public static final String RESOURCE_BASE = new File(EmbeddedJetty.class.getClassLoader().getResource(".").getPath()).getAbsolutePath();
 
     protected EmbeddedJetty(HttpConfiguration configuration) {
         server = new Server(threadPool(configuration));
@@ -36,9 +42,12 @@ public class EmbeddedJetty extends Embedded {
 
     @Override
     public Embedded addServletContext(String contextPath, boolean shareNothing, final Module... modules) {
-        ServletContextHandler handler = new ServletContextHandler(server, root(contextPath), shareNothing ? NO_SESSIONS : SESSIONS);
+
+        ServletContextHandler handler = new ServletContextHandler(shareNothing ? NO_SESSIONS : SESSIONS);
         handler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
         handler.addServlet(DefaultServlet.class, "/*");
+        handler.setContextPath(contextPath);
+        handler.setInitParameter("org.eclipse.jetty.servlet.Default.resourceBase", RESOURCE_BASE);
 
         handler.addEventListener(new GuiceServletContextListener() {
             @Override
@@ -46,7 +55,23 @@ public class EmbeddedJetty extends Embedded {
                 return Guice.createInjector(modules);
             }
         });
+
+        HandlerList handlerList = new HandlerList();
+        handlerList.setHandlers(new Handler[]{getResourceHandler(), handler});
+
+        server.setHandler(handlerList);
+
         return this;
+    }
+
+    private ResourceHandler getResourceHandler() {
+        ResourceHandler resource_handler = new ResourceHandler();
+        resource_handler.setDirectoriesListed(true);
+        resource_handler.setWelcomeFiles(new String[]{"index.html"});
+
+        resource_handler.setResourceBase(".");
+
+        return resource_handler;
     }
 
     @Override

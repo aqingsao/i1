@@ -1,9 +1,11 @@
 i1-quartz-monitor
 =================
 
+## What's This Project
+
 A template project for Quartz with admin and monitor functions.
 
-## What's This Project
+## Functions
 
 ## How to use it
 
