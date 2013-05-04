@@ -2,6 +2,9 @@ package com.thoughtworks.i1.quartz.api;
 
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.service.JobsService;
+import org.quartz.Job;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +12,11 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+
+import static java.lang.Thread.sleep;
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 @Path("quartz-jobs")
 public class JobsResource {
@@ -46,7 +54,7 @@ public class JobsResource {
 
         } catch (Exception e) {
             LOGGER.error("save job failed!");
+            return Response.serverError().build();
         }
-        return Response.noContent().build();
     }
 }

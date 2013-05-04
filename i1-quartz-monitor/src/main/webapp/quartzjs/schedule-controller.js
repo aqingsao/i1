@@ -14,24 +14,41 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
         };
 
 //        初始化
-        $scope.trigger = new Trigger();
+        $scope.quartzList = [];
         $scope.quartz = new Quartz();
-        $scope.quartz.triggerList.push($scope.trigger);
 
-        $scope.savequartz = function () {
+        $scope.quartz.addTrigger(new Trigger());
 
-//            $scope.quartz = new Quartz();
-            $scope.quartz.jobName = $scope.jobName;
-            $scope.quartz.jobGroupname = $scope.jobGroupName;
-            $scope.quartz.jobClass = $scope.jobClass;
-            $scope.quartz.description = $scope.description;
-            $scope.quartz.url = $scope.url;
-//            $scope.quartz.triggerList = $scope.tempTriggerList;
+        $scope.saveQuartz = function () {
+
+            $scope.quartz.addJobData("url", $scope.url);
 
             var url = "http://localhost:8051/schedule/api/quartz-jobs/item";
             $http.post(url, $scope.quartz).success(
                 function (data, status, headers, config) {
-                    alert("保存成功");
+                    alert("保存成功！");
+                    $scope.quartzList = [];
+                    for (var j = 0; j < data.length; j++) {
+                        var tempQuartz = new Quartz();
+                        $scope.quartzList.push(tempQuartz.copyQuartzVO(data[j]));
+                    }
+                }).error(
+                function (data, status, headers, config) {
+                    alert("保存失败！");
+                }
+            );
+        };
+
+        $scope.listQuartz = function () {
+
+            var url = "http://localhost:8051/schedule/api/quartz-jobs/items";
+            $http.post(url, $scope.quartz).success(
+                function (data, status, headers, config) {
+                    for (var j = 0; j < data.length; j++) {
+                        var tempQuartz = new Quartz();
+                        $scope.quartzList.push(tempQuartz.copyQuartzVO(data[j]));
+                    }
+
                 }).error(
                 function (data, status, headers, config) {
                     alert("保存成功");
@@ -40,8 +57,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
         };
 
         $scope.addClo = function(){
-             $scope.trigger = new Trigger();
-            $scope.quartz.triggerList.push($scope.trigger);
+            $scope.quartz.addTrigger(new Trigger());
         }
 
 

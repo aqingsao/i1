@@ -1,41 +1,44 @@
 var Quartz = function () {
     this.jobName = "";
     this.jobGroupName = "";
-    this.jobClass = "";
+    this.jobClass = "com.thoughtworks.i1.quartz.jobs.JobForTest";
     this.description = "";
-    this.url = "";
-    map()
-    this.triggerList = [];
+    this.jobDatas = [];
+    this.triggers = [];
 };
 
 var Trigger = function () {
     this.triggerName = "";
     this.triggerGroupName = "";
-    this.startTime = null;
-    this.endTime = null;
+    this.startTime = 0;
+    this.endTime = 0;
     this.triggerState = "";
-    this.repeatCount = 12;
-    this.repeatInterval = 12;
+    this.repeatCount = -1;
+    this.repeatInterval = 10000;
 };
+
+var JobData = function (key, value) {
+    this.key = key;
+    this.value = value;
+};
+
 
 Quartz.prototype.addTrigger = function (trigger) {
-    this.triggerList.push(trigger);
+    this.triggers.push(trigger);
+};
+
+Quartz.prototype.addJobData = function(key, value){
+    var tempJobData = new JobData(key, value);
+    this.jobDatas.push(tempJobData);
+};
+
+Quartz.prototype.copyQuartzVO = function(data){
+    for(i in data){
+        this[i] = data[i];
+    }
+    return this;
 };
 
 
-
-function Map() {
-    /** 存放键的数组(遍历用到) */
-    this.keys = new Array();
-    /** 存放数据 */
-    this.data = new Object();
-    /**         * 放入一个键值对        * @param {String} key        * @param {Object} value        */
-    this.put = function (key, value) {
-        if (this.data[key] == null) {
-            this.keys.push(key);
-        }
-        this.data[key] = value;
-    };
-}
 
 

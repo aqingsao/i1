@@ -85,41 +85,39 @@
                         <table class="table table-striped table-bordered table-hover">
 
                             <tr>
-                                <td>jobName</td>
-                                <td><input id="jobName" type="text" ng-model="jobName"></td>
-                                <td>jobClass</td>
-                                <td><input id="jobClass" type="text" ng-model="jobClass"></td>
-                                <td>url</td>
+                                <td>任务名称</td>
+                                <td><input id="jobName" type="text" ng-model="quartz.jobName"></td>
+                                <td>任务执行Class</td>
+                                <td><input id="jobClass" type="text" ng-model="quartz.jobClass"></td>
+                                <td>任务链接url</td>
                                 <td><input id="url" type="text" ng-model="url"></td>
-                                <td>description</td>
-                                <td><input id="description" type="text" ng-model="description"></td>
+                                <td>任务描述</td>
+                                <td><input id="description" type="text" ng-model="quartz.description"></td>
                             </tr>
 
                             <table class="table table-striped table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <td>triggerName</td>
-                                    <td>startTime</td>
-                                    <td>endTime</td>
-                                    <td>triggerState</td>
-                                    <td>repeatCount</td>
-                                    <td>repeatInterval</td>
+                                    <td>触发器名称</td>
+                                    <td>开始时间</td>
+                                    <td>结束时间</td>
+                                    <td>重复次数</td>
+                                    <td>间隔时间</td>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="trigger in tempTriggerList">
+                                <tr ng-repeat="trigger in quartz.triggers">
                                     <td><input id="triggerName" type="text" ng-model="trigger.triggerName"></td>
                                     <td><input id="startTime" type="text" ng-model="trigger.startTime"></td>
                                     <td><input id="endTime" type="text" ng-model="trigger.endTime"></td>
-                                    <td><input id="triggerState" type="text" ng-model="trigger.triggerState"></td>
                                     <td><input id="repeatCount" type="text" ng-model="trigger.repeatCount"></td>
-                                    <td><input id="repeatInterval" type="text" ng-model="trigger.repeatInterval"></td>
+                                    <td><input id="repeatInterval" type="text" ng-model="trigger.repeatInterval">ms</td>
                                     <td>
                                         <a href="" ng-click="addClo()">添加</a>
                                     </td>
                                 </tr>
                                 <td>
-                                    <button class="btn btn-large btn-primary" ng-click="savequartz()" type="button">保存
+                                    <button class="btn btn-large btn-primary" ng-click="saveQuartz()" type="button">保存
                                     </button>
                                 </td>
                                 </tbody>
@@ -131,13 +129,14 @@
 
                         <table class="table table-striped table-bordered table-hover">
                             <tr>
-                                <td>jabName</td>
-                                <td>jobClass</td>
-                                <td>triggerName</td>
-                                <td>cronpress</td>
-                                <td>urlKey</td>
-                                <td>urlValue</td>
-                                <td>urlValue</td>
+                                <td>任务名称</td>
+                                <td>任务执行Class</td>
+                                <td>任务链接url</td>
+                                <td>触发器名称</td>
+                                <td>开始时间</td>
+                                <td>结束时间</td>
+                                <td>重复次数</td>
+                                <td>间隔时间</td>
                                 <td>
                                     <button class="btn btn-large btn-primary" type="button">启动</button>
                                 </td>
@@ -149,12 +148,14 @@
                                 </td>
                             </tr>
 
-                            <tr>
-                                <td>jabName</td>
-                                <td>jobClass</td>
-                                <td>triggerName</td>
+                            <tr ng-repeat="quartz in quartzList">
+                                <td>{{quartz.jabName}}</td>
+                                <td>{{quartz.jobClass}}</td>
+                                <td>{{quartz.jobDatas[0].value}}</td>
+                                <td>quartz.triggerName</td>
                                 <td>cronpress</td>
                                 <td>urlKey</td>
+                                <td>urlValue</td>
                                 <td>urlValue</td>
                                 <td>urlValue</td>
                                 <td>
@@ -197,8 +198,9 @@
 <script src="js/ng-grid.js"></script>
 
 
-<script src="quartz.js/schedule-app.js"></script>
-<script src="quartz.js/schedule-controller.js"></script>
+<script src="quartzjs/quartz-model.js"></script>
+<script src="quartzjs/schedule-app.js"></script>
+<script src="quartzjs/schedule-controller.js"></script>
 
 </body>
 </html>

@@ -9,18 +9,18 @@ public class QuartzVO {
     private String jobGroupName;
     private String description;
     private String jobClass;
-    private Map<String, String> jobData;
+    private List<JobDataVO> jobDatas;
     private List<TriggerVO> triggers;
 
     public QuartzVO() {
     }
 
-    public QuartzVO(String jobName, String jobGroupName, String description, String jobClass, Map<String, String> jobData, List<TriggerVO> triggers) {
+    public QuartzVO(String jobName, String jobGroupName, String description, String jobClass, List<JobDataVO> jobDatas, List<TriggerVO> triggers) {
         this.jobName = jobName;
         this.jobGroupName = jobGroupName;
         this.description = description;
         this.jobClass = jobClass;
-        this.jobData = jobData;
+        this.jobDatas = jobDatas;
         this.triggers = triggers;
     }
 
@@ -56,12 +56,12 @@ public class QuartzVO {
         this.jobClass = jobClass;
     }
 
-    public Map<String, String> getJobData() {
-        return jobData;
+    public List<JobDataVO> getJobDatas() {
+        return jobDatas;
     }
 
-    public void setJobData(Map<String, String> jobData) {
-        this.jobData = jobData;
+    public void setJobDatas(List<JobDataVO> jobDatas) {
+        this.jobDatas = jobDatas;
     }
 
     public List<TriggerVO> getTriggers() {

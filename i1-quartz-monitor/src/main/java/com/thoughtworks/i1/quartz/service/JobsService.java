@@ -3,6 +3,7 @@ package com.thoughtworks.i1.quartz.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.thoughtworks.i1.commons.SystemException;
+import com.thoughtworks.i1.quartz.domain.JobDataVO;
 import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
@@ -112,9 +113,10 @@ public class JobsService {
                 .withIdentity(quartzVO.getJobName(), jobGroupName.length() == 0 ? "HEREN-JOB-GROUP" : jobGroupName)
                 .withDescription(quartzVO.getDescription())
                 .storeDurably(true);
-        Map<String, String> jobData = quartzVO.getJobData();
-        for (String key : jobData.keySet()) {
-            String value = jobData.get(key);
+        List<JobDataVO> jobDatas = quartzVO.getJobDatas();
+        for (JobDataVO jobDataVO : jobDatas) {
+            String key = jobDataVO.getKey();
+            String value = jobDataVO.getValue();
             jobBuilder.usingJobData(key, value);
         }
         return jobBuilder.build();
@@ -139,11 +141,12 @@ public class JobsService {
         quartzVO.setJobGroupName(jobDetail.getKey().getGroup());
         quartzVO.setJobClass(jobDetail.getJobClass().getName());
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        Map<String, String> jobData = Maps.newHashMap();
+        List<JobDataVO> jobDatas = Lists.newArrayList();
         for (String key : jobDataMap.getKeys()) {
-            jobData.put(key, jobDataMap.get(key).toString());
+            JobDataVO jobDataVO = new JobDataVO(key, jobDataMap.get(key).toString());
+            jobDatas.add(jobDataVO);
         }
-        quartzVO.setJobData(jobData);
+        quartzVO.setJobDatas(jobDatas);
         return quartzVO;
     }
 

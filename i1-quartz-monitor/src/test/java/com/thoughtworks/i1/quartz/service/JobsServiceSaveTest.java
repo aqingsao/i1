@@ -41,33 +41,39 @@ public class JobsServiceSaveTest {
     }
 
     private static String getData(){
-        return "    {\n" +
+        return "" +
+                "    {\n" +
                 "        \"jobName\": \"jobName\",\n" +
                 "        \"jobGroupName\": \"jobGroupName\",\n" +
+                "        \"description\": null,\n" +
                 "        \"jobClass\": \"com.thoughtworks.i1.quartz.jobs.JobForTest\",\n" +
-                "        \"jobData\": {\n" +
-                "            \"url\": \"test-url\"\n" +
-                "        },\n" +
+                "        \"jobDatas\": [\n" +
+                "            {\n" +
+                "                \"key\": \"url\",\n" +
+                "                \"value\": \"test-url\"\n" +
+                "            }\n" +
+                "        ],\n" +
                 "        \"triggers\": [\n" +
                 "            {\n" +
                 "                \"triggerName\": \"triggerName\",\n" +
                 "                \"triggerGroupName\": \"triggerGroupName\",\n" +
-                "                \"startTime\": 1367475197000,\n" +
+                "                \"startTime\": 1367567457000,\n" +
                 "                \"endTime\": null,\n" +
                 "                \"triggerState\": null,\n" +
-                "                \"repeatCount\": -1,\n" +
-                "                \"repeatInterval\": 5000\n" +
-                "            }\n" +
-                "            ,{\n" +
+                "                \"repeatCount\": 0,\n" +
+                "                \"repeatInterval\": 0\n" +
+                "            },\n" +
+                "            {\n" +
                 "                \"triggerName\": \"triggerName2\",\n" +
                 "                \"triggerGroupName\": \"triggerGroupName\",\n" +
-                "                \"startTime\": 1367475197000,\n" +
+                "                \"startTime\": 1367567457000,\n" +
                 "                \"endTime\": null,\n" +
                 "                \"triggerState\": null,\n" +
-                "                \"repeatCount\": -1,\n" +
-                "                \"repeatInterval\": 3000\n" +
+                "                \"repeatCount\": 0,\n" +
+                "                \"repeatInterval\": 0\n" +
                 "            }\n" +
                 "        ]\n" +
-                "    }\n" ;
+                "    }\n" +
+                "" ;
     }
 }
