@@ -26,7 +26,7 @@ dependencies{
     // Use javax validation: JSR303
     compile 'javax.validation:validation-api:1.0.0.GA'
     // Use javax persistence: JSR317
-    compile 'javax.persistence:persistence-api:1.0.2'
+    compile 'javax.persistence:persistence-api:1.0-rev-1'
 
     // Use slf4j as log framework
     compile "org.slf4j:slf4j-api:$slf4jVersion"
