@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.commons.config.util;
+package com.thoughtworks.i1.commons.util;
 
 import ch.qos.logback.classic.Level;
 

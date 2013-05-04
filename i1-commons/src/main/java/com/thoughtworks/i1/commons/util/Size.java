@@ -1,4 +1,4 @@
-package com.thoughtworks.i1.commons.config.util;
+package com.thoughtworks.i1.commons.util;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

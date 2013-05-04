@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.thoughtworks.i1.commons.config.builder.Builder;
 import com.thoughtworks.i1.commons.config.builder.OptionalBuilder;
-import com.thoughtworks.i1.commons.config.util.Duration;
+import com.thoughtworks.i1.commons.util.Duration;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -14,8 +14,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
-import static com.thoughtworks.i1.commons.config.util.Duration.Unit.MINUTES;
-import static com.thoughtworks.i1.commons.config.util.Duration.Unit.SECONDS;
+import static com.thoughtworks.i1.commons.util.Duration.Unit.MINUTES;
+import static com.thoughtworks.i1.commons.util.Duration.Unit.SECONDS;
 
 @XmlType
 public class HttpConfiguration {

@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.i1.commons.config.builder.Builder;
 import com.thoughtworks.i1.commons.config.builder.OptionalBuilder;
-import com.thoughtworks.i1.commons.config.util.LogLevel;
-import com.thoughtworks.i1.commons.config.util.Size;
+import com.thoughtworks.i1.commons.util.LogLevel;
+import com.thoughtworks.i1.commons.util.Size;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
