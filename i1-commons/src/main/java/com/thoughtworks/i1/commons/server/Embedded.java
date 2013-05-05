@@ -1,5 +1,6 @@
 package com.thoughtworks.i1.commons.server;
 
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.thoughtworks.i1.commons.config.HttpConfiguration;
 
@@ -11,4 +12,6 @@ public abstract class Embedded {
     public static Embedded jetty(HttpConfiguration configuration){
         return new EmbeddedJetty(configuration);
     }
+
+    public abstract Injector injector();
 }

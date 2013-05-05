@@ -32,6 +32,7 @@ import static org.eclipse.jetty.servlet.ServletContextHandler.SESSIONS;
 public class EmbeddedJetty extends Embedded {
     private Server server;
     public static final String RESOURCE_BASE = new File(EmbeddedJetty.class.getClassLoader().getResource(".").getPath()).getAbsolutePath();
+    private Injector injector;
 
     protected EmbeddedJetty(HttpConfiguration configuration) {
         server = new Server(threadPool(configuration));
@@ -47,10 +48,11 @@ public class EmbeddedJetty extends Embedded {
         handler.setContextPath(contextPath);
         handler.setInitParameter("org.eclipse.jetty.servlet.Default.resourceBase", RESOURCE_BASE);
 
+        injector = Guice.createInjector(modules);
         handler.addEventListener(new GuiceServletContextListener() {
             @Override
             protected Injector getInjector() {
-                return Guice.createInjector(modules);
+                return injector;
             }
         });
 
@@ -96,6 +98,11 @@ public class EmbeddedJetty extends Embedded {
             throw new SystemException(e.getMessage(), e);
         }
         return this;
+    }
+
+    @Override
+    public Injector injector() {
+        return injector;
     }
 
     private QueuedThreadPool threadPool(HttpConfiguration configuration) {
