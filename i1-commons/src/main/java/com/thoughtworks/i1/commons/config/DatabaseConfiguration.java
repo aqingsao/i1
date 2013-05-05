@@ -1,5 +1,6 @@
 package com.thoughtworks.i1.commons.config;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -22,10 +23,6 @@ import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.DatabaseC
 
 @XmlType
 public class DatabaseConfiguration {
-    public static DatabaseConfigurationBuilder database() {
-        return new DatabaseConfigurationBuilder();
-    }
-
     @NotNull
     private String driver;
     @NotNull
@@ -41,7 +38,7 @@ public class DatabaseConfiguration {
     public DatabaseConfiguration() {
     }
 
-    DatabaseConfiguration(String driver, String url, String password, String user, Map<String, String> properties, Optional<MigrationConfiguration> migration) {
+    public DatabaseConfiguration(String driver, String url, String password, String user, Map<String, String> properties, Optional<MigrationConfiguration> migration) {
         this.driver = driver;
         this.url = url;
         this.password = password;
@@ -159,20 +156,14 @@ public class DatabaseConfiguration {
             if (o == null || getClass() != o.getClass()) return false;
 
             MigrationConfiguration that = (MigrationConfiguration) o;
-
-            if (auto != that.auto) return false;
-            if (!Arrays.equals(locations, that.locations)) return false;
-            if (!placeholders.equals(that.placeholders)) return false;
-
-            return true;
+            return Objects.equal(this.auto, that.auto) &&
+                    Arrays.equals(this.locations, that.locations) &&
+                    Objects.equal(this.placeholders, that.placeholders);
         }
 
         @Override
         public int hashCode() {
-            int result = (auto ? 1 : 0);
-            result = 31 * result + Arrays.hashCode(locations);
-            result = 31 * result + placeholders.hashCode();
-            return result;
+            return Objects.hashCode(this.auto, this.locations, this.placeholders);
         }
     }
 
@@ -185,8 +176,10 @@ public class DatabaseConfiguration {
         private ImmutableMap.Builder<String, String> properties = ImmutableMap.builder();
         private OptionalBuilder<MigrationConfigurationBuilder, MigrationConfiguration>
                 migration = new OptionalBuilder<>(new MigrationConfigurationBuilder());
+        private Configuration.ConfigurationBuilder parent;
 
-        DatabaseConfigurationBuilder() {
+        DatabaseConfigurationBuilder(Configuration.ConfigurationBuilder parent) {
+            this.parent = parent;
         }
 
         public DatabaseConfigurationBuilder driver(String driver) {
@@ -228,6 +221,10 @@ public class DatabaseConfiguration {
 
         public MigrationConfigurationBuilder migration() {
             return migration.builder();
+        }
+
+        public Configuration.ConfigurationBuilder end() {
+            return parent;
         }
 
         public static abstract class Setting {

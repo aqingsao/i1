@@ -46,14 +46,19 @@ public class Configuration {
     @NotNull
     private LoggingConfiguration logging;
 
+    @NotNull
+    private DatabaseConfiguration database;
+
     public Configuration() {
         http = config().http().build();
         logging = config().logging().build();
+        database = config().database().build();
     }
 
-    private Configuration(HttpConfiguration http, LoggingConfiguration logging) {
+    private Configuration(HttpConfiguration http, LoggingConfiguration logging, DatabaseConfiguration database) {
         this.http = http;
         this.logging = logging;
+        this.database = database;
     }
 
     protected Configuration(Configuration configuration) {
@@ -71,11 +76,18 @@ public class Configuration {
         return logging;
     }
 
+    @XmlElement
+    public DatabaseConfiguration getDatabase() {
+        return database;
+    }
+
     public static class ConfigurationBuilder implements Builder<Configuration> {
 
         private HttpConfiguration.HttpConfigurationBuilder http = new HttpConfiguration.HttpConfigurationBuilder(this);
 
         private LoggingConfiguration.LoggingConfigurationBuilder logging = new LoggingConfiguration.LoggingConfigurationBuilder(this);
+
+        private DatabaseConfiguration.DatabaseConfigurationBuilder database = new DatabaseConfiguration.DatabaseConfigurationBuilder(this);
 
         ConfigurationBuilder() {
         }
@@ -90,7 +102,11 @@ public class Configuration {
 
         @Override
         public Configuration build() {
-            return new Configuration(http.build(), logging.build());
+            return new Configuration(http.build(), logging.build(), database.build());
+        }
+
+        public DatabaseConfiguration.DatabaseConfigurationBuilder database() {
+            return database;
         }
     }
 }
