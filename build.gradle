@@ -74,7 +74,6 @@ subprojects {
 
     dependencies {
         compile project(':i1-commons')
-//        compile "javax:javaee-api:6.0"
 
         // Use embedded H2 database
         compile 'com.h2database:h2:1.3.170'

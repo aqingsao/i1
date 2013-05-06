@@ -19,6 +19,8 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.servlet.DispatcherType;
@@ -30,22 +32,27 @@ import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 import static org.eclipse.jetty.servlet.ServletContextHandler.SESSIONS;
 
 public class EmbeddedJetty extends Embedded {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedJetty.class);
+    private final HttpConfiguration configuration;
     private Server server;
     public static final String RESOURCE_BASE = new File(EmbeddedJetty.class.getClassLoader().getResource(".").getPath()).getAbsolutePath();
     private Injector injector;
+    private String contextPath;
 
     protected EmbeddedJetty(HttpConfiguration configuration) {
-        server = new Server(threadPool(configuration));
+        this.configuration = configuration;
+        server = new Server(threadPool(this.configuration));
         server.setConnectors(configureConnectors(configuration));
     }
 
     @Override
     public Embedded addServletContext(String contextPath, boolean shareNothing, final Module... modules) {
 
-        ServletContextHandler handler = new ServletContextHandler(shareNothing ? NO_SESSIONS : SESSIONS);
+        this.contextPath = contextPath;
+        ServletContextHandler handler = new ServletContextHandler(server, contextPath, shareNothing ? NO_SESSIONS : SESSIONS);
         handler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
         handler.addServlet(DefaultServlet.class, "/*");
-        handler.setContextPath(contextPath);
+        handler.setContextPath(this.contextPath);
         handler.setInitParameter("org.eclipse.jetty.servlet.Default.resourceBase", RESOURCE_BASE);
 
         injector = Guice.createInjector(modules);
@@ -55,11 +62,6 @@ public class EmbeddedJetty extends Embedded {
                 return injector;
             }
         });
-
-        HandlerList handlerList = new HandlerList();
-        handlerList.setHandlers(new Handler[]{getResourceHandler(), handler});
-
-        server.setHandler(handlerList);
 
         return this;
     }
@@ -79,6 +81,7 @@ public class EmbeddedJetty extends Embedded {
         Preconditions.checkState(!server.isRunning(), "Server is already running.");
         try {
             server.start();
+            LOGGER.info(String.format("Server is started on %d with %s", configuration.getPort(), contextPath));
             if (standalone) server.join();
         } catch (Exception e) {
             throw new SystemException(e.getMessage(), e);

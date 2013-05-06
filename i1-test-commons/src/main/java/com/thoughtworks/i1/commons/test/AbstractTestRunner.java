@@ -1,6 +1,6 @@
 package com.thoughtworks.i1.commons.test;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -74,9 +74,10 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     }
 
     protected void beforeAllTestsRun() {
-        configuration = Configuration.config().http().port(8051).end()
-                .database().with(H2.driver, H2.tempFileDB, H2.compatible("ORACLE"), Hibernate.dialect("Oracle10g"), Hibernate.showSql)
-                .user("sa").password("").end().build();
+        configuration = Configuration.config()
+                .http().port(8051).end()
+                .database().with(H2.driver, H2.tempFileDB, H2.compatible("ORACLE"), Hibernate.dialect("Oracle10g"), Hibernate.showSql).user("sa").password("").end()
+                .build();
         startServer(configuration);
     }
 
@@ -151,8 +152,8 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
                     bind(HttpClient.class).toInstance(client);
                     bind(java.net.URI.class).toInstance(configuration.getHttp().getUri(contextPath));
                 }
-            }, Modules.jpaPersistModule("domain", configuration.getDatabase()),
-                    Modules.jerseyServletModule("/api/*", "com.thoughtworks.i1"),
+            }, new Modules().jpaPersistModule("domain", configuration.getDatabase()),
+                    new Modules().jerseyServletModule("/api/*", Optional.<String>absent(), "com.thoughtworks.i1"),
                     customizedModule()
             ).start(false);
 
