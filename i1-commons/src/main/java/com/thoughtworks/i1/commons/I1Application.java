@@ -2,6 +2,7 @@ package com.thoughtworks.i1.commons;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
@@ -33,7 +34,7 @@ public abstract class I1Application {
         return "domain";
     }
 
-    protected String getScannintPackage() {
+    protected String getScanningPackage() {
         return "com.thoughtworks.i1";
     }
 
@@ -42,13 +43,14 @@ public abstract class I1Application {
     }
 
     protected Module[] getModules() {
-        Module jerseyServletModule = jerseyServletModule(getApiPrefix(), getScannintPackage());
+        Module propertyModule = getPropertyModule(getPropertyFiles());
+        Module jerseyServletModule = jerseyServletModule(getApiPrefix(), getScanningPackage());
         Module jpaPersistModule = jpaPersistModule(getPersistUnit());
         Optional<Module> customizedModule = getCustomizedModule();
         if (customizedModule.isPresent()) {
-            return new Module[]{jerseyServletModule, jpaPersistModule, customizedModule.get()};
+            return new Module[]{propertyModule, jerseyServletModule, jpaPersistModule, customizedModule.get()};
         }
-        return new Module[]{jerseyServletModule, jpaPersistModule};
+        return new Module[]{propertyModule, jerseyServletModule, jpaPersistModule};
     }
 
     public JpaPersistModule jpaPersistModule(String persistUnit) {
@@ -59,9 +61,6 @@ public abstract class I1Application {
         return new JerseyServletModule() {
             @Override
             protected void configureServlets() {
-                for (String propertyFile : getPropertyFiles()) {
-                    bindProperties(binder(), loadProperties(propertyFile));
-                }
                 bind(JacksonJaxbJsonProvider.class).in(Singleton.class);
                 serve(prefix).with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
                         .put(PROPERTY_PACKAGES, on(";").skipNulls().join(packages)).build());
@@ -91,6 +90,17 @@ public abstract class I1Application {
     }
 
     protected abstract Configuration defaultConfiguration();
+
+    private Module getPropertyModule(final String[] propertyFiles) {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                for (String propertyFile : getPropertyFiles()) {
+                    bindProperties(binder(), loadProperties(propertyFile));
+                }
+            }
+        };
+    }
 
     private Properties loadProperties(String propertyFile) {
 

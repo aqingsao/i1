@@ -82,7 +82,7 @@ public class I1ApplicationTest {
     public void should_only_load_inner_resources_when_given_scanning_package() {
         server = new I1TestApplication(){
             @Override
-            protected String getScannintPackage() {
+            protected String getScanningPackage() {
                 return "com.thoughtworks.i1.commons.inner";
             }
         }.runInEmbeddedJetty(false);
