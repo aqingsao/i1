@@ -1,6 +1,7 @@
 package com.thoughtworks.i1.emailSender;
 
 import com.google.inject.servlet.GuiceFilter;
+import com.googlecode.flyway.core.Flyway;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.db.Migration;
@@ -40,7 +41,7 @@ public class Main {
         handler.addServlet(DefaultServlet.class, "/*");
         DatabaseConfiguration configuration = Configuration.config().database().user("user").password("")
                 .with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("Oracle"), DatabaseConfiguration.Hibernate.createDrop, DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).build();
-        Migration.migrate(configuration);
+        new Migration(new Flyway()).migrate(configuration);
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("domain", configuration.toProperties());
         entityManager = entityManagerFactory.createEntityManager();
 

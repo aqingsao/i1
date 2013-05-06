@@ -34,6 +34,9 @@ dependencies{
     runtime 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final'
     runtime "org.hibernate:hibernate-validator:4.3.0.Final"
 
+    // Use embedded H2 database
+    compile 'com.h2database:h2:1.3.170'
+
     // Use jersey as RESTful framework
     compile "com.sun.jersey:jersey-core:$jerseyVersion"
     compile "com.sun.jersey:jersey-servlet:$jerseyVersion"

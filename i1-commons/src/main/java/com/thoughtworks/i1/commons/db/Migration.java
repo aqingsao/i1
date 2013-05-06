@@ -9,9 +9,13 @@ import java.util.Properties;
 
 public class Migration {
     private static Logger logger = LoggerFactory.getLogger(Migration.class);
-    private static Flyway flyway = new Flyway();
+    private Flyway flyway;
 
-    public static void migrate(DatabaseConfiguration config) {
+    public Migration(Flyway flyway){
+        this.flyway = flyway;
+    }
+
+    public void migrate(DatabaseConfiguration config) {
         if (config.getMigration().isPresent()) {
             DatabaseConfiguration.MigrationConfiguration configuration = config.getMigration().get();
             flyway.setLocations(configuration.getLocations());
