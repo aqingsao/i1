@@ -6,7 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.googlecode.flyway.core.Flyway;
-import com.thoughtworks.i1.commons.Modules;
+import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.server.Embedded;
@@ -74,10 +74,6 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     }
 
     protected void beforeAllTestsRun() {
-        configuration = Configuration.config()
-                .http().port(8051).end()
-                .database().with(H2.driver, H2.tempFileDB, H2.compatible("ORACLE"), Hibernate.dialect("Oracle10g"), Hibernate.showSql).user("sa").password("").end()
-                .build();
         startServer(configuration);
     }
 
@@ -146,16 +142,9 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
             client.start();
 
             final String contextPath = "/test";
-            server = Embedded.jetty(configuration.getHttp()).addServletContext(contextPath, true, new AbstractModule() {
-                @Override
-                protected void configure() {
-                    bind(HttpClient.class).toInstance(client);
-                    bind(java.net.URI.class).toInstance(configuration.getHttp().getUri(contextPath));
-                }
-            }, new Modules().jpaPersistModule("domain", configuration.getDatabase()),
-                    new Modules().jerseyServletModule("/api/*", Optional.<String>absent(), "com.thoughtworks.i1"),
-                    customizedModule()
-            ).start(false);
+
+            I1Application application = new TestApplication();
+            server = application.runInEmbeddedJetty();
 
             LOGGER.info(String.format("Server is started at: %s", configuration.getHttp().getUri(contextPath)));
             injector = server.injector();
@@ -194,4 +183,31 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
         return currentTest;
     }
 
+    public static class TestApplication extends I1Application{
+
+        @Override
+        protected Optional<Module> getCustomizedModule() {
+            Module module = new AbstractModule() {
+                @Override
+                protected void configure() {
+                    bind(HttpClient.class).toInstance(client);
+                    bind(java.net.URI.class).toInstance(getConfiguration().getHttp().getUri(getContextPath()));
+                }
+            };
+            return Optional.of(module);
+        }
+
+        @Override
+        protected Configuration defaultConfiguration() {
+            return Configuration.config()
+                    .http().port(8051).end()
+                    .database().with(H2.driver, H2.tempFileDB, H2.compatible("ORACLE"), Hibernate.dialect("Oracle10g"), Hibernate.showSql).user("sa").password("").end()
+                    .build();
+        }
+
+        @Override
+        protected String getContextPath() {
+            return "test";
+        }
+    }
 }

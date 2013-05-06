@@ -1,16 +1,19 @@
 package com.thoughtworks.i1.quartz;
 
-import com.thoughtworks.i1.commons.AbstractApplication;
+import com.google.common.base.Optional;
+import com.google.inject.Module;
+import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
-import com.thoughtworks.i1.commons.server.Embedded;
-import com.thoughtworks.i1.quartz.web.MyGuiceServletContextListener;
+import com.thoughtworks.i1.quartz.service.QuartzModule;
 
-public class Application extends AbstractApplication {
+public class Application extends I1Application {
     private static final Application instance = new Application();
-    private Application(){}
 
-    public static Application getInstance(){
+    private Application() {
+    }
+
+    public static Application getInstance() {
         return instance;
     }
 
@@ -22,8 +25,18 @@ public class Application extends AbstractApplication {
                 .build();
     }
 
+    @Override
+    protected Optional<Module> getCustomizedModule() {
+        Module module = new QuartzModule();
+        return Optional.of(module);
+    }
+
+    @Override
+    protected String getContextPath() {
+        return "/schedule";
+    }
+
     public static void main(String[] args) throws Exception {
-        Configuration configuration = new Application().getConfiguration();
-        Embedded.jetty(configuration.getHttp()).addServletContext("/scheduler", true, new MyGuiceServletContextListener()).start(true);
+        Application.getInstance().runInEmbeddedJetty();
     }
 }
