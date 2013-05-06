@@ -57,19 +57,24 @@ public class JobsService {
     }
 
     public List<QuartzVO> findAllJobs() {
-        List<JobVO> jobVOs = getJobVOs();
-        List<QuartzVO> quartzVOs = Lists.newArrayList();
+        try {
+            List<JobVO> jobVOs = getJobVOs();
+            List<QuartzVO> quartzVOs = Lists.newArrayList();
 
-        for (JobVO jobVO : jobVOs) {
-            QuartzVO quartzVO = getQuartzVOFromJob(jobVO.getJobDetail());
+            for (JobVO jobVO : jobVOs) {
+                QuartzVO quartzVO = getQuartzVOFromJob(jobVO.getJobDetail());
 
-            List<TriggerVO> triggerVOs = getTriggerVOFromJob(jobVO.getTriggers());
-            quartzVO.setTriggers(triggerVOs);
+                List<TriggerVO> triggerVOs = getTriggerVOFromJob(jobVO.getTriggers());
+                quartzVO.setTriggers(triggerVOs);
 
-            quartzVOs.add(quartzVO);
+                quartzVOs.add(quartzVO);
+            }
+
+            return quartzVOs;
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
-
-        return quartzVOs;
+        return null;
     }
 
     public void saveJob(QuartzVO quartzVO) {
@@ -122,7 +127,7 @@ public class JobsService {
         return jobBuilder.build();
     }
 
-    private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) {
+    private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) throws Exception{
         List<TriggerVO> triggerVOs = Lists.newArrayList();
         for (SimpleTrigger trigger : (List<SimpleTrigger>)triggers) {
             TriggerVO triggerVO = new TriggerVO();
@@ -132,6 +137,8 @@ public class JobsService {
             triggerVO.setEndTime(trigger.getEndTime());
             triggerVO.setRepeatCount(trigger.getRepeatCount());
             triggerVO.setRepeatInterval(trigger.getRepeatInterval());
+            Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+            triggerVO.setTriggerState(triggerState.name());
             triggerVOs.add(triggerVO);
         }
         return triggerVOs;
