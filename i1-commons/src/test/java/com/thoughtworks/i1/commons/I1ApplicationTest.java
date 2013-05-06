@@ -94,7 +94,7 @@ public class I1ApplicationTest {
         assertThat(get("/", "/api/outer").getClientResponseStatus(), is(ClientResponse.Status.NOT_FOUND));
     }
 
-    @Ignore
+    @Test
     public void should_load_property_file_when_given() {
         server = new I1TestApplication(){
             @Override
