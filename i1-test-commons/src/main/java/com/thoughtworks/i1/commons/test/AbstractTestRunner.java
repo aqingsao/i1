@@ -4,7 +4,9 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.common.base.Throwables;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.googlecode.flyway.core.Flyway;
+import com.thoughtworks.i1.commons.Modules;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.server.Embedded;
@@ -19,6 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import java.util.Properties;
+
+import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.H2;
+import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.Hibernate;
 
 public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
 
@@ -69,7 +74,9 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     }
 
     protected void beforeAllTestsRun() {
-        configuration = Configuration.config().http().port(8051).end().build();
+        configuration = Configuration.config().http().port(8051).end()
+                .database().with(H2.driver, H2.tempFileDB, H2.compatible("ORACLE"), Hibernate.dialect("Oracle10g"), Hibernate.showSql)
+                .user("sa").password("").end().build();
         startServer(configuration);
     }
 
@@ -130,32 +137,41 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
         flyway.configure(flywayConfiguration(config));
     }
 
-    protected void startServer(Configuration configuration) {
+    protected void startServer(final Configuration configuration) {
         try {
             migrateDatabase(configuration.getDatabase());
 
             client = new HttpClient();
             client.start();
 
-            server = Embedded.jetty(configuration.getHttp()).addServletContext("/test", true, new AbstractModule() {
+            final String contextPath = "/test";
+            server = Embedded.jetty(configuration.getHttp()).addServletContext(contextPath, true, new AbstractModule() {
                 @Override
                 protected void configure() {
                     bind(HttpClient.class).toInstance(client);
-                    bind(JacksonJaxbJsonProvider.class);
+                    bind(java.net.URI.class).toInstance(configuration.getHttp().getUri(contextPath));
                 }
-            }).start(false);
+            }, Modules.jpaPersistModule("domain", configuration.getDatabase()),
+                    Modules.jerseyServletModule("/api/*", "com.thoughtworks.i1"),
+                    customizedModule()
+            ).start(false);
 
-            entityManager = server.injector().getInstance(EntityManager.class);
+            LOGGER.info(String.format("Server is started at: %s", configuration.getHttp().getUri(contextPath)));
+            injector = server.injector();
+            entityManager = injector.getInstance(EntityManager.class);
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
+    protected abstract Module customizedModule();
+
     protected void closeServer() {
         try {
             if (server != null) {
                 server.stop();
+                LOGGER.info("Server is stopped successfully");
             }
         } catch (Exception e) {
             LOGGER.warn("Failed to stop server: " + e.getMessage(), e);
@@ -176,4 +192,5 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
 
         return currentTest;
     }
+
 }
