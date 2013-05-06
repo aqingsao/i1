@@ -76,17 +76,6 @@ subprojects {
         compile project(':i1-commons')
 //        compile "javax:javaee-api:6.0"
 
-        // Use guice as IOC framework
-        compile "com.google.inject.extensions:guice-persist:$guiceVersion"
-        compile "com.google.inject:guice:$guiceVersion"
-
-        // Use jersey as RESTful framework
-        compile "com.sun.jersey:jersey-core:$jerseyVersion"
-        compile "com.sun.jersey:jersey-servlet:$jerseyVersion"
-        compile "com.sun.jersey:jersey-server:$jerseyVersion"
-        compile "com.sun.jersey:jersey-json:$jerseyVersion"
-        compile "com.sun.jersey.contribs:jersey-guice:$jerseyVersion"
-
         // Use embedded H2 database
         compile 'com.h2database:h2:1.3.170'
 

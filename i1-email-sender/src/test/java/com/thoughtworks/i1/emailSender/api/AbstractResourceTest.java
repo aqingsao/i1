@@ -1,6 +1,7 @@
 package com.thoughtworks.i1.emailSender.api;
 
 import com.google.inject.servlet.GuiceFilter;
+import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.db.Migration;
 import com.thoughtworks.i1.emailSender.web.MyGuiceServletContextListener;
@@ -36,7 +37,7 @@ public abstract class AbstractResourceTest {
         // Must add DefaultServlet for embedded Jetty, failing to do this will cause 404 errors.
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
-        DatabaseConfiguration configuration = DatabaseConfiguration.database().user("sa").password("")
+        DatabaseConfiguration configuration = Configuration.config().database().user("sa").password("")
                 .with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.fileDB("/Users/twer/Projects/i1/email-sender"), DatabaseConfiguration.H2.compatible("Oracle"), DatabaseConfiguration.Hibernate.create, DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql)
                 .build();
         Migration.migrate(configuration);

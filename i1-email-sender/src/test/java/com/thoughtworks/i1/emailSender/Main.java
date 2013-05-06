@@ -1,6 +1,7 @@
 package com.thoughtworks.i1.emailSender;
 
 import com.google.inject.servlet.GuiceFilter;
+import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.db.Migration;
 import com.thoughtworks.i1.emailSender.domain.Email;
@@ -17,7 +18,6 @@ import javax.servlet.DispatcherType;
 import java.io.File;
 import java.util.EnumSet;
 
-import static com.google.inject.name.Names.bindProperties;
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
@@ -38,7 +38,7 @@ public class Main {
         // Must add DefaultServlet for embedded Jetty, failing to do this will cause 404 errors.
         // This is not needed if web.xml is used instead.
         handler.addServlet(DefaultServlet.class, "/*");
-        DatabaseConfiguration configuration = DatabaseConfiguration.database().user("user").password("")
+        DatabaseConfiguration configuration = Configuration.config().database().user("user").password("")
                 .with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("Oracle"), DatabaseConfiguration.Hibernate.createDrop, DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).build();
         Migration.migrate(configuration);
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("domain", configuration.toProperties());
