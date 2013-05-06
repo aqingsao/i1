@@ -38,7 +38,7 @@ public class Modules {
                 bind(JacksonJaxbJsonProvider.class).in(Singleton.class);
                 serve(prefix).with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
                         .put(PROPERTY_PACKAGES, on(";").skipNulls().join(packages)).build());
-                filter("/*").through(PersistFilter.class);
+                filter(prefix).through(PersistFilter.class);
             }
         };
     }

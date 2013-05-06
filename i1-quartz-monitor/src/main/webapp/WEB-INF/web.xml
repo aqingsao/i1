@@ -8,16 +8,16 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-    <!--<servlet>-->
-        <!--<description></description>-->
-        <!--<display-name>defaultServlet</display-name>-->
-        <!--<servlet-name>defaultServlet</servlet-name>-->
-        <!--<servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>defaultServlet</servlet-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</servlet-mapping>-->
+    <servlet>
+        <description></description>
+        <display-name>defaultServlet</display-name>
+        <servlet-name>defaultServlet</servlet-name>
+        <servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>defaultServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 
     <filter>
         <filter-name>guiceFilter</filter-name>
