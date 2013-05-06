@@ -1,6 +1,5 @@
 package com.thoughtworks.i1.quartz.web;
 
-import com.google.common.base.Optional;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -18,7 +17,7 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
 
     @Override
     public Injector getInjector() {
-        return Guice.createInjector(application.jerseyServletModule("/api/*", Optional.<String>absent(), "com.thoughtworks.i1"),
+        return Guice.createInjector(application.jerseyServletModule("/api/*", "com.thoughtworks.i1"),
                 application.jpaPersistModule("domain"), new QuartzModule());
     }
 }

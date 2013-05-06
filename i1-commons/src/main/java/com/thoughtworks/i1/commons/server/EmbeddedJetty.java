@@ -68,14 +68,6 @@ public class EmbeddedJetty extends Embedded {
         return this;
     }
 
-    private Injector getInjector(GuiceServletContextListener listener) {
-        try {
-            return (Injector) listener.getClass().getDeclaredMethod("getInjector").invoke(listener);
-        } catch (Exception e) {
-            throw new SystemException("Cannot invoke getInjector() method on " + listener.getClass());
-        }
-    }
-
     @Override
     public Embedded start(boolean standalone) {
         Preconditions.checkState(!server.isRunning(), "Server is already running.");
@@ -106,6 +98,14 @@ public class EmbeddedJetty extends Embedded {
     @Override
     public Injector injector() {
         return injector;
+    }
+
+    private Injector getInjector(GuiceServletContextListener listener) {
+        try {
+            return (Injector) listener.getClass().getDeclaredMethod("getInjector").invoke(listener);
+        } catch (Exception e) {
+            throw new SystemException("Cannot invoke getInjector() method on " + listener.getClass());
+        }
     }
 
     private QueuedThreadPool threadPool(HttpConfiguration configuration) {

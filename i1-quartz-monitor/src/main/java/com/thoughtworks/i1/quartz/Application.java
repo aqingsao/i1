@@ -1,7 +1,6 @@
 package com.thoughtworks.i1.quartz;
 
 import com.google.common.base.Optional;
-import com.google.inject.Module;
 import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
@@ -26,9 +25,8 @@ public class Application extends I1Application {
     }
 
     @Override
-    protected Optional<Module> getCustomizedModule() {
-        Module module = new QuartzModule();
-        return Optional.of(module);
+    protected Optional<QuartzModule> getCustomizedModule() {
+        return Optional.of(new QuartzModule());
     }
 
     @Override
@@ -37,6 +35,6 @@ public class Application extends I1Application {
     }
 
     public static void main(String[] args) throws Exception {
-        Application.getInstance().runInEmbeddedJetty();
+        Application.getInstance().runInEmbeddedJetty(true);
     }
 }

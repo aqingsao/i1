@@ -144,7 +144,7 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
             final String contextPath = "/test";
 
             I1Application application = new TestApplication();
-            server = application.runInEmbeddedJetty();
+            server = application.runInEmbeddedJetty(false);
 
             LOGGER.info(String.format("Server is started at: %s", configuration.getHttp().getUri(contextPath)));
             injector = server.injector();

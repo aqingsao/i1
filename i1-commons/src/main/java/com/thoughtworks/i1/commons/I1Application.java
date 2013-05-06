@@ -25,8 +25,8 @@ public abstract class I1Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(I1Application.class);
     private Configuration configuration;
 
-    public Embedded runInEmbeddedJetty() {
-        return Embedded.jetty(getConfiguration().getHttp()).addServletContext(getContextPath(), true, getModules()).start(true);
+    public Embedded runInEmbeddedJetty(boolean standalone) {
+        return Embedded.jetty(getConfiguration().getHttp()).addServletContext(getContextPath(), true, getModules()).start(standalone);
     }
 
     protected String getPersistUnit() {
@@ -42,10 +42,10 @@ public abstract class I1Application {
     }
 
     protected Module[] getModules() {
-        Module jerseyServletModule = jerseyServletModule(getApiPrefix(), Optional.<String>absent(), getScannintPackage());
+        Module jerseyServletModule = jerseyServletModule(getApiPrefix(), getScannintPackage());
         Module jpaPersistModule = jpaPersistModule(getPersistUnit());
         Optional<Module> customizedModule = getCustomizedModule();
-        if(customizedModule.isPresent()){
+        if (customizedModule.isPresent()) {
             return new Module[]{jerseyServletModule, jpaPersistModule, customizedModule.get()};
         }
         return new Module[]{jerseyServletModule, jpaPersistModule};
@@ -55,12 +55,12 @@ public abstract class I1Application {
         return new JpaPersistModule(persistUnit).properties(getConfiguration().getDatabase().toProperties());
     }
 
-    public JerseyServletModule jerseyServletModule(final String prefix, final Optional<String> propertyFile, final String... packages) {
+    public JerseyServletModule jerseyServletModule(final String prefix, final String... packages) {
         return new JerseyServletModule() {
             @Override
             protected void configureServlets() {
-                if(propertyFile.isPresent()){
-                    bindProperties(binder(), loadProperties(propertyFile.get()));
+                for (String propertyFile : getPropertyFiles()) {
+                    bindProperties(binder(), loadProperties(propertyFile));
                 }
                 bind(JacksonJaxbJsonProvider.class).in(Singleton.class);
                 serve(prefix).with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
@@ -70,6 +70,27 @@ public abstract class I1Application {
             }
         };
     }
+
+    public Configuration getConfiguration() {
+        if (configuration == null) {
+            configuration = defaultConfiguration();
+        }
+        return configuration;
+    }
+
+    protected String[] getPropertyFiles() {
+        return new String[0];
+    }
+
+    protected <T extends Module> Optional<T> getCustomizedModule() {
+        return Optional.absent();
+    }
+
+    protected String getContextPath(){
+        return "/";
+    }
+
+    protected abstract Configuration defaultConfiguration();
 
     private Properties loadProperties(String propertyFile) {
 
@@ -82,14 +103,4 @@ public abstract class I1Application {
             throw new SystemException(e.getMessage(), e);
         }
     }
-
-    public Configuration getConfiguration(){
-        if(configuration == null){
-            configuration = defaultConfiguration();
-        }
-        return configuration;
-    }
-    protected abstract Optional<Module> getCustomizedModule();
-    protected abstract Configuration defaultConfiguration();
-    protected abstract String getContextPath();
 }
