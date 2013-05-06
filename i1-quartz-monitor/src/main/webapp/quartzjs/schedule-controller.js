@@ -151,12 +151,27 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
             $http.get(resumeUrl).success(
                 function (data, status, headers, config) {
                     alert("重启执行成功！");
-                }).error(
+                }
+            ).error(
                 function (data, status, headers, config) {
                     alert("重启失败！");
                 }
             );
-        }
+        } ;
+
+//        从schedule里面移除trigger
+        $scope.removeFromSchedule = function (trigger) {
+            var removeUrl = Path.getUri("api/quartz-jobs/delete-trigger/" + trigger.triggerName + "/" + trigger.triggerGroupName);
+            $http.get(removeUrl).success(
+                function (data, status, headers, config) {
+                    alert("移除成功！");
+                }
+            ).error(
+                function (data, status, headers, config) {
+                alert("移除失败！");
+                }
+            )
+        };
     }
 )
 ;

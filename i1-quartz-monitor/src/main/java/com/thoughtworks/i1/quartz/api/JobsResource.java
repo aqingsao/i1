@@ -79,14 +79,14 @@ public class JobsResource {
     }
 
 
-    @POST
-    @Path("delete-trigger/{trrggerName}/{triggerGroupName}")
+    @GET
+    @Path("delete-trigger/{triggerName}/{triggerGroupName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteSchedule(@PathParam("trrggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
+    public Response deleteSchedule(@PathParam("triggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
         try {
             jobsService.deleteTrigger(triggerName,triggerGroupName);
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
-                    .path("delete-trigger/{trrggerName}/{triggerGroupName");
+                    .path("delete-trigger/{triggerName}/{triggerGroupName");
             Response.ResponseBuilder builder = Response.created(path
                     .build());
             builder.contentLocation(path.build());
@@ -97,14 +97,14 @@ public class JobsResource {
         }
     }
 
-    @POST
-    @Path("resume-trigger/{trrggerName}/{triggerGroupName}")
+    @GET
+    @Path("resume-trigger/{triggerName}/{triggerGroupName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response resumeSchedule(@PathParam("trrggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
+    public Response resumeSchedule(@PathParam("triggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
         try {
             jobsService.resumeTrigger(triggerName,triggerGroupName);
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
-                    .path("resume-trigger/{trrggerName}/{triggerGroupName}");
+                    .path("resume-trigger/{triggerName}/{triggerGroupName}");
             Response.ResponseBuilder builder = Response.created(path
                     .build());
             builder.contentLocation(path.build());
