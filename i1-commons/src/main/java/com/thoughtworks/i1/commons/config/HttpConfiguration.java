@@ -9,8 +9,10 @@ import com.thoughtworks.i1.commons.util.Duration;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.net.URI;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
@@ -359,5 +361,10 @@ public class HttpConfiguration {
                 return new SslConfiguration(keyStorePath, keyStorePassword, keyManagerPassword, keyStoreType, trustStorePath, trustStorePassword, trustStoreType);
             }
         }
+    }
+
+    public URI getUri(String contextPath) {
+        String host = this.host.isPresent() ? this.host.get() : "http://localhost";
+        return UriBuilder.fromUri(host).port(getPort()).path(contextPath).build();
     }
 }

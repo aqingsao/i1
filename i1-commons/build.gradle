@@ -4,7 +4,9 @@ dependencies{
     // Use jetty DefaultServlet
     compile "org.eclipse.jetty:jetty-servlet:$jettyVersion" // jetty-servlet depends on jetty-server
 
-    // Use guice servlet for web app
+    // Use guice as IOC framework
+    compile "com.google.inject.extensions:guice-persist:$guiceVersion"
+    compile "com.google.inject:guice:$guiceVersion"
     compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
 
     // Use flyway as db migration tool
@@ -27,6 +29,16 @@ dependencies{
     compile 'javax.validation:validation-api:1.0.0.GA'
     // Use javax persistence: JSR317
     compile 'javax.persistence:persistence-api:1.0-rev-1'
+    runtime "org.hibernate:hibernate-entitymanager:4.1.7.Final"
+    runtime 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final'
+    runtime "org.hibernate:hibernate-validator:4.3.0.Final"
+
+    // Use jersey as RESTful framework
+    compile "com.sun.jersey:jersey-core:$jerseyVersion"
+    compile "com.sun.jersey:jersey-servlet:$jerseyVersion"
+    compile "com.sun.jersey:jersey-server:$jerseyVersion"
+    compile "com.sun.jersey:jersey-json:$jerseyVersion"
+    compile "com.sun.jersey.contribs:jersey-guice:$jerseyVersion"
 
     // Use slf4j as log framework
     compile "org.slf4j:slf4j-api:$slf4jVersion"
