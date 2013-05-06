@@ -15,6 +15,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
 
 //        初始化
         $scope.quartzList = [];
+
         $scope.quartz = new Quartz();
 
         $scope.quartz.addTrigger(new Trigger());
@@ -23,7 +24,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
 
             $scope.quartz.addJobData("url", $scope.url);
 
-            var url = "http://localhost:8051/schedule/api/quartz-jobs/item";
+            var url = Path.getUri("api/quartz-jobs/item");
             $http.post(url, $scope.quartz).success(
                 function (data, status, headers, config) {
                     alert("保存成功！");
@@ -41,17 +42,17 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
 
         $scope.listQuartz = function () {
 
-            var url = "http://localhost:8051/schedule/api/quartz-jobs/items";
-            $http.post(url, $scope.quartz).success(
+            var url = Path.getUri("api/quartz-jobs/items");
+            $http.get(url).success(
                 function (data, status, headers, config) {
+                    $scope.quartzList = [];
                     for (var j = 0; j < data.length; j++) {
                         var tempQuartz = new Quartz();
                         $scope.quartzList.push(tempQuartz.copyQuartzVO(data[j]));
                     }
-
                 }).error(
                 function (data, status, headers, config) {
-                    alert("保存成功");
+
                 }
             );
         };
@@ -60,7 +61,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
             $scope.quartz.addTrigger(new Trigger());
         }
 
-
+        $scope.listQuartz();
 
     }
 )

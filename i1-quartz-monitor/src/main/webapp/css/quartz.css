@@ -29,3 +29,7 @@
     width: 870px;
     height: 300px;
 }
+.quartz-items ul li{
+    float: left;
+    list-style-type:none;
+}

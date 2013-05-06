@@ -124,12 +124,14 @@ public class JobsService {
 
     private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) {
         List<TriggerVO> triggerVOs = Lists.newArrayList();
-        for (Trigger trigger : triggers) {
+        for (SimpleTrigger trigger : (List<SimpleTrigger>)triggers) {
             TriggerVO triggerVO = new TriggerVO();
             triggerVO.setTriggerName(trigger.getKey().getName());
             triggerVO.setTriggerGroupName(trigger.getKey().getGroup());
             triggerVO.setStartTime(trigger.getStartTime());
             triggerVO.setEndTime(trigger.getEndTime());
+            triggerVO.setRepeatCount(trigger.getRepeatCount());
+            triggerVO.setRepeatInterval(trigger.getRepeatInterval());
             triggerVOs.add(triggerVO);
         }
         return triggerVOs;

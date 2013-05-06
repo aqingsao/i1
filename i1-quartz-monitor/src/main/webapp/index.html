@@ -137,6 +137,7 @@
                                 <td>结束时间</td>
                                 <td>重复次数</td>
                                 <td>间隔时间</td>
+                                <td>触发器状态</td>
                                 <td>
                                     <button class="btn btn-large btn-primary" type="button">启动</button>
                                 </td>
@@ -148,16 +149,17 @@
                                 </td>
                             </tr>
 
-                            <tr ng-repeat="quartz in quartzList">
-                                <td>{{quartz.jabName}}</td>
+                            <tbody ng-repeat="quartz in quartzList">
+                            <tr ng-repeat="trigger in quartz.triggers">
+                                <td>{{quartz.jobName}}</td>
                                 <td>{{quartz.jobClass}}</td>
                                 <td>{{quartz.jobDatas[0].value}}</td>
-                                <td>quartz.triggerName</td>
-                                <td>cronpress</td>
-                                <td>urlKey</td>
-                                <td>urlValue</td>
-                                <td>urlValue</td>
-                                <td>urlValue</td>
+                                <td>{{trigger.triggerName}}</td>
+                                <td>{{trigger.startTime}}</td>
+                                <td>{{trigger.endTime}}</td>
+                                <td>{{trigger.repeatCount}}</td>
+                                <td>{{trigger.repeatInterval}}</td>
+                                <td>{{trigger.triggerState}}</td>
                                 <td>
                                     <button class="btn btn-large btn-primary" type="button">启动</button>
                                 </td>
@@ -168,6 +170,9 @@
                                     <button class="btn btn-large btn-primary" type="button">删除</button>
                                 </td>
                             </tr>
+
+                            </tbody>
+
 
                         </table>
                     </div>
@@ -198,6 +203,7 @@
 <script src="js/ng-grid.js"></script>
 
 
+<script src="commons/utils.js"></script>
 <script src="quartzjs/quartz-model.js"></script>
 <script src="quartzjs/schedule-app.js"></script>
 <script src="quartzjs/schedule-controller.js"></script>
