@@ -11,7 +11,6 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.commons.config.HttpConfiguration;
 import com.thoughtworks.i1.commons.util.Duration;
-import com.thoughtworks.i1.commons.web.I1GuiceServletContextListener;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -46,23 +45,17 @@ public class EmbeddedJetty extends Embedded {
 
     @Override
     public Embedded addServletContext(String contextPath, boolean shareNothing, final Module... modules) {
-
-        injector = Guice.createInjector(modules);
-        return getEmbedded(contextPath, shareNothing, new GuiceServletContextListener() {
+        return addServletContext(contextPath, shareNothing, new GuiceServletContextListener() {
             @Override
             protected Injector getInjector() {
-                return injector;
+                return Guice.createInjector(modules);
             }
         });
     }
 
     @Override
-    public Embedded addServletContext(String contextPath, boolean shareNothing, I1GuiceServletContextListener listener) {
-        injector = listener.getInjector();
-        return getEmbedded(contextPath, shareNothing, listener);
-    }
-
-    private Embedded getEmbedded(String contextPath, boolean shareNothing, GuiceServletContextListener listener) {
+    public Embedded addServletContext(String contextPath, boolean shareNothing, GuiceServletContextListener listener) {
+        this.injector = getInjector(listener);
         this.contextPath = contextPath;
         ServletContextHandler handler = new ServletContextHandler(server, contextPath, shareNothing ? NO_SESSIONS : SESSIONS);
         handler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
@@ -73,6 +66,14 @@ public class EmbeddedJetty extends Embedded {
         handler.addEventListener(listener);
 
         return this;
+    }
+
+    private Injector getInjector(GuiceServletContextListener listener) {
+        try {
+            return (Injector) listener.getClass().getDeclaredMethod("getInjector").invoke(listener);
+        } catch (Exception e) {
+            throw new SystemException("Cannot invoke getInjector() method on " + listener.getClass());
+        }
     }
 
     @Override
