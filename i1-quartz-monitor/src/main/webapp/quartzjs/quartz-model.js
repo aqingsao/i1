@@ -23,6 +23,8 @@ var JobData = function (key, value) {
 };
 
 
+
+
 Quartz.prototype.addTrigger = function (trigger) {
     this.triggers.push(trigger);
 };

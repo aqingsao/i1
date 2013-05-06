@@ -1,2 +1,2 @@
-var scheduleApp = angular.module('scheduleApp',['ngGrid']);
+var scheduleApp = angular.module('scheduleApp',['ngGrid', 'directives']);
 

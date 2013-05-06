@@ -14,6 +14,7 @@
     <!--<link rel="stylesheet" href="css/modern.css">-->
     <link href="css/quartz.css" rel="stylesheet">
     <link href="css/ng-grid.css" rel="stylesheet">
+    <link href="css/jquery-ui.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -107,11 +108,17 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="trigger in quartz.triggers">
-                                    <td><input id="triggerName" type="text" ng-model="trigger.triggerName"></td>
-                                    <td><input id="startTime" type="text" ng-model="trigger.startTime"></td>
-                                    <td><input id="endTime" type="text" ng-model="trigger.endTime"></td>
-                                    <td><input id="repeatCount" type="text" ng-model="trigger.repeatCount"></td>
-                                    <td><input id="repeatInterval" type="text" ng-model="trigger.repeatInterval">ms</td>
+                                    <td><input id="triggerName{{$index}}" type="text" ng-model="trigger.triggerName"></td>
+                                    <td><input id="startTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].startTime" ></td>
+                                    <td><input id="endTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].endTime"></td>
+                                    <td><input id="repeatCount{{$index}}" type="text" ng-model="trigger.repeatCount"></td>
+                                    <td>
+                                        <input id="repeatInterval{{$index}}" type="text" ng-model="triggerInfoList[$index].repeatInterval">
+                                        <select id="repeatIntervalUnit{{$index}}"
+                                                ng-model="triggerInfoList[$index].repeatIntervalUnit"
+                                                ng-options="unit.key as unit.value for unit in units">
+                                        </select>
+                                    </td>
                                     <td>
                                         <a href="" ng-click="addClo()">添加</a>
                                     </td>
@@ -150,26 +157,26 @@
                             </tr>
 
                             <tbody ng-repeat="quartz in quartzList">
-                            <tr ng-repeat="trigger in quartz.triggers">
-                                <td>{{quartz.jobName}}</td>
-                                <td>{{quartz.jobClass}}</td>
-                                <td>{{quartz.jobDatas[0].value}}</td>
-                                <td>{{trigger.triggerName}}</td>
-                                <td>{{trigger.startTime}}</td>
-                                <td>{{trigger.endTime}}</td>
-                                <td>{{trigger.repeatCount}}</td>
-                                <td>{{trigger.repeatInterval}}</td>
-                                <td>{{trigger.triggerState}}</td>
-                                <td>
-                                    <button class="btn btn-large btn-primary" type="button">启动</button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-large btn-primary" type="button">暂停</button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-large btn-primary" type="button">删除</button>
-                                </td>
-                            </tr>
+                                <tr ng-repeat="trigger in quartz.triggers">
+                                    <td>{{quartz.jobName}}</td>
+                                    <td>{{quartz.jobClass}}</td>
+                                    <td>{{quartz.jobDatas[0].value}}</td>
+                                    <td>{{trigger.triggerName}}</td>
+                                    <td>{{trigger.startTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                    <td>{{trigger.endTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                    <td>{{trigger.repeatCount}}</td>
+                                    <td>{{getRepeatIntervalExpress(trigger.repeatInterval)}}</td>
+                                    <td>{{trigger.triggerState}}</td>
+                                    <td>
+                                        <button class="btn btn-large btn-primary" type="button">启动</button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-large btn-primary" type="button">暂停</button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-large btn-primary" type="button">删除</button>
+                                    </td>
+                                </tr>
 
                             </tbody>
 
@@ -201,9 +208,11 @@
 <script src="js/angular.js"></script>
 <script src="js/largeLoad.js"></script>
 <script src="js/ng-grid.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
 
 
 <script src="commons/utils.js"></script>
+<script src="commons/directiveModule.js"></script>
 <script src="quartzjs/quartz-model.js"></script>
 <script src="quartzjs/schedule-app.js"></script>
 <script src="quartzjs/schedule-controller.js"></script>
