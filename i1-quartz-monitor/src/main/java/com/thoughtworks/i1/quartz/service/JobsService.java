@@ -83,7 +83,7 @@ public class JobsService {
             this.addJob(jobDetail);
 
             List<TriggerVO> triggerVOs = quartzVO.getTriggers();
-            for(TriggerVO triggerVO : triggerVOs){
+            for (TriggerVO triggerVO : triggerVOs) {
                 Trigger trigger = getTrigger(jobDetail, triggerVO);
 
                 scheduleJob(trigger);
@@ -100,8 +100,7 @@ public class JobsService {
                 .withIdentity(triggerVO.getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
                 .startAt(triggerVO.getStartTime())
                 .endAt(triggerVO.getEndTime())
-                .forJob(jobDetail)
-               ;
+                .forJob(jobDetail);
         triggerBuilder.withSchedule(
                 SimpleScheduleBuilder
                         .simpleSchedule()
@@ -127,9 +126,9 @@ public class JobsService {
         return jobBuilder.build();
     }
 
-    private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) throws Exception{
+    private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) throws Exception {
         List<TriggerVO> triggerVOs = Lists.newArrayList();
-        for (SimpleTrigger trigger : (List<SimpleTrigger>)triggers) {
+        for (SimpleTrigger trigger : (List<SimpleTrigger>) triggers) {
             TriggerVO triggerVO = new TriggerVO();
             triggerVO.setTriggerName(trigger.getKey().getName());
             triggerVO.setTriggerGroupName(trigger.getKey().getGroup());
@@ -183,4 +182,49 @@ public class JobsService {
         }
         return jobDetails;
     }
+
+    /**
+     * 启动一个调度对象
+     * @throws SchedulerException
+     */
+    public  void start() throws SchedulerException
+    {
+        scheduler.start();
+    }
+
+    /**
+     * 检查调度是否启动
+     * @return
+     * @throws SchedulerException
+     */
+    public  boolean isStarted() throws SchedulerException
+    {
+        return scheduler.isStarted();
+    }
+
+
+
+    public void pasuseTrigger(String triggerName, String triggerGroupName) throws SchedulerException {
+        TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroupName);
+        scheduler.pauseTrigger(triggerKey);//停止触发器
+    }
+
+    public void deleteTrigger(String triggerName, String triggerGroupName) throws SchedulerException {
+        TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroupName);
+        scheduler.unscheduleJob(triggerKey);//移除触发器
+
+    }
+
+    public void resumeTrigger(String triggerName, String triggerGroupName) throws SchedulerException {
+        TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroupName);
+        scheduler.resumeTrigger(triggerKey);
+    }
+
+    public void deleteJob(String jobName, String jobGroupName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);
+        scheduler.deleteJob(jobKey);
+    }
+
+
+
 }

@@ -168,10 +168,10 @@
                                     <td>{{getRepeatIntervalExpress(trigger.repeatInterval)}}</td>
                                     <td>{{trigger.triggerState}}</td>
                                     <td>
-                                        <button class="btn btn-large btn-primary" type="button">启动</button>
+                                        <button class="btn btn-large btn-primary" type="button" ng-click="resumeTrigger(trigger)">启动</button>
                                     </td>
                                     <td>
-                                        <button class="btn btn-large btn-primary" type="button">暂停</button>
+                                        <button class="btn btn-large btn-primary" type="button" ng-click="pauseSchedule(trigger)">暂停</button>
                                     </td>
                                     <td>
                                         <button class="btn btn-large btn-primary" type="button">删除</button>
