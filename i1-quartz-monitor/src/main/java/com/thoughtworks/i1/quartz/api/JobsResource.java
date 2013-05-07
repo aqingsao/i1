@@ -60,9 +60,9 @@ public class JobsResource {
     }
 
     @GET
-    @Path("pause-trigger/{trrggerName}/{triggerGroupName}")
+    @Path("pause-trigger/{triggerName}/{triggerGroupName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response pauseSchedule(@PathParam("trrggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
+    public Response pauseSchedule(@PathParam("triggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
         try {
             jobsService.pasuseTrigger(triggerName,triggerGroupName);
 

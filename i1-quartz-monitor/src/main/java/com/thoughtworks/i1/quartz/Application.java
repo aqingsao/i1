@@ -19,7 +19,7 @@ public class Application extends I1Application {
     @Override
     public Configuration defaultConfiguration() {
         return Configuration.config()
-                .http().port(8051).end()
+                .http().port(8052).end()
                 .database().with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
                 .build();
     }

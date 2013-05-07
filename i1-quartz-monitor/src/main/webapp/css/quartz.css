@@ -33,3 +33,23 @@
     float: left;
     list-style-type:none;
 }
+
+.repeatCount{
+    width: 30px;
+}
+
+.repeatIntervalUnits{
+    width: 70px;
+}
+
+.abouttime{
+    width:160px;
+}
+
+.interval{
+    width: 120px;
+}
+
+.triggername{
+    width: 120px;
+}

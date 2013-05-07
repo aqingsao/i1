@@ -18,7 +18,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
             endTime = "";
             repeatInterval = 0;
             repeatIntervalUnit = 0;
-        }
+        } ;
 
         $scope.units = [
             {"key": 0, "value": "秒"},

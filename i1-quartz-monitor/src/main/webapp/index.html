@@ -2,7 +2,7 @@
 <html lang="en-US" ng-app="scheduleApp">
 <head>
     <meta charset="utf-8">
-    <title>I1 Email Sender</title>
+    <title>I1 Quartz Schedule</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -40,13 +40,13 @@
             <li><a href="report.html">Report</a></li>
             <li><a href="#">About</a></li>
         </ul>
-        <h3 class="muted">Email Sender</h3>
+        <h3 class="muted">I1 Quartz Schedule</h3>
     </div>
 
     <hr>
     <div class="container-fluid">
         <div class="row">
-            <div class="span1 bs-docs-sidebar ">
+            <div class="span2 bs-docs-sidebar ">
                 <!--Sidebar content-->
                 <ul class="nav nav-list bs-docs-sidenav affix">
                     <li class="">
@@ -55,8 +55,7 @@
                     </li>
                     <li class="">
                         <a href="#jobDetail" ng-click="changeContent();jobDetailShow=true"><i
-                                class="icon-chevron-right"></i>quartz
-                            jobDetail</a>
+                                class="icon-chevron-right"></i>Quartz schedule</a>
                     </li>
 
                     <li>
@@ -67,7 +66,8 @@
 
                 </ul>
             </div>
-            <div class="span11">
+            <!---->
+            <div class="span10">
                 <!--Body content-->
                 <section>
                     <!--server-->
@@ -108,15 +108,15 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="trigger in quartz.triggers">
-                                    <td><input id="triggerName{{$index}}" type="text" ng-model="trigger.triggerName"></td>
-                                    <td><input id="startTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].startTime" ></td>
-                                    <td><input id="endTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].endTime"></td>
-                                    <td><input id="repeatCount{{$index}}" type="text" ng-model="trigger.repeatCount"></td>
+                                    <td><input id="triggerName{{$index}}" type="text" ng-model="trigger.triggerName" class="triggername"></td>
+                                    <td><input id="startTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].startTime" class="abouttime"></td>
+                                    <td><input id="endTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].endTime" class="abouttime"></td>
+                                    <td><input id="repeatCount{{$index}}" type="text" ng-model="trigger.repeatCount" class="repeatCount"></td>
                                     <td>
-                                        <input id="repeatInterval{{$index}}" type="text" ng-model="triggerInfoList[$index].repeatInterval">
+                                        <input id="repeatInterval{{$index}}" type="text" ng-model="triggerInfoList[$index].repeatInterval" class="interval">
                                         <select id="repeatIntervalUnit{{$index}}"
                                                 ng-model="triggerInfoList[$index].repeatIntervalUnit"
-                                                ng-options="unit.key as unit.value for unit in units">
+                                                ng-options="unit.key as unit.value for unit in units" class="repeatIntervalUnits">
                                         </select>
                                     </td>
                                     <td>
@@ -146,13 +146,13 @@
                                 <td>间隔时间</td>
                                 <td>触发器状态</td>
                                 <td>
-                                    <button class="btn btn-large btn-primary" type="button">启动</button>
+                                    启动
                                 </td>
                                 <td>
-                                    <button class="btn btn-large btn-primary" type="button">暂停</button>
+                                    暂停
                                 </td>
                                 <td>
-                                    <button class="btn btn-large btn-primary" type="button">删除</button>
+                                    删除
                                 </td>
                             </tr>
 
