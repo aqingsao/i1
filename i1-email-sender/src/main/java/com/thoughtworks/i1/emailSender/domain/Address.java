@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 
 import javax.mail.internet.InternetAddress;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Objects;
@@ -88,6 +89,7 @@ public class Address {
         return Objects.hash(this.id, this.userName, this.userAddress);
     }
 
+    @XmlTransient
     public boolean isValid() {
         return EMAIL_PATTERN.matcher(this.userAddress).matches();
     }

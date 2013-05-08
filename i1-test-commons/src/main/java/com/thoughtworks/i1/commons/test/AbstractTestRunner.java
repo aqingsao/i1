@@ -164,7 +164,7 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     protected void closeServer() {
         try {
             if (application != null) {
-                application.getInjector().getInstance(PersistService.class).start();
+                application.getInjector().getInstance(PersistService.class).stop();
                 application.stop();
                 LOGGER.info("Server is stopped successfully");
             }

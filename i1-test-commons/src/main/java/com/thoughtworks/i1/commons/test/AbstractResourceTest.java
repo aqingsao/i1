@@ -69,14 +69,19 @@ public abstract class AbstractResourceTest {
     }
 
 
+    protected ClientResponse post(String path, Object entity) {
+        WebResource webResource = Client.create().resource(uri(path));
+        return webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, entity);
+    }
+
     protected String toJson(Object object) {
         return JsonUtils.toJson(object);
     }
 
+
     protected <T> T fromJson(String json, Class<T> entityClass) {
         return JsonUtils.fromJson(json, entityClass);
     }
-
 
     protected boolean containsJsonNode(Iterable<JsonNode> jsonNodes, String name, Object value) {
         for (JsonNode node : jsonNodes) {

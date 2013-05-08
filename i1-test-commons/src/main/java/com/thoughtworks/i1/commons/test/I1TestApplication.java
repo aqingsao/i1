@@ -20,7 +20,7 @@ public class I1TestApplication extends I1Application{
 
     @Override
     public Module[] getModules() {
-        Module propertyModule = new PropertyModule();
+        Module propertyModule = new PropertyModule(getPropertyFiles());
         Module jerseyServletModule = jerseyServletModule(getApiPrefix(), getScanningPackage());
         Module jpaPersistModule = jpaPersistModule(getPersistUnit());
         Module uriModule = new AbstractModule() {

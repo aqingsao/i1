@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
 public class JobsResourceTest  extends AbstractResourceTest {
 
     @Test
-    public void should_() {
+    public void should_return_empty_job_items() {
         ClientResponse response = get("/api/quartz-jobs/items");
 
         assertThat(response.getClientResponseStatus(), is(ClientResponse.Status.OK));
