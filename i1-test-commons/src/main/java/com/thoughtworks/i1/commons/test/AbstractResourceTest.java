@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.thoughtworks.i1.commons.config.Configuration;
-import com.thoughtworks.i1.commons.test.ApiTestRunner;
 import com.thoughtworks.i1.commons.util.JsonUtils;
-import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -52,6 +50,18 @@ public abstract class AbstractResourceTest {
         return object;
     }
 
+    protected <T> void removeAll(Class<T> entityClass) {
+        EntityManager entityManager = getEntityManager();
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        TypedQuery<T> query = entityManager.createQuery("select o from " + entityClass.getName() + " o", entityClass);
+        for (T t : query.getResultList()) {
+            entityManager.remove(t);
+        }
+        transaction.commit();
+    }
     protected ClientResponse get(String path) {
         WebResource webResource = Client.create().resource(uri(path));
 

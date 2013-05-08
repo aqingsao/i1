@@ -1,16 +1,18 @@
 package com.thoughtworks.i1.emailSender.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import com.thoughtworks.i1.commons.test.AbstractResourceTest;
+import com.thoughtworks.i1.commons.test.ApiTestRunner;
+import com.thoughtworks.i1.commons.test.I1TestApplication;
+import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.emailSender.commons.JsonUtils;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.domain.SendingEmailError;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -20,17 +22,9 @@ import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@RunWith(ApiTestRunner.class)
+@RunWithApplication(I1TestApplication.class)
 public class EmailResourceTest extends AbstractResourceTest {
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        server.start();
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        server.stop();
-    }
 
     @Test
     public void test_send_email_successfully() throws IOException {
@@ -109,7 +103,7 @@ public class EmailResourceTest extends AbstractResourceTest {
         ClientResponse clientResponse = Client.create().resource(uri("/api/email")).get(ClientResponse.class);
 
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
-        List<Email> emails = clientResponse.getEntity(new GenericType<List<Email>>(){
+        List<Email> emails = clientResponse.getEntity(new GenericType<List<Email>>() {
         });
         assertThat(emails.size(), is(1));
         Email actual = emails.get(0);

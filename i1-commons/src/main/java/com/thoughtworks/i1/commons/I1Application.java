@@ -47,7 +47,7 @@ public abstract class I1Application {
     }
 
     protected Module[] getModules() {
-        Module propertyModule = getPropertyModule(getPropertyFiles());
+        Module propertyModule = getPropertyModule();
         Module jerseyServletModule = jerseyServletModule(getApiPrefix(), getScanningPackage());
         Module jpaPersistModule = jpaPersistModule(getPersistUnit());
         Optional<Module> customizedModule = getCustomizedModule();
@@ -103,7 +103,7 @@ public abstract class I1Application {
 
     protected abstract Configuration defaultConfiguration();
 
-    protected Module getPropertyModule(final String[] propertyFiles) {
+    protected Module getPropertyModule() {
         return new AbstractModule() {
             @Override
             protected void configure() {
