@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.test.I1TestApplication;
-import com.thoughtworks.i1.quartz.service.QuartzModule;
+import com.thoughtworks.i1.quartz.QuartzApplication;
 
 public class QuartzTestApplication extends I1TestApplication {
     @Override
@@ -16,7 +16,7 @@ public class QuartzTestApplication extends I1TestApplication {
     }
 
     @Override
-    protected Optional<QuartzModule> getCustomizedModule() {
-        return Optional.of(new QuartzModule());
+    protected Optional<QuartzApplication.QuartzModule> getCustomizedModule() {
+        return Optional.of(new QuartzApplication.QuartzModule());
     }
 }

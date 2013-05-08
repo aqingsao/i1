@@ -2,9 +2,9 @@ package com.thoughtworks.i1.quartz.service;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.thoughtworks.i1.quartz.QuartzApplication;
 import com.thoughtworks.i1.quartz.domain.JobVO;
 import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
 import java.util.List;
@@ -12,12 +12,11 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 public class JobsServiceListTest {
 
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new QuartzModule());
+        Injector injector = Guice.createInjector(new QuartzApplication.QuartzModule());
         JobsService jobsService = injector.getInstance(JobsService.class);
         try{
             List<JobVO> jobVOList = jobsService.getJobVOs();
