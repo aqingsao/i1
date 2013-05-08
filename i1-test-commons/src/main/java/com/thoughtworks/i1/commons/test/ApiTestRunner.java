@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ApiTestRunner extends AbstractTestRunner {
+public class ApiTestRunner extends AbstractTestRunner {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ApiTestRunner.class);
 
     private long time;

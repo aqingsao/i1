@@ -12,7 +12,7 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
     private final Application application;
 
     public MyGuiceServletContextListener() {
-        application = Application.getInstance();
+        application = new Application();
     }
 
     @Override

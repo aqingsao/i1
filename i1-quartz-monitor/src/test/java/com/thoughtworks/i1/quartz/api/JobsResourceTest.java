@@ -6,6 +6,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.thoughtworks.i1.commons.test.AbstractResourceTest;
+import com.thoughtworks.i1.commons.test.ApiTestRunner;
+import com.thoughtworks.i1.commons.test.TestApplication;
+import com.thoughtworks.i1.quartz.Application;
 import com.thoughtworks.i1.quartz.domain.JobDataVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
@@ -21,7 +24,8 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(QuartzApiTestRunner.class)
+@RunWith(ApiTestRunner.class)
+@TestApplication(Application.class)
 @Ignore
 public class JobsResourceTest  extends AbstractResourceTest {
 

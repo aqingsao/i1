@@ -1,13 +1,9 @@
 package com.thoughtworks.i1.commons.test;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
-import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.googlecode.flyway.core.Flyway;
 import com.thoughtworks.i1.commons.I1Application;
-import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.server.Embedded;
 import org.eclipse.jetty.client.HttpClient;
@@ -22,9 +18,6 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import java.util.Properties;
 
-import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.H2;
-import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.Hibernate;
-
 public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
 
     protected static Injector injector;
@@ -38,6 +31,27 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
 
     public AbstractTestRunner(Class<?> klass) throws org.junit.runners.model.InitializationError {
         super(klass);
+        application = getApplication(klass);
+    }
+
+    private I1Application getApplication(Class<?> klass) {
+        if (klass == null) {
+            return null;
+        }
+        TestApplication annotation = klass.getAnnotation(TestApplication.class);
+        if (annotation != null) {
+            Class<? extends I1Application> value = annotation.value();
+            try {
+                return value.newInstance();
+            } catch (Exception e) {
+                throw new RuntimeException(String.format("Cannot instantiate application for %s", value.getName()));
+            }
+        }
+        if (klass == Object.class) {
+            throw new RuntimeException(String.format("Cannot find expected annotation %s on test class",
+                    TestApplication.class.getName()));
+        }
+        return this.getApplication(klass.getSuperclass());
     }
 
     protected Properties flywayConfiguration(DatabaseConfiguration configuration) {
@@ -74,11 +88,8 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     }
 
     protected void beforeAllTestsRun() {
-        application = getApplication();
-        startServer(application.getConfiguration());
+        startServer();
     }
-
-    protected abstract I1Application getApplication();
 
     protected void afterAllTestsRun() {
         closeServer();
@@ -137,19 +148,18 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
         flyway.configure(flywayConfiguration(config));
     }
 
-    protected void startServer(final Configuration configuration) {
+    protected void startServer() {
         try {
-            migrateDatabase(configuration.getDatabase());
+            migrateDatabase(application.getConfiguration().getDatabase());
 
             client = new HttpClient();
             client.start();
 
             final String contextPath = "/test";
 
-            I1Application application = new TestApplication();
             server = application.runInEmbeddedJetty(false);
 
-            LOGGER.info(String.format("Server is started at: %s", configuration.getHttp().getUri(contextPath)));
+            LOGGER.info(String.format("Server is started at: %s", application.getConfiguration().getHttp().getUri(contextPath)));
             injector = server.injector();
             entityManager = injector.getInstance(EntityManager.class);
 
@@ -184,31 +194,4 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
         return currentTest;
     }
 
-    public static class TestApplication extends I1Application{
-
-        @Override
-        protected Optional<Module> getCustomizedModule() {
-            Module module = new AbstractModule() {
-                @Override
-                protected void configure() {
-                    bind(HttpClient.class).toInstance(client);
-                    bind(java.net.URI.class).toInstance(getConfiguration().getHttp().getUri(getContextPath()));
-                }
-            };
-            return Optional.of(module);
-        }
-
-        @Override
-        protected Configuration defaultConfiguration() {
-            return Configuration.config()
-                    .http().port(8051).end()
-                    .database().with(H2.driver, H2.tempFileDB, H2.compatible("ORACLE"), Hibernate.dialect("Oracle10g"), Hibernate.showSql).user("sa").password("").end()
-                    .build();
-        }
-
-        @Override
-        protected String getContextPath() {
-            return "test";
-        }
-    }
 }
