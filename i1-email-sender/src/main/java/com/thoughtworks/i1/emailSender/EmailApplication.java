@@ -28,6 +28,6 @@ public class EmailApplication extends I1Application {
     }
 
     public static void main(String[] args) throws Exception {
-        new EmailApplication().runInEmbeddedJetty(true);
+        new EmailApplication().start(true);
     }
 }

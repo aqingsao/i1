@@ -11,6 +11,7 @@ import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.emailSender.commons.JsonUtils;
 import com.thoughtworks.i1.emailSender.domain.Email;
 import com.thoughtworks.i1.emailSender.domain.SendingEmailError;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(ApiTestRunner.class)
 @RunWithApplication(I1TestApplication.class)
+@Ignore
 public class EmailResourceTest extends AbstractResourceTest {
 
     @Test

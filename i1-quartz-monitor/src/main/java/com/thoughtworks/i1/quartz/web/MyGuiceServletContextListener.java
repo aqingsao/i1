@@ -3,21 +3,40 @@ package com.thoughtworks.i1.quartz.web;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.thoughtworks.i1.quartz.Application;
-import com.thoughtworks.i1.quartz.service.QuartzModule;
+import com.thoughtworks.i1.commons.I1Application;
+import com.thoughtworks.i1.commons.SystemException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 
 // This listener is used for both web.xml and embedded server
 public class MyGuiceServletContextListener extends GuiceServletContextListener {
 
-    private final Application application;
+    private I1Application application;
 
     public MyGuiceServletContextListener() {
-        application = new Application();
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        super.contextInitialized(servletContextEvent);
+
+        ServletContext c = servletContextEvent.getServletContext();
+        String application = c.getInitParameter("application");
+        if (application == null) {
+            throw new SystemException("Cannot find application definition for context listener");
+        }
+
+        try {
+            this.application = (I1Application) Class.forName(application).newInstance();
+        } catch (Exception e) {
+            throw new SystemException("Failed to instantiate application " + application);
+        }
+
     }
 
     @Override
     public Injector getInjector() {
-        return Guice.createInjector(application.jerseyServletModule("/api/*", "com.thoughtworks.i1"),
-                application.jpaPersistModule("domain"), new QuartzModule());
+        return Guice.createInjector(application.getModules());
     }
 }

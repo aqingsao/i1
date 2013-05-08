@@ -8,17 +8,6 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-    <!--<servlet>-->
-        <!--<description></description>-->
-        <!--<display-name>defaultServlet</display-name>-->
-        <!--<servlet-name>defaultServlet</servlet-name>-->
-        <!--<servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>defaultServlet</servlet-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</servlet-mapping>-->
-
     <filter>
         <filter-name>guiceFilter</filter-name>
         <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
@@ -29,6 +18,10 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>com.thoughtworks.i1.quartz.web.MyGuiceServletContextListener</listener-class>
+        <listener-class>com.thoughtworks.i1.commons.web.I1GuiceServletContextListener</listener-class>
     </listener>
+    <context-param>
+        <param-name>application</param-name>
+        <param-value>com.thoughtworks.i1.quartz.QuartzApplication</param-value>
+    </context-param>
 </web-app>

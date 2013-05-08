@@ -26,28 +26,35 @@ import static com.sun.jersey.api.core.PackagesResourceConfig.PROPERTY_PACKAGES;
 
 public abstract class I1Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(I1Application.class);
+    public static final String DEFAULT_PERSIST_UNIT = "domain";
+    public static final String DEFAULT_SCANNING_PACKAGE = "com.thoughtworks.i1";
+    public static final String DEFAULT_API_PREFIX = "/api/*";
+
     private Configuration configuration;
     private Embedded server;
 
-    public Embedded runInEmbeddedJetty(boolean standalone) {
-        server = Embedded.jetty(getConfiguration().getHttp());
-        return server.addServletContext(getContextPath(), true, getModules()).start(standalone);
+    public I1Application() {
+        server = Embedded.jetty(getConfiguration().getHttp()).addServletContext(getContextPath(), true, getModules());
+    }
+
+    public Embedded start(boolean standalone) {
+        return server.start(standalone);
     }
 
     protected String getPersistUnit() {
-        return "domain";
+        return DEFAULT_PERSIST_UNIT;
     }
 
     protected String getScanningPackage() {
-        return "com.thoughtworks.i1";
+        return DEFAULT_SCANNING_PACKAGE;
     }
 
     protected String getApiPrefix() {
-        return "/api/*";
+        return DEFAULT_API_PREFIX;
     }
 
-    protected Module[] getModules() {
-        Module propertyModule = getPropertyModule();
+    public Module[] getModules() {
+        Module propertyModule = new PropertyModule(this.getPropertyFiles());
         Module jerseyServletModule = jerseyServletModule(getApiPrefix(), getScanningPackage());
         Module jpaPersistModule = jpaPersistModule(getPersistUnit());
         Optional<Module> customizedModule = getCustomizedModule();
@@ -81,11 +88,11 @@ public abstract class I1Application {
         return configuration;
     }
 
-    public String getContextPath(){
+    public String getContextPath() {
         return "/";
     }
 
-    public Injector getInjector(){
+    public Injector getInjector() {
         return server.injector();
     }
 
@@ -103,30 +110,33 @@ public abstract class I1Application {
 
     protected abstract Configuration defaultConfiguration();
 
-    protected Module getPropertyModule() {
-        return new AbstractModule() {
-            @Override
-            protected void configure() {
-                for (String propertyFile : getPropertyFiles()) {
-                    bindProperties(binder(), loadProperties(propertyFile));
-                }
-            }
-        };
-    }
-
-    private Properties loadProperties(String propertyFile) {
-
-        try {
-            Properties properties = new Properties();
-            properties.load(getClass().getClassLoader().getResourceAsStream(propertyFile));
-            return properties;
-        } catch (IOException e) {
-            LOGGER.error("Failed to load property file " + propertyFile);
-            throw new SystemException(e.getMessage(), e);
-        }
-    }
-
     public URI getUri() {
         return this.configuration.getHttp().getUri(getContextPath());
+    }
+
+    public static class PropertyModule extends AbstractModule {
+        private String[] propertyFiles;
+
+        public PropertyModule(String... propertyFiles) {
+            this.propertyFiles = propertyFiles;
+        }
+
+        @Override
+        protected void configure() {
+            for (String propertyFile : propertyFiles) {
+                bindProperties(binder(), loadProperties(propertyFile));
+            }
+        }
+
+        private Properties loadProperties(String propertyFile) {
+
+            try {
+                Properties properties = new Properties();
+                properties.load(getClass().getClassLoader().getResourceAsStream(propertyFile));
+                return properties;
+            } catch (IOException e) {
+                throw new SystemException(String.format("Failed to load property file %s: %s", propertyFile, e.getMessage()), e);
+            }
+        }
     }
 }

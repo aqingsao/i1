@@ -152,7 +152,7 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
             client = new HttpClient();
             client.start();
 
-            application.runInEmbeddedJetty(false);
+            application.start(false);
             LOGGER.info(String.format("Server is started at: %s", application.getUri()));
             application.getInjector().getInstance(PersistService.class).start();
             entityManager = application.getInjector().getInstance(EntityManager.class);

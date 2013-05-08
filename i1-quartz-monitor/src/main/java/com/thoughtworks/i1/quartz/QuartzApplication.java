@@ -6,9 +6,9 @@ import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.quartz.service.QuartzModule;
 
-public class Application extends I1Application {
+public class QuartzApplication extends I1Application {
 
-    public Application() {
+    public QuartzApplication() {
     }
 
     @Override
@@ -30,6 +30,6 @@ public class Application extends I1Application {
     }
 
     public static void main(String[] args) throws Exception {
-        new Application().runInEmbeddedJetty(true);
+        new QuartzApplication().start(true);
     }
 }

@@ -34,7 +34,7 @@ public class I1ApplicationTest {
 
     @Test
     public void should_use_api_as_prefix_in_default() {
-        server = new I1TestApplication().runInEmbeddedJetty(false);
+        server = new I1TestApplication().start(false);
 
         ClientResponse clientResponse = get("/", "/api/outer");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -48,7 +48,7 @@ public class I1ApplicationTest {
             protected String getApiPrefix() {
                 return "/test/*";
             }
-        }.runInEmbeddedJetty(false);
+        }.start(false);
 
         ClientResponse clientResponse = get("/", "/test/outer");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -57,7 +57,7 @@ public class I1ApplicationTest {
 
     @Test
     public void should_use_root_context_in_default() {
-        server = new I1TestApplication().runInEmbeddedJetty(false);
+        server = new I1TestApplication().start(false);
 
         ClientResponse clientResponse = get("/", "/api/outer");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -71,7 +71,7 @@ public class I1ApplicationTest {
             public String getContextPath() {
                 return "/test";
             }
-        }.runInEmbeddedJetty(false);
+        }.start(false);
 
         ClientResponse clientResponse = get("/test", "/api/outer");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -85,7 +85,7 @@ public class I1ApplicationTest {
             protected String getScanningPackage() {
                 return "com.thoughtworks.i1.commons.inner";
             }
-        }.runInEmbeddedJetty(false);
+        }.start(false);
 
         ClientResponse clientResponse = get("/", "/api/inner");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -101,7 +101,7 @@ public class I1ApplicationTest {
             protected String[] getPropertyFiles() {
                 return new String[]{"application.property"};
             }
-        }.runInEmbeddedJetty(false);
+        }.start(false);
 
         ClientResponse clientResponse = get("/", "/api/inner/property");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
