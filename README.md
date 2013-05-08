@@ -50,11 +50,9 @@ In default we use gradle as build tool and IDEA as IDE. To set it up, you should
 
 ### Run the app
 To see each module is, you could run it up by either one of the following ways:
-** Run Java class "LauncherStartClass"
+** Run Java class "***Application"
 ** Run gradle command "gradle clean jettyRun"
 ** Package to a war and deploy it to a web server.
 
-## Contributors
-[aqingsao](https://github.com/aqingsao), [zengchuan](https://github.com/zengchuan), [caihongbo](https://github.com/caihongbo)
-
+## Contribution
 If you have any idea or questions on I1 project, or if you want to contribute, feel free to contact us.
