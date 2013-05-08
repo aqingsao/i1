@@ -7,12 +7,11 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.thoughtworks.i1.commons.test.AbstractResourceTest;
 import com.thoughtworks.i1.commons.test.ApiTestRunner;
-import com.thoughtworks.i1.commons.test.TestApplication;
-import com.thoughtworks.i1.quartz.Application;
+import com.thoughtworks.i1.commons.test.I1TestApplication;
+import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.quartz.domain.JobDataVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,8 +24,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(ApiTestRunner.class)
-@TestApplication(Application.class)
-@Ignore
+@RunWithApplication(QuartzTestApplication.class)
 public class JobsResourceTest  extends AbstractResourceTest {
 
     @Test
@@ -64,19 +62,7 @@ public class JobsResourceTest  extends AbstractResourceTest {
         quartzVO.setTriggers(triggerVOList);
         quartzVO.setJobDatas(jobDataVOList);
 
-
-//        ClientResponse response = get("/api/quartz-jobs/items")  ;
-
-//        response.getClientResponseStatus();
-
-        ClientConfig clientConfig = new DefaultClientConfig();
-        clientConfig.getClasses().add(JacksonJaxbJsonProvider.class);
-        Client client = Client.create(clientConfig);
-        ClientResponse clientResponse = client.resource("/api/quartz-jobs/items")
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
-        int a = clientResponse.getStatus();
-
-        System.out.println(a);
+        ClientResponse clientResponse = get("/api/quartz-jobs/items");
+        assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
     }
 }

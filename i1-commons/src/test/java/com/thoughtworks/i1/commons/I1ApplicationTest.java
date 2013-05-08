@@ -68,7 +68,7 @@ public class I1ApplicationTest {
     public void should_override_context_path_when_given() {
         server = new I1TestApplication(){
             @Override
-            protected String getContextPath() {
+            public String getContextPath() {
                 return "/test";
             }
         }.runInEmbeddedJetty(false);

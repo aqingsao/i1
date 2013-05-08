@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TestApplication {
-    Class<? extends I1Application> value();
+public @interface RunWithApplication {
+    Class<? extends I1TestApplication> value();
 }

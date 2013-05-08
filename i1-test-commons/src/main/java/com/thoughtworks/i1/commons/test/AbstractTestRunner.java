@@ -1,11 +1,10 @@
 package com.thoughtworks.i1.commons.test;
 
 import com.google.common.base.Throwables;
-import com.google.inject.Injector;
+import com.google.inject.persist.PersistService;
 import com.googlecode.flyway.core.Flyway;
 import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
-import com.thoughtworks.i1.commons.server.Embedded;
 import org.eclipse.jetty.client.HttpClient;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
@@ -20,9 +19,7 @@ import java.util.Properties;
 
 public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
 
-    protected static Injector injector;
     protected static EntityManager entityManager;
-    private static Embedded server;
     private static HttpClient client;
     private static boolean listenerAdded = false;
 
@@ -38,9 +35,9 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
         if (klass == null) {
             return null;
         }
-        TestApplication annotation = klass.getAnnotation(TestApplication.class);
+        RunWithApplication annotation = klass.getAnnotation(RunWithApplication.class);
         if (annotation != null) {
-            Class<? extends I1Application> value = annotation.value();
+            Class<? extends I1TestApplication> value = annotation.value();
             try {
                 return value.newInstance();
             } catch (Exception e) {
@@ -49,7 +46,7 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
         }
         if (klass == Object.class) {
             throw new RuntimeException(String.format("Cannot find expected annotation %s on test class",
-                    TestApplication.class.getName()));
+                    RunWithApplication.class.getName()));
         }
         return this.getApplication(klass.getSuperclass());
     }
@@ -155,14 +152,10 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
             client = new HttpClient();
             client.start();
 
-            final String contextPath = "/test";
-
-            server = application.runInEmbeddedJetty(false);
-
-            LOGGER.info(String.format("Server is started at: %s", application.getConfiguration().getHttp().getUri(contextPath)));
-            injector = server.injector();
-            entityManager = injector.getInstance(EntityManager.class);
-
+            application.runInEmbeddedJetty(false);
+            LOGGER.info(String.format("Server is started at: %s", application.getUri()));
+            application.getInjector().getInstance(PersistService.class).start();
+            entityManager = application.getInjector().getInstance(EntityManager.class);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -170,8 +163,8 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
 
     protected void closeServer() {
         try {
-            if (server != null) {
-                server.stop();
+            if (application != null) {
+                application.stop();
                 LOGGER.info("Server is stopped successfully");
             }
         } catch (Exception e) {
@@ -189,7 +182,7 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     @Override
     protected Object createTest() throws Exception {
         Object currentTest = super.createTest();
-        injector.injectMembers(currentTest);
+        application.getInjector().injectMembers(currentTest);
 
         return currentTest;
     }

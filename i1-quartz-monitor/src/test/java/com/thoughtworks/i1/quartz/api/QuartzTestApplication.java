@@ -1,18 +1,14 @@
-package com.thoughtworks.i1.quartz;
+package com.thoughtworks.i1.quartz.api;
 
 import com.google.common.base.Optional;
-import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
+import com.thoughtworks.i1.commons.test.I1TestApplication;
 import com.thoughtworks.i1.quartz.service.QuartzModule;
 
-public class Application extends I1Application {
-
-    public Application() {
-    }
-
+public class QuartzTestApplication extends I1TestApplication {
     @Override
-    public Configuration defaultConfiguration() {
+    protected Configuration defaultConfiguration() {
         return Configuration.config()
                 .http().port(8052).end()
                 .database().with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
@@ -22,14 +18,5 @@ public class Application extends I1Application {
     @Override
     protected Optional<QuartzModule> getCustomizedModule() {
         return Optional.of(new QuartzModule());
-    }
-
-    @Override
-    public String getContextPath() {
-        return "/schedule";
-    }
-
-    public static void main(String[] args) throws Exception {
-        new Application().runInEmbeddedJetty(true);
     }
 }

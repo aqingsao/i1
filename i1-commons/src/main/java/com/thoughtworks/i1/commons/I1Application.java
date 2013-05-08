@@ -3,6 +3,7 @@ package com.thoughtworks.i1.commons;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Properties;
 
 import static com.google.common.base.Joiner.on;
@@ -25,9 +27,11 @@ import static com.sun.jersey.api.core.PackagesResourceConfig.PROPERTY_PACKAGES;
 public abstract class I1Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(I1Application.class);
     private Configuration configuration;
+    private Embedded server;
 
     public Embedded runInEmbeddedJetty(boolean standalone) {
-        return Embedded.jetty(getConfiguration().getHttp()).addServletContext(getContextPath(), true, getModules()).start(standalone);
+        server = Embedded.jetty(getConfiguration().getHttp());
+        return server.addServletContext(getContextPath(), true, getModules()).start(standalone);
     }
 
     protected String getPersistUnit() {
@@ -77,6 +81,18 @@ public abstract class I1Application {
         return configuration;
     }
 
+    public String getContextPath(){
+        return "/";
+    }
+
+    public Injector getInjector(){
+        return server.injector();
+    }
+
+    public void stop() {
+        server.stop();
+    }
+
     protected String[] getPropertyFiles() {
         return new String[0];
     }
@@ -85,13 +101,9 @@ public abstract class I1Application {
         return Optional.absent();
     }
 
-    protected String getContextPath(){
-        return "/";
-    }
-
     protected abstract Configuration defaultConfiguration();
 
-    private Module getPropertyModule(final String[] propertyFiles) {
+    protected Module getPropertyModule(final String[] propertyFiles) {
         return new AbstractModule() {
             @Override
             protected void configure() {
@@ -112,5 +124,9 @@ public abstract class I1Application {
             LOGGER.error("Failed to load property file " + propertyFile);
             throw new SystemException(e.getMessage(), e);
         }
+    }
+
+    public URI getUri() {
+        return this.configuration.getHttp().getUri(getContextPath());
     }
 }
