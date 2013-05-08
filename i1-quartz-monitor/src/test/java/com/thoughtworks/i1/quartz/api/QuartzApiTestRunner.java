@@ -1,8 +1,8 @@
 package com.thoughtworks.i1.quartz.api;
 
-import com.google.inject.Module;
+import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.test.AbstractTestRunner;
-import com.thoughtworks.i1.quartz.service.QuartzModule;
+import com.thoughtworks.i1.quartz.Application;
 import org.junit.runners.model.InitializationError;
 
 public class QuartzApiTestRunner extends AbstractTestRunner {
@@ -11,7 +11,7 @@ public class QuartzApiTestRunner extends AbstractTestRunner {
     }
 
     @Override
-    protected Module customizedModule() {
-        return new QuartzModule();
+    protected I1Application getApplication() {
+        return Application.getInstance();
     }
 }

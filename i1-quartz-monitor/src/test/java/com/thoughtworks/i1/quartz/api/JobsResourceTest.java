@@ -9,6 +9,7 @@ import com.thoughtworks.i1.commons.test.AbstractResourceTest;
 import com.thoughtworks.i1.quartz.domain.JobDataVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,6 +22,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(QuartzApiTestRunner.class)
+@Ignore
 public class JobsResourceTest  extends AbstractResourceTest {
 
     @Test
