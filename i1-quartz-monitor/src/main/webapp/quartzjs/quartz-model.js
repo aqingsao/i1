@@ -1,7 +1,8 @@
 var Quartz = function () {
     this.jobName = "";
     this.jobGroupName = "";
-    this.jobClass = "com.thoughtworks.i1.quartz.jobs.JobForTest";
+//    this.jobClass = "com.thoughtworks.i1.quartz.jobs.JobForTest";
+    this.jobClass = "com.thoughtworks.i1.quartz.jobs.JobForUrl";
     this.description = "";
     this.jobDatas = [];
     this.triggers = [];

@@ -113,7 +113,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
             }
 
             return temp + tempUnit;
-        }
+        } ;
 
         function getRepeatInterval(repeatInterval, repeatIntervalUnit) {
             var temp = 0;
