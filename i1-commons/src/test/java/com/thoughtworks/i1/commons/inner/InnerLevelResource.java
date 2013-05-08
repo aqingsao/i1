@@ -16,10 +16,9 @@ import javax.ws.rs.core.Response;
 public class InnerLevelResource {
     private String property;
 
-    @Inject
-    public InnerLevelResource(@Named("foo") String property){
-        this.property = property;
-    }
+//    public InnerLevelResource(@Named("foo") String property){
+//        this.property = property;
+//    }
     @GET
     public Response get() {
         return Response.ok().entity("inner").build();

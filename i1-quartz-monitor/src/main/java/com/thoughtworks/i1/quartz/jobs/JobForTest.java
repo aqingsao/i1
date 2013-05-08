@@ -1,10 +1,7 @@
 package com.thoughtworks.i1.quartz.jobs;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import com.sun.deploy.util.SessionState;
 import org.quartz.*;
 
-import javax.ws.rs.core.MediaType;
 import java.util.Date;
 
 @DisallowConcurrentExecution

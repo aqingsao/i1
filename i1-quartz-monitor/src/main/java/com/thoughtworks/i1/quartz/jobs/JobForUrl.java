@@ -1,7 +1,6 @@
 package com.thoughtworks.i1.quartz.jobs;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import com.sun.deploy.util.SessionState;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;

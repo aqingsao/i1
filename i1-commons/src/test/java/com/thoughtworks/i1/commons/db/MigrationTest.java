@@ -6,13 +6,8 @@ import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.jnlp.PersistenceService;
-import javax.persistence.EntityManagerFactory;
-
 import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.H2;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class MigrationTest {
     private Flyway flyway;

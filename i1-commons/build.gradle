@@ -43,6 +43,7 @@ dependencies{
     compile "com.sun.jersey:jersey-server:$jerseyVersion"
     compile "com.sun.jersey:jersey-json:$jerseyVersion"
     compile "com.sun.jersey.contribs:jersey-guice:$jerseyVersion"
+    compile "com.sun.jersey:jersey-client:$jerseyVersion"
 
     // Use slf4j as log framework
     compile "org.slf4j:slf4j-api:$slf4jVersion"
@@ -53,7 +54,6 @@ dependencies{
     testCompile "org.mockito:mockito-all:$mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$hamCrestVersion"
     // Use Jersey client as API test tool
-    testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
     testCompile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
     testCompile "org.eclipse.jetty:jetty-client:$jettyVersion"
 }
