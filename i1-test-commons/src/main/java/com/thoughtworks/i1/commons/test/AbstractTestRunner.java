@@ -85,12 +85,9 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     }
 
     protected void beforeAllTestsRun() {
-        startServer();
     }
 
     protected void afterAllTestsRun() {
-        closeServer();
-        cleanDatabase(application.getConfiguration().getDatabase());
     }
 
     protected void afterRun() {

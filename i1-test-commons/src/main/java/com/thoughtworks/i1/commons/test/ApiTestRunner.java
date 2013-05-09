@@ -15,12 +15,17 @@ import java.util.List;
 import java.util.Map;
 
 public class ApiTestRunner extends AbstractTestRunner {
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ApiTestRunner.class);
-
-    private long time;
 
     public ApiTestRunner(Class<?> klass) throws InitializationError {
         super(klass);
+    }
+
+    protected void beforeAllTestsRun() {
+        startServer();
+    }
+
+    protected void afterAllTestsRun() {
+        closeServer();
     }
 
     protected void beforeRunChild(FrameworkMethod method) {

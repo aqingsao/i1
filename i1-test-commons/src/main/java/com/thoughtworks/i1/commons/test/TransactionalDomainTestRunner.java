@@ -5,10 +5,9 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.slf4j.LoggerFactory;
 
-public abstract class DomainTestRunner extends AbstractTestRunner {
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DomainTestRunner.class);
+public class TransactionalDomainTestRunner extends AbstractTestRunner {
 
-    public DomainTestRunner(Class<?> klass) throws InitializationError {
+    public TransactionalDomainTestRunner(Class<?> klass) throws InitializationError {
         super(klass);
     }
 

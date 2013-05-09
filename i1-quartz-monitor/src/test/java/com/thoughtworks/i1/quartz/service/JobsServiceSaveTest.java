@@ -2,15 +2,44 @@ package com.thoughtworks.i1.quartz.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.thoughtworks.i1.commons.test.RunWithApplication;
+import com.thoughtworks.i1.commons.test.TransactionalDomainTestRunner;
 import com.thoughtworks.i1.quartz.QuartzApplication;
+import com.thoughtworks.i1.quartz.api.QuartzTestApplication;
+import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.List;
 
 import static java.lang.Thread.sleep;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 
+@RunWith(TransactionalDomainTestRunner.class)
+@RunWithApplication(QuartzTestApplication.class)
+@Ignore
 public class JobsServiceSaveTest {
+    @Inject
+    private JobsService jobsService;
+
+    @Test
+    public void should_() throws Exception {
+        String  data = getData();
+
+        QuartzVO quartzVO = (QuartzVO)jsonToBean(data, QuartzVO.class);
+
+        jobsService.saveJob(quartzVO);
+
+        List<JobVO> jobVOs = jobsService.getJobVOs();
+        assertThat(jobVOs.size(), is(1));
+    }
 
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(new QuartzApplication.QuartzModule());
