@@ -2,6 +2,7 @@ package com.thoughtworks.i1.quartz.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.inject.persist.Transactional;
 import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.quartz.domain.JobDataVO;
 import com.thoughtworks.i1.quartz.domain.JobVO;
@@ -77,6 +78,7 @@ public class JobsService {
         return null;
     }
 
+    @Transactional
     public void saveJob(QuartzVO quartzVO) {
         try {
             JobDetail jobDetail = getJobDetail(quartzVO);

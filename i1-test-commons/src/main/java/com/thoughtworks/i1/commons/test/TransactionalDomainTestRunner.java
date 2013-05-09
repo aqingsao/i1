@@ -11,6 +11,14 @@ public class TransactionalDomainTestRunner extends AbstractTestRunner {
         super(klass);
     }
 
+    protected void beforeAllTestsRun() {
+        startServer();
+    }
+
+    protected void afterAllTestsRun() {
+        closeServer();
+    }
+
     protected void beforeRunChild(FrameworkMethod method) {
         super.beforeRunChild(method);
         entityManager.getTransaction().begin();

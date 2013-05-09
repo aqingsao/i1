@@ -2,19 +2,27 @@ package com.thoughtworks.i1.emailSender.service;
 
 import com.thoughtworks.i1.commons.BusinessException;
 import com.thoughtworks.i1.commons.SystemException;
+import com.thoughtworks.i1.commons.test.RunWithApplication;
+import com.thoughtworks.i1.commons.test.TransactionalDomainTestRunner;
+import com.thoughtworks.i1.emailSender.api.EmailTestApplication;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.model.InitializationError;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import static com.thoughtworks.i1.emailSender.domain.Address.anAddress;
 import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
 
-@Ignore
-public class EmailServiceIntegrationTest {
+@RunWithApplication(EmailTestApplication.class)
+@RunWith(TransactionalDomainTestRunner.class)
+public class EmailServiceIntegrationTest{
 
     private EmailService emailService;
     private EmailConfiguration emailConfiguration;
+    @Inject
     private EntityManager entityManager;
 
     @Test
@@ -39,6 +47,7 @@ public class EmailServiceIntegrationTest {
     }
 
     @Test(expected = SystemException.class)
+    @Ignore
     public void should_throw_system_exception_when_there_are_system_errors() {
         emailService = new EmailService(new EmailConfiguration(25, "smtp.163.com", false, "i1_test", "ThoughtWorks"), entityManager);
 
