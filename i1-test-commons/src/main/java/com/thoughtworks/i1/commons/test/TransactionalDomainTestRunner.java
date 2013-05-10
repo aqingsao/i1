@@ -11,10 +11,12 @@ public class TransactionalDomainTestRunner extends AbstractTestRunner {
         super(klass);
     }
 
+    @Override
     protected void beforeAllTestsRun() {
         startServer();
     }
 
+    @Override
     protected void afterAllTestsRun() {
         closeServer();
     }

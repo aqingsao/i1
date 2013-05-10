@@ -8,7 +8,6 @@ import com.thoughtworks.i1.emailSender.api.EmailTestApplication;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.model.InitializationError;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -18,6 +17,7 @@ import static com.thoughtworks.i1.emailSender.domain.Email.anEmail;
 
 @RunWithApplication(EmailTestApplication.class)
 @RunWith(TransactionalDomainTestRunner.class)
+@Ignore
 public class EmailServiceIntegrationTest{
 
     private EmailService emailService;

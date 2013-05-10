@@ -45,17 +45,6 @@ public class EmbeddedJetty extends Embedded {
 
     @Override
     public Embedded addServletContext(String contextPath, boolean shareNothing, final Module... modules) {
-        return addServletContext(contextPath, shareNothing, new GuiceServletContextListener() {
-            @Override
-            protected Injector getInjector() {
-                return Guice.createInjector(modules);
-            }
-        });
-    }
-
-    @Override
-    public Embedded addServletContext(String contextPath, boolean shareNothing, GuiceServletContextListener listener) {
-        this.injector = getInjector(listener);
         this.contextPath = contextPath;
         ServletContextHandler handler = new ServletContextHandler(server, contextPath, shareNothing ? NO_SESSIONS : SESSIONS);
         handler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
@@ -63,7 +52,13 @@ public class EmbeddedJetty extends Embedded {
         handler.setContextPath(this.contextPath);
         handler.setInitParameter("org.eclipse.jetty.servlet.Default.resourceBase", RESOURCE_BASE);
 
-        handler.addEventListener(listener);
+        this.injector = Guice.createInjector(modules);
+        handler.addEventListener(new GuiceServletContextListener() {
+            @Override
+            protected Injector getInjector() {
+                return injector;
+            }
+        });
 
         return this;
     }
@@ -98,14 +93,6 @@ public class EmbeddedJetty extends Embedded {
     @Override
     public Injector injector() {
         return injector;
-    }
-
-    private Injector getInjector(GuiceServletContextListener listener) {
-        try {
-            return (Injector) listener.getClass().getDeclaredMethod("getInjector").invoke(listener);
-        } catch (Exception e) {
-            throw new SystemException("Cannot invoke getInjector() method on " + listener.getClass());
-        }
     }
 
     private QueuedThreadPool threadPool(HttpConfiguration configuration) {

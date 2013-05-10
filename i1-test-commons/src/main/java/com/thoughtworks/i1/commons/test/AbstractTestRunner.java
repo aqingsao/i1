@@ -151,7 +151,6 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
 
             application.start(false);
             LOGGER.info(String.format("Server is started at: %s", application.getUri()));
-            application.getInjector().getInstance(PersistService.class).start();
             entityManager = application.getInjector().getInstance(EntityManager.class);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -161,7 +160,6 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     protected void closeServer() {
         try {
             if (application != null) {
-                application.getInjector().getInstance(PersistService.class).stop();
                 application.stop();
                 LOGGER.info("Server is stopped successfully");
             }
