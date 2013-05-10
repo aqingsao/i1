@@ -4,6 +4,6 @@
              version="1.0">
     <persistence-unit name="domain" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>com.thoughtworks.i1.quartz.domain.JobVO</class>
+        <class>com.thoughtworks.i1.quartz.domain.QuartzVO</class>
     </persistence-unit>
 </persistence>

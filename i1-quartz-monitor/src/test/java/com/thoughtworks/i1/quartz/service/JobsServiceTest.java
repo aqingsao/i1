@@ -14,6 +14,7 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.List;
 
 import static com.thoughtworks.i1.quartz.domain.QuartzVO.QuartzVOBuilder.aQuartzVO;
@@ -32,14 +33,15 @@ public class JobsServiceTest {
 
     @Test
     public void should_save_a_job() throws Exception {
-        QuartzVO quartzVO = aQuartzVO().jobDetail("name", "group", "com.thoughtworks.i1.quartz.DummpyJob").end().addTrigger("a", "herenTrigger").end().build();
+        QuartzVO quartzVO = aQuartzVO().jobDetail("name", "group", "com.thoughtworks.i1.quartz.DummyJob").end()
+                .addTrigger("a", "herenTrigger").time(new Date(), new Date()).end().build();
         jobService.saveJob(quartzVO);
 
         List<QuartzVO> actual = jobService.findAllJobs();
         assertThat(actual.size(), is(1));
         assertThat(actual.get(0).getJobName(), is("name"));
         assertThat(actual.get(0).getJobGroupName(), is("group"));
-        assertThat(actual.get(0).getJobClass(), is("com.thoughtworks.i1.quartz.DummpyJob"));
+        assertThat(actual.get(0).getJobClass(), is("com.thoughtworks.i1.quartz.DummyJob"));
     }
 
     public static void main(String[] args) {

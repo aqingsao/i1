@@ -9,7 +9,7 @@ public class DummyJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        count++;
+        System.out.println(String.format("Dummy job is executed for %d times", ++count));
     }
 
     public static int getCount() {

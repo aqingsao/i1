@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.quartz.domain.JobDetailVO;
-import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
 import org.quartz.*;
@@ -87,22 +86,10 @@ public class JobsService {
 
             List<TriggerVO> triggerVOs = quartzVO.getTriggers();
             for (TriggerVO triggerVO : triggerVOs) {
-                scheduleJob(triggerVO.getTrigger(jobDetail.getKey().getName()));
+                scheduleJob(triggerVO.toTrigger(jobDetail.getKey()));
             }
 
         } catch (Exception e) {
-            throw new SystemException(e.getMessage(), e);
-        }
-    }
-
-    public List<JobVO> getJobVOs() {
-        try {
-            List<JobVO> jobVOs = Lists.newArrayList();
-            for (JobDetail jobDetail : getJobDetails()) {
-                jobVOs.add(new JobVO(jobDetail, scheduler.getTriggersOfJob(jobDetail.getKey())));
-            }
-            return jobVOs;
-        } catch (SchedulerException e) {
             throw new SystemException(e.getMessage(), e);
         }
     }

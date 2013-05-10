@@ -8,19 +8,11 @@ import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.commons.test.TransactionalDomainTestRunner;
 import com.thoughtworks.i1.quartz.QuartzApplication;
 import com.thoughtworks.i1.quartz.api.QuartzTestApplication;
-import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-
 import static java.lang.Thread.sleep;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
 
 @RunWith(TransactionalDomainTestRunner.class)
 @RunWithApplication(QuartzTestApplication.class)

@@ -1,10 +1,7 @@
 package com.thoughtworks.i1.quartz.domain;
 
 import com.thoughtworks.i1.commons.config.builder.Builder;
-import org.quartz.SimpleScheduleBuilder;
-import org.quartz.SimpleTrigger;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
 
 import java.util.Date;
 
@@ -94,13 +91,13 @@ public class TriggerVO {
         this.repeatInterval = repeatInterval;
     }
 
-    public Trigger getTrigger(String jobName) {
+    public Trigger toTrigger(JobKey jobKey) {
         String triggerGroupName = getTriggerGroupName();
         TriggerBuilder<Trigger> triggerBuilder = newTrigger()
                 .withIdentity(getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
                 .startAt(getStartTime())
                 .endAt(getEndTime())
-                .forJob(jobName);
+                .forJob(jobKey);
         triggerBuilder.withSchedule(
                 SimpleScheduleBuilder
                         .simpleSchedule()
