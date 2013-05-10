@@ -6,7 +6,7 @@ import com.google.inject.Scopes;
 import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
-import com.thoughtworks.i1.quartz.service.JobsService;
+import com.thoughtworks.i1.quartz.service.JobService;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -43,7 +43,7 @@ public class QuartzApplication extends I1Application {
         protected void configure()
         {
             bind(SchedulerFactory.class).to(StdSchedulerFactory.class).in(Scopes.SINGLETON);
-            bind(JobsService.class).in(Scopes.SINGLETON);
+            bind(JobService.class).in(Scopes.SINGLETON);
         }
     }
 }

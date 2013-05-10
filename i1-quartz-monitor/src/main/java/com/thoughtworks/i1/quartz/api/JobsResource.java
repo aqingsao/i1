@@ -1,7 +1,7 @@
 package com.thoughtworks.i1.quartz.api;
 
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
-import com.thoughtworks.i1.quartz.service.JobsService;
+import com.thoughtworks.i1.quartz.service.JobService;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.SchedulerException;
@@ -22,20 +22,20 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @Path("quartz-jobs")
 public class JobsResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobsResource.class);
-    private JobsService jobsService;
+    private JobService jobService;
     @Context
     private UriInfo context;
 
     @Inject
-    public JobsResource(JobsService jobsService) {
-        this.jobsService = jobsService;
+    public JobsResource(JobService jobService) {
+        this.jobService = jobService;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("items")
     public List<QuartzVO> getQuartzJobs() {
-        return jobsService.findAllJobs();
+        return jobService.findAllJobs();
     }
 
     @POST
@@ -43,7 +43,7 @@ public class JobsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveSchedule(QuartzVO quartzVO) {
         try {
-            jobsService.saveJob(quartzVO);
+            jobService.saveJob(quartzVO);
             List<QuartzVO> quartzVOs = getQuartzJobs();
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class).path("items");
             Response.ResponseBuilder builder = Response.created(path.build());
@@ -60,7 +60,7 @@ public class JobsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response pauseSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
-            jobsService.pasuseTrigger(triggerName, triggerGroupName);
+            jobService.pasuseTrigger(triggerName, triggerGroupName);
 
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
                     .path("pause-trigger/{trrggerName}/{triggerGroupName}");
@@ -80,7 +80,7 @@ public class JobsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
-            jobsService.deleteTrigger(triggerName, triggerGroupName);
+            jobService.deleteTrigger(triggerName, triggerGroupName);
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
                     .path("delete-trigger/{triggerName}/{triggerGroupName");
             Response.ResponseBuilder builder = Response.created(path
@@ -98,7 +98,7 @@ public class JobsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response resumeSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
-            jobsService.resumeTrigger(triggerName, triggerGroupName);
+            jobService.resumeTrigger(triggerName, triggerGroupName);
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
                     .path("resume-trigger/{triggerName}/{triggerGroupName}");
             Response.ResponseBuilder builder = Response.created(path

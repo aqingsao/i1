@@ -27,9 +27,9 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 @RunWith(TransactionalDomainTestRunner.class)
 @RunWithApplication(QuartzTestApplication.class)
-public class JobsServiceTest {
+public class JobServiceTest {
     @Inject
-    private JobsService jobService;
+    private JobService jobService;
 
     @Test
     public void should_save_a_job() throws Exception {
@@ -46,7 +46,7 @@ public class JobsServiceTest {
 
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(new QuartzApplication.QuartzModule());
-        JobsService jobsService = injector.getInstance(JobsService.class);
+        JobService jobService = injector.getInstance(JobService.class);
         try{
             Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName("com.thoughtworks.i1.quartz.jobs.JobForTest");
             JobDetail jobDetail = newJob(jobClass)
@@ -54,24 +54,24 @@ public class JobsServiceTest {
                     .usingJobData("url", "test-url")
                     .storeDurably(true)
                     .build();
-            jobsService.addJob(jobDetail);
+            jobService.addJob(jobDetail);
 
             Trigger trigger = newTrigger()
                     .withIdentity("triggerName", "triggerGroupName")
                     .withSchedule(cronSchedule("0/5 * * * * ? "))
                     .forJob(jobDetail)
                     .build();
-            jobsService.scheduleJob(trigger);
+            jobService.scheduleJob(trigger);
 
             Trigger trigger2 = newTrigger()
                     .withIdentity("triggerName2", "triggerGroupName")
                     .withSchedule(cronSchedule("0/3 * * * * ? "))
                     .forJob(jobDetail)
                     .build();
-            jobsService.scheduleJob(trigger2);
+            jobService.scheduleJob(trigger2);
 
             sleep(20000);
-            jobsService.shutdown();
+            jobService.shutdown();
         } catch (Exception e){
             System.out.println(e.toString());
         }

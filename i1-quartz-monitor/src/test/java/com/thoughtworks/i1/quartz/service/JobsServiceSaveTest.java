@@ -19,22 +19,22 @@ import static java.lang.Thread.sleep;
 @Ignore
 public class JobsServiceSaveTest {
     @Inject
-    private JobsService jobsService;
+    private JobService jobService;
 
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(new QuartzApplication.QuartzModule());
-        JobsService jobsService = injector.getInstance(JobsService.class);
+        JobService jobService = injector.getInstance(JobService.class);
         try{
 
             String  data = getData();
 
             QuartzVO quartzVO = (QuartzVO)jsonToBean(data, QuartzVO.class);
             System.out.println(quartzVO.getJobName());
-            jobsService.saveJob(quartzVO);
+            jobService.saveJob(quartzVO);
 
 
             sleep(20000);
-            jobsService.shutdown();
+            jobService.shutdown();
         } catch (Exception e){
             System.out.println(e.toString());
         }

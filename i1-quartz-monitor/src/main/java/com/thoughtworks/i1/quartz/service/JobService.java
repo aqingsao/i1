@@ -17,12 +17,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class JobsService {
+public class JobService {
     private final Scheduler scheduler;
-    private static final Logger LOGGER = LoggerFactory.getLogger(JobsService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobService.class);
 
     @Inject
-    public JobsService(final SchedulerFactory factory, final GuiceJobFactory jobFactory) throws SchedulerException {
+    public JobService(final SchedulerFactory factory, final GuiceJobFactory jobFactory) throws SchedulerException {
         scheduler = factory.getScheduler();
         scheduler.setJobFactory(jobFactory);
         LOGGER.info("Starting scheduler...");
