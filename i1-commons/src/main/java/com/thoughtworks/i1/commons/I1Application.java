@@ -76,7 +76,7 @@ public abstract class I1Application {
                 serve(prefix).with(GuiceContainer.class, new ImmutableMap.Builder<String, String>()
                         .put(PROPERTY_PACKAGES, on(";").skipNulls().join(packages)).build());
                 // we only open entityManager when user is accessing api
-                filter("/*").through(PersistFilter.class);
+                filter(prefix).through(PersistFilter.class);
             }
         };
     }
