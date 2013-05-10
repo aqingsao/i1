@@ -29,18 +29,6 @@ public class JobsServiceSaveTest {
     @Inject
     private JobsService jobsService;
 
-    @Test
-    public void should_() throws Exception {
-        String  data = getData();
-
-        QuartzVO quartzVO = (QuartzVO)jsonToBean(data, QuartzVO.class);
-
-        jobsService.saveJob(quartzVO);
-
-        List<JobVO> jobVOs = jobsService.getJobVOs();
-        assertThat(jobVOs.size(), is(1));
-    }
-
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(new QuartzApplication.QuartzModule());
         JobsService jobsService = injector.getInstance(JobsService.class);

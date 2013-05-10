@@ -45,14 +45,10 @@ public class JobsResource {
         try {
             jobsService.saveJob(quartzVO);
             List<QuartzVO> quartzVOs = getQuartzJobs();
-            UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
-                    .path("items");
-            Response.ResponseBuilder builder = Response.created(path
-                    .build());
+            UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class).path("items");
+            Response.ResponseBuilder builder = Response.created(path.build());
             builder.contentLocation(path.build()).entity(quartzVOs);
-            return (null == builder ? Response.noContent().build() : builder.build());
-
-
+            return builder.build();
         } catch (Exception e) {
             LOGGER.error("save job failed!");
             return Response.serverError().build();
@@ -62,9 +58,9 @@ public class JobsResource {
     @GET
     @Path("pause-trigger/{triggerName}/{triggerGroupName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response pauseSchedule(@PathParam("triggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
+    public Response pauseSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
-            jobsService.pasuseTrigger(triggerName,triggerGroupName);
+            jobsService.pasuseTrigger(triggerName, triggerGroupName);
 
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
                     .path("pause-trigger/{trrggerName}/{triggerGroupName}");
@@ -82,9 +78,9 @@ public class JobsResource {
     @GET
     @Path("delete-trigger/{triggerName}/{triggerGroupName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteSchedule(@PathParam("triggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
+    public Response deleteSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
-            jobsService.deleteTrigger(triggerName,triggerGroupName);
+            jobsService.deleteTrigger(triggerName, triggerGroupName);
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
                     .path("delete-trigger/{triggerName}/{triggerGroupName");
             Response.ResponseBuilder builder = Response.created(path
@@ -100,9 +96,9 @@ public class JobsResource {
     @GET
     @Path("resume-trigger/{triggerName}/{triggerGroupName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response resumeSchedule(@PathParam("triggerName")String triggerName,@PathParam("triggerGroupName") String triggerGroupName) {
+    public Response resumeSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
-            jobsService.resumeTrigger(triggerName,triggerGroupName);
+            jobsService.resumeTrigger(triggerName, triggerGroupName);
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
                     .path("resume-trigger/{triggerName}/{triggerGroupName}");
             Response.ResponseBuilder builder = Response.created(path

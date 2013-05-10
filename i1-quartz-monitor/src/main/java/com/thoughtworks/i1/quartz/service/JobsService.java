@@ -3,7 +3,7 @@ package com.thoughtworks.i1.quartz.service;
 import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 import com.thoughtworks.i1.commons.SystemException;
-import com.thoughtworks.i1.quartz.domain.JobDataVO;
+import com.thoughtworks.i1.quartz.domain.JobDetailVO;
 import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
@@ -13,10 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.*;
-
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 public class JobsService {
     private final Scheduler scheduler;
@@ -42,6 +42,7 @@ public class JobsService {
         return scheduler.scheduleJob(trigger);
     }
 
+    @Transactional
     public void addJob(JobDetail jobDetail) throws SchedulerException {
         scheduler.addJob(jobDetail, false);
     }
@@ -70,65 +71,28 @@ public class JobsService {
     }
 
     private QuartzVO getQuartzVO(JobDetail jobDetail) throws SchedulerException {
-        QuartzVO quartzVO = new QuartzVO(jobDetail);
-
         List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobDetail.getKey());
         List<TriggerVO> triggerVOs = Lists.newArrayList();
         for (SimpleTrigger trigger : (List<SimpleTrigger>) triggersOfJob) {
             triggerVOs.add(new TriggerVO(trigger, scheduler.getTriggerState(trigger.getKey())));
         }
-        quartzVO.setTriggers(triggerVOs);
-        return quartzVO;
+        return new QuartzVO(new JobDetailVO(jobDetail), triggerVOs);
     }
 
     @Transactional
     public void saveJob(QuartzVO quartzVO) {
         try {
-            JobDetail jobDetail = getJobDetail(quartzVO);
-            this.addJob(jobDetail);
+            JobDetail jobDetail = quartzVO.getJobDetail();
+            scheduler.addJob(jobDetail, false);
 
             List<TriggerVO> triggerVOs = quartzVO.getTriggers();
             for (TriggerVO triggerVO : triggerVOs) {
-                Trigger trigger = getTrigger(jobDetail, triggerVO);
-
-                scheduleJob(trigger);
+                scheduleJob(triggerVO.getTrigger(jobDetail.getKey().getName()));
             }
 
         } catch (Exception e) {
-            System.out.println(e.toString());
+            throw new SystemException(e.getMessage(), e);
         }
-    }
-
-    private Trigger getTrigger(JobDetail jobDetail, TriggerVO triggerVO) {
-        String triggerGroupName = triggerVO.getTriggerGroupName();
-        TriggerBuilder<Trigger> triggerBuilder = newTrigger()
-                .withIdentity(triggerVO.getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
-                .startAt(triggerVO.getStartTime())
-                .endAt(triggerVO.getEndTime())
-                .forJob(jobDetail);
-        triggerBuilder.withSchedule(
-                SimpleScheduleBuilder
-                        .simpleSchedule()
-                        .withRepeatCount(triggerVO.getRepeatCount())
-                        .withIntervalInMilliseconds(triggerVO.getRepeatInterval())
-        );
-        return triggerBuilder.build();
-    }
-
-    private JobDetail getJobDetail(QuartzVO quartzVO) throws ClassNotFoundException {
-        Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(quartzVO.getJobClass());
-        String jobGroupName = quartzVO.getJobGroupName();
-        JobBuilder jobBuilder = newJob(jobClass)
-                .withIdentity(quartzVO.getJobName(), jobGroupName.length() == 0 ? "HEREN-JOB-GROUP" : jobGroupName)
-                .withDescription(quartzVO.getDescription())
-                .storeDurably(true);
-        List<JobDataVO> jobDatas = quartzVO.getJobDatas();
-        for (JobDataVO jobDataVO : jobDatas) {
-            String key = jobDataVO.getKey();
-            String value = jobDataVO.getValue();
-            jobBuilder.usingJobData(key, value);
-        }
-        return jobBuilder.build();
     }
 
     public List<JobVO> getJobVOs() {

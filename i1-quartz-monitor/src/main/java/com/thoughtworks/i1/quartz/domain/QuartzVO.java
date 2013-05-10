@@ -1,76 +1,66 @@
 package com.thoughtworks.i1.quartz.domain;
 
 import com.google.common.collect.Lists;
-import org.quartz.JobDataMap;
+import com.thoughtworks.i1.commons.SystemException;
+import com.thoughtworks.i1.commons.config.builder.Builder;
+import org.quartz.Job;
+import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 
 import java.util.List;
 
-public class QuartzVO {
+import static org.quartz.JobBuilder.newJob;
 
-    private String jobName;
-    private String jobGroupName;
-    private String description;
-    private String jobClass;
-    private List<JobDataVO> jobDatas;
+public class QuartzVO {
+    private JobDetailVO detail;
     private List<TriggerVO> triggers;
 
     public QuartzVO() {
     }
 
-    public QuartzVO(JobDetail jobDetail) {
-        this.jobName = jobDetail.getKey().getName();
-        this.jobGroupName = jobDetail.getKey().getGroup();
-        this.jobClass = jobDetail.getJobClass().getName();
-        this.jobDatas = Lists.newArrayList();
-        for (String key : jobDetail.getJobDataMap().getKeys()) {
-            jobDatas.add(new JobDataVO(key, jobDetail.getJobDataMap().get(key).toString()));
-        }
-    }
-
-    public static QuartzVO getQuartzVO1(JobDetail jobDetail) {
-
-        return new QuartzVO(jobDetail);
+    public QuartzVO(JobDetailVO jobDetailVO, List<TriggerVO> triggerVOs) {
+        this.detail = jobDetailVO;
+        this.triggers = triggerVOs;
     }
 
     public String getJobName() {
-        return jobName;
+        return detail.getJobName();
     }
 
     public void setJobName(String jobName) {
-        this.jobName = jobName;
+//        this.detail.set = jobName;
     }
 
     public String getJobGroupName() {
-        return jobGroupName;
+        return detail.getJobGroupName();
     }
 
     public void setJobGroupName(String jobGroupName) {
-        this.jobGroupName = jobGroupName;
+//        this.jobGroupName = jobGroupName;
     }
 
     public String getDescription() {
-        return description;
+        return "";
     }
 
     public void setDescription(String description) {
-        this.description = description;
+//        this.description = description;
     }
 
     public String getJobClass() {
-        return jobClass;
+        return detail.getJobClass();
     }
 
     public void setJobClass(String jobClass) {
-        this.jobClass = jobClass;
+//        this.jobClass = jobClass;
     }
 
     public List<JobDataVO> getJobDatas() {
-        return jobDatas;
+        return detail.getJobData();
     }
 
     public void setJobDatas(List<JobDataVO> jobDatas) {
-        this.jobDatas = jobDatas;
+//        this.jobDatas = jobDatas;
     }
 
     public List<TriggerVO> getTriggers() {
@@ -79,5 +69,63 @@ public class QuartzVO {
 
     public void setTriggers(List<TriggerVO> triggers) {
         this.triggers = triggers;
+    }
+
+    public JobDetail getJobDetail() throws ClassNotFoundException {
+        try {
+            Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(getJobClass());
+            String jobGroupName = getJobGroupName();
+            JobBuilder jobBuilder = newJob(jobClass)
+                    .withIdentity(getJobName(), jobGroupName.length() == 0 ? "HEREN-JOB-GROUP" : jobGroupName)
+                    .withDescription(getDescription())
+                    .storeDurably(true);
+            List<JobDataVO> jobDatas = getJobDatas();
+            for (JobDataVO jobDataVO : jobDatas) {
+                String key = jobDataVO.getKey();
+                String value = jobDataVO.getValue();
+                jobBuilder.usingJobData(key, value);
+            }
+            return jobBuilder.build();
+        } catch (ClassNotFoundException e) {
+            throw new SystemException(e.getMessage(), e);
+        }
+    }
+
+    public static class QuartzVOBuilder implements Builder {
+        private JobDetailVO.JobDetailVOBuilder jobDetailVOBuilder;
+
+        private List<TriggerVO.TriggerVOBuilder> triggerVOBuilders = Lists.newArrayList();
+
+        private QuartzVOBuilder() {
+        }
+
+        public static QuartzVOBuilder aQuartzVO() {
+            return new QuartzVOBuilder();
+        }
+
+        public JobDetailVO.JobDetailVOBuilder jobDetail(JobDetail jobDetail) {
+            this.jobDetailVOBuilder = new JobDetailVO.JobDetailVOBuilder(this, jobDetail);
+            return this.jobDetailVOBuilder;
+        }
+
+        public JobDetailVO.JobDetailVOBuilder jobDetail(String name, String group, String jobClass) {
+            this.jobDetailVOBuilder = new JobDetailVO.JobDetailVOBuilder(this, name, group, jobClass);
+            return this.jobDetailVOBuilder;
+        }
+
+        public TriggerVO.TriggerVOBuilder addTrigger(String triggerName, String triggerGroupName) {
+            TriggerVO.TriggerVOBuilder triggerVOBuilder = new TriggerVO.TriggerVOBuilder(this, triggerName, triggerGroupName);
+            this.triggerVOBuilders.add(triggerVOBuilder);
+            return triggerVOBuilder;
+        }
+
+        @Override
+        public QuartzVO build() {
+            List triggerVOs = Lists.newArrayList();
+            for (TriggerVO.TriggerVOBuilder triggerVOBuilder : triggerVOBuilders) {
+                triggerVOs.add(triggerVOBuilder.build());
+            }
+            return new QuartzVO(jobDetailVOBuilder.build(), triggerVOs);
+        }
     }
 }

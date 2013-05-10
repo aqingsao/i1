@@ -5,7 +5,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.thoughtworks.i1.quartz.domain.JobDataVO;
 import com.thoughtworks.i1.quartz.domain.QuartzVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
 
@@ -14,32 +13,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.thoughtworks.i1.quartz.domain.QuartzVO.QuartzVOBuilder.aQuartzVO;
+
 public class ClientTest {
     public static void main(String[] args) {
-        List<TriggerVO> triggerVOList = new ArrayList<>();
-        TriggerVO triggerVO = new TriggerVO();
-        triggerVO.setTriggerName("a");
-        triggerVO.setTriggerGroupName("herenTrigger");
-        triggerVO.setTriggerState("default");
-        triggerVO.setStartTime(new Date());
-        triggerVO.setEndTime(new Date());
-        triggerVO.setRepeatCount(9);
-        triggerVO.setRepeatInterval(7);
-        triggerVOList.add(triggerVO);
-
-        List<JobDataVO> jobDataVOList = new ArrayList<>();
-        JobDataVO jobDataVO = new JobDataVO();
-        jobDataVO.setKey("url");
-        jobDataVO.setValue("http://localhost:8051/heren/api/diagnosis-clinic-dict/test");
-        jobDataVOList.add(jobDataVO);
-
-        QuartzVO quartzVO = new QuartzVO();
-        quartzVO.setJobName("b");
-        quartzVO.setJobGroupName("herenSchedule");
-        quartzVO.setDescription("use schedule");
-        quartzVO.setJobClass("com.thoughtworks.i1.quartz.jobs.JobForUrl");
-        quartzVO.setTriggers(triggerVOList);
-        quartzVO.setJobDatas(jobDataVOList);
+        QuartzVO quartzVO = aQuartzVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
+                .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
+                .addTrigger("a", "herenTrigger").time(new Date(), new Date()).repeat(7, 9).end()
+                .build();
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getClasses().add(JacksonJaxbJsonProvider.class);

@@ -1,9 +1,14 @@
 package com.thoughtworks.i1.quartz.domain;
 
+import com.thoughtworks.i1.commons.config.builder.Builder;
+import org.quartz.SimpleScheduleBuilder;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 
 import java.util.Date;
+
+import static org.quartz.TriggerBuilder.newTrigger;
 
 public class TriggerVO {
 
@@ -19,13 +24,18 @@ public class TriggerVO {
     }
 
     public TriggerVO(SimpleTrigger trigger, Trigger.TriggerState triggerState) {
-        this.triggerName = trigger.getKey().getName();
-        this.triggerGroupName = trigger.getKey().getGroup();
-        this.startTime = trigger.getStartTime();
-        this.endTime = trigger.getEndTime();
-        this.repeatCount = trigger.getRepeatCount();
-        this.repeatInterval = trigger.getRepeatInterval();
-        this.triggerState = triggerState.name();
+        this(trigger.getKey().getName(), trigger.getKey().getGroup(), trigger.getStartTime(), trigger.getEndTime(),
+                trigger.getRepeatCount(), trigger.getRepeatInterval(), triggerState.name());
+    }
+
+    public TriggerVO(String name, String groupName, Date startTime, Date endTime, int repeatCount, long repeatInterval, String triggerState) {
+        this.triggerName = name;
+        this.triggerGroupName = groupName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.repeatCount = repeatCount;
+        this.repeatInterval = repeatInterval;
+        this.triggerState = triggerState;
     }
 
     public String getTriggerName() {
@@ -82,5 +92,59 @@ public class TriggerVO {
 
     public void setRepeatInterval(long repeatInterval) {
         this.repeatInterval = repeatInterval;
+    }
+
+    public Trigger getTrigger(String jobName) {
+        String triggerGroupName = getTriggerGroupName();
+        TriggerBuilder<Trigger> triggerBuilder = newTrigger()
+                .withIdentity(getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
+                .startAt(getStartTime())
+                .endAt(getEndTime())
+                .forJob(jobName);
+        triggerBuilder.withSchedule(
+                SimpleScheduleBuilder
+                        .simpleSchedule()
+                        .withRepeatCount(getRepeatCount())
+                        .withIntervalInMilliseconds(getRepeatInterval())
+        );
+        return triggerBuilder.build();
+    }
+
+    public static class TriggerVOBuilder implements Builder {
+        private String triggerName ;
+        private String triggerGroupName;
+        private Date startTime;
+        private Date endTime;
+        private int repeatCount;
+        private long repeatInterval;
+        private String triggerState;
+
+        private QuartzVO.QuartzVOBuilder parent;
+
+        public TriggerVOBuilder(QuartzVO.QuartzVOBuilder parent, String triggerName, String triggerGroupName) {
+            this.triggerName =triggerName;
+            this.triggerGroupName = triggerGroupName;
+            this.parent = parent;
+        }
+
+        public TriggerVOBuilder time(Date startTime, Date endTime) {
+            this.startTime = startTime;
+            this.endTime = endTime;
+            return this;
+        }
+
+        public TriggerVOBuilder repeat(int interval, int repeatCount) {
+            this.repeatInterval = interval;
+            this.repeatCount = repeatCount;
+            return this;
+        }
+
+        public QuartzVO.QuartzVOBuilder end(){
+            return parent;
+        }
+
+        public TriggerVO build() {
+            return new TriggerVO(triggerName, triggerGroupName, startTime, endTime, repeatCount, repeatInterval, triggerState);
+        }
     }
 }
