@@ -1,7 +1,9 @@
 package com.thoughtworks.i1.quartz.domain;
 
+import org.quartz.SimpleTrigger;
+import org.quartz.Trigger;
+
 import java.util.Date;
-import java.util.Map;
 
 public class TriggerVO {
 
@@ -16,14 +18,14 @@ public class TriggerVO {
     public TriggerVO() {
     }
 
-    public TriggerVO(String triggerName, String triggerGroupName, Date startTime, Date endTime, String triggerState, int repeatCount, long repeatInterval) {
-        this.triggerName = triggerName;
-        this.triggerGroupName = triggerGroupName;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.triggerState = triggerState;
-        this.repeatCount = repeatCount;
-        this.repeatInterval = repeatInterval;
+    public TriggerVO(SimpleTrigger trigger, Trigger.TriggerState triggerState) {
+        this.triggerName = trigger.getKey().getName();
+        this.triggerGroupName = trigger.getKey().getGroup();
+        this.startTime = trigger.getStartTime();
+        this.endTime = trigger.getEndTime();
+        this.repeatCount = trigger.getRepeatCount();
+        this.repeatInterval = trigger.getRepeatInterval();
+        this.triggerState = triggerState.name();
     }
 
     public String getTriggerName() {

@@ -1,7 +1,10 @@
 package com.thoughtworks.i1.quartz.domain;
 
+import com.google.common.collect.Lists;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+
 import java.util.List;
-import java.util.Map;
 
 public class QuartzVO {
 
@@ -15,13 +18,19 @@ public class QuartzVO {
     public QuartzVO() {
     }
 
-    public QuartzVO(String jobName, String jobGroupName, String description, String jobClass, List<JobDataVO> jobDatas, List<TriggerVO> triggers) {
-        this.jobName = jobName;
-        this.jobGroupName = jobGroupName;
-        this.description = description;
-        this.jobClass = jobClass;
-        this.jobDatas = jobDatas;
-        this.triggers = triggers;
+    public QuartzVO(JobDetail jobDetail) {
+        this.jobName = jobDetail.getKey().getName();
+        this.jobGroupName = jobDetail.getKey().getGroup();
+        this.jobClass = jobDetail.getJobClass().getName();
+        this.jobDatas = Lists.newArrayList();
+        for (String key : jobDetail.getJobDataMap().getKeys()) {
+            jobDatas.add(new JobDataVO(key, jobDetail.getJobDataMap().get(key).toString()));
+        }
+    }
+
+    public static QuartzVO getQuartzVO1(JobDetail jobDetail) {
+
+        return new QuartzVO(jobDetail);
     }
 
     public String getJobName() {

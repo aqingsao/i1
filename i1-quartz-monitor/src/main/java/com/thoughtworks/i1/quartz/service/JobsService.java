@@ -1,7 +1,6 @@
 package com.thoughtworks.i1.quartz.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.inject.persist.Transactional;
 import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.quartz.domain.JobDataVO;
@@ -59,23 +58,27 @@ public class JobsService {
 
     public List<QuartzVO> findAllJobs() {
         try {
-            List<JobVO> jobVOs = getJobVOs();
             List<QuartzVO> quartzVOs = Lists.newArrayList();
-
-            for (JobVO jobVO : jobVOs) {
-                QuartzVO quartzVO = getQuartzVOFromJob(jobVO.getJobDetail());
-
-                List<TriggerVO> triggerVOs = getTriggerVOFromJob(jobVO.getTriggers());
-                quartzVO.setTriggers(triggerVOs);
-
-                quartzVOs.add(quartzVO);
+            for (JobDetail jobDetail : getJobDetails()) {
+                quartzVOs.add(getQuartzVO(jobDetail));
             }
 
             return quartzVOs;
         } catch (Exception e) {
-            System.out.println(e.toString());
+            throw new SystemException(e.getMessage(), e);
         }
-        return null;
+    }
+
+    private QuartzVO getQuartzVO(JobDetail jobDetail) throws SchedulerException {
+        QuartzVO quartzVO = new QuartzVO(jobDetail);
+
+        List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobDetail.getKey());
+        List<TriggerVO> triggerVOs = Lists.newArrayList();
+        for (SimpleTrigger trigger : (List<SimpleTrigger>) triggersOfJob) {
+            triggerVOs.add(new TriggerVO(trigger, scheduler.getTriggerState(trigger.getKey())));
+        }
+        quartzVO.setTriggers(triggerVOs);
+        return quartzVO;
     }
 
     @Transactional
@@ -128,38 +131,6 @@ public class JobsService {
         return jobBuilder.build();
     }
 
-    private List<TriggerVO> getTriggerVOFromJob(List<? extends Trigger> triggers) throws Exception {
-        List<TriggerVO> triggerVOs = Lists.newArrayList();
-        for (SimpleTrigger trigger : (List<SimpleTrigger>) triggers) {
-            TriggerVO triggerVO = new TriggerVO();
-            triggerVO.setTriggerName(trigger.getKey().getName());
-            triggerVO.setTriggerGroupName(trigger.getKey().getGroup());
-            triggerVO.setStartTime(trigger.getStartTime());
-            triggerVO.setEndTime(trigger.getEndTime());
-            triggerVO.setRepeatCount(trigger.getRepeatCount());
-            triggerVO.setRepeatInterval(trigger.getRepeatInterval());
-            Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-            triggerVO.setTriggerState(triggerState.name());
-            triggerVOs.add(triggerVO);
-        }
-        return triggerVOs;
-    }
-
-    private QuartzVO getQuartzVOFromJob(JobDetail jobDetail) {
-        QuartzVO quartzVO = new QuartzVO();
-        quartzVO.setJobName(jobDetail.getKey().getName());
-        quartzVO.setJobGroupName(jobDetail.getKey().getGroup());
-        quartzVO.setJobClass(jobDetail.getJobClass().getName());
-        JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        List<JobDataVO> jobDatas = Lists.newArrayList();
-        for (String key : jobDataMap.getKeys()) {
-            JobDataVO jobDataVO = new JobDataVO(key, jobDataMap.get(key).toString());
-            jobDatas.add(jobDataVO);
-        }
-        quartzVO.setJobDatas(jobDatas);
-        return quartzVO;
-    }
-
     public List<JobVO> getJobVOs() {
         try {
             List<JobVO> jobVOs = Lists.newArrayList();
@@ -186,24 +157,14 @@ public class JobsService {
     }
 
     /**
-     * 启动一个调度对象
-     * @throws SchedulerException
-     */
-    public  void start() throws SchedulerException
-    {
-        scheduler.start();
-    }
-
-    /**
      * 检查调度是否启动
+     *
      * @return
      * @throws SchedulerException
      */
-    public  boolean isStarted() throws SchedulerException
-    {
+    public boolean isStarted() throws SchedulerException {
         return scheduler.isStarted();
     }
-
 
 
     public void pasuseTrigger(String triggerName, String triggerGroupName) throws SchedulerException {
@@ -226,7 +187,6 @@ public class JobsService {
         JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);
         scheduler.deleteJob(jobKey);
     }
-
 
 
 }
