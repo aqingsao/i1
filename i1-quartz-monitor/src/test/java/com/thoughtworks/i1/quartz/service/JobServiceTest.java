@@ -6,7 +6,7 @@ import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.commons.test.TransactionalDomainTestRunner;
 import com.thoughtworks.i1.quartz.QuartzApplication;
 import com.thoughtworks.i1.quartz.api.QuartzTestApplication;
-import com.thoughtworks.i1.quartz.domain.QuartzVO;
+import com.thoughtworks.i1.quartz.domain.JobVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.Job;
@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
 
-import static com.thoughtworks.i1.quartz.domain.QuartzVO.QuartzVOBuilder.aQuartzVO;
+import static com.thoughtworks.i1.quartz.domain.JobVO.QuartzVOBuilder.aQuartzVO;
 import static java.lang.Thread.sleep;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -33,11 +33,11 @@ public class JobServiceTest {
 
     @Test
     public void should_save_a_job() throws Exception {
-        QuartzVO quartzVO = aQuartzVO().jobDetail("name", "group", "com.thoughtworks.i1.quartz.DummyJob").end()
+        JobVO jobVO = aQuartzVO().jobDetail("name", "group", "com.thoughtworks.i1.quartz.DummyJob").end()
                 .addTrigger("a", "herenTrigger").time(new Date(), new Date()).end().build();
-        jobService.saveJob(quartzVO);
+        jobService.saveJob(jobVO);
 
-        List<QuartzVO> actual = jobService.findAllJobs();
+        List<JobVO> actual = jobService.findAllJobs();
         assertThat(actual.size(), is(1));
         assertThat(actual.get(0).getJobName(), is("name"));
         assertThat(actual.get(0).getJobGroupName(), is("group"));

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.quartz.domain.JobDetailVO;
-import com.thoughtworks.i1.quartz.domain.QuartzVO;
+import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -56,35 +56,35 @@ public class JobService {
         }
     }
 
-    public List<QuartzVO> findAllJobs() {
+    public List<JobVO> findAllJobs() {
         try {
-            List<QuartzVO> quartzVOs = Lists.newArrayList();
+            List<JobVO> jobVOs = Lists.newArrayList();
             for (JobDetail jobDetail : getJobDetails()) {
-                quartzVOs.add(getQuartzVO(jobDetail));
+                jobVOs.add(getQuartzVO(jobDetail));
             }
 
-            return quartzVOs;
+            return jobVOs;
         } catch (Exception e) {
             throw new SystemException(e.getMessage(), e);
         }
     }
 
-    private QuartzVO getQuartzVO(JobDetail jobDetail) throws SchedulerException {
+    private JobVO getQuartzVO(JobDetail jobDetail) throws SchedulerException {
         List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobDetail.getKey());
         List<TriggerVO> triggerVOs = Lists.newArrayList();
         for (SimpleTrigger trigger : (List<SimpleTrigger>) triggersOfJob) {
             triggerVOs.add(new TriggerVO(trigger, scheduler.getTriggerState(trigger.getKey())));
         }
-        return new QuartzVO(new JobDetailVO(jobDetail), triggerVOs);
+        return new JobVO(new JobDetailVO(jobDetail), triggerVOs);
     }
 
     @Transactional
-    public void saveJob(QuartzVO quartzVO) {
+    public void saveJob(JobVO jobVO) {
         try {
-            JobDetail jobDetail = quartzVO.getJobDetail();
+            JobDetail jobDetail = jobVO.getJobDetail();
             scheduler.addJob(jobDetail, false);
 
-            List<TriggerVO> triggerVOs = quartzVO.getTriggers();
+            List<TriggerVO> triggerVOs = jobVO.getTriggers();
             for (TriggerVO triggerVO : triggerVOs) {
                 scheduleJob(triggerVO.toTrigger(jobDetail.getKey()));
             }

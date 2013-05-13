@@ -116,9 +116,9 @@ public class TriggerVO {
         private long repeatInterval;
         private String triggerState;
 
-        private QuartzVO.QuartzVOBuilder parent;
+        private JobVO.QuartzVOBuilder parent;
 
-        public TriggerVOBuilder(QuartzVO.QuartzVOBuilder parent, String triggerName, String triggerGroupName) {
+        public TriggerVOBuilder(JobVO.QuartzVOBuilder parent, String triggerName, String triggerGroupName) {
             this.triggerName =triggerName;
             this.triggerGroupName = triggerGroupName;
             this.parent = parent;
@@ -136,7 +136,7 @@ public class TriggerVO {
             return this;
         }
 
-        public QuartzVO.QuartzVOBuilder end(){
+        public JobVO.QuartzVOBuilder end(){
             return parent;
         }
 

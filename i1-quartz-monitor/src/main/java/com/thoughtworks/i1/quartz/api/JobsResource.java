@@ -1,11 +1,7 @@
 package com.thoughtworks.i1.quartz.api;
 
-import com.thoughtworks.i1.quartz.domain.QuartzVO;
+import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.service.JobService;
-import org.quartz.Job;
-import org.quartz.JobDetail;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +13,6 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 @Path("quartz-jobs")
 public class JobsResource {
@@ -34,20 +29,20 @@ public class JobsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("items")
-    public List<QuartzVO> getQuartzJobs() {
+    public List<JobVO> getQuartzJobs() {
         return jobService.findAllJobs();
     }
 
     @POST
     @Path("item")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveSchedule(QuartzVO quartzVO) {
+    public Response saveSchedule(JobVO jobVO) {
         try {
-            jobService.saveJob(quartzVO);
-            List<QuartzVO> quartzVOs = getQuartzJobs();
+            jobService.saveJob(jobVO);
+            List<JobVO> jobVOs = getQuartzJobs();
             UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class).path("items");
             Response.ResponseBuilder builder = Response.created(path.build());
-            builder.contentLocation(path.build()).entity(quartzVOs);
+            builder.contentLocation(path.build()).entity(jobVOs);
             return builder.build();
         } catch (Exception e) {
             LOGGER.error("save job failed!");

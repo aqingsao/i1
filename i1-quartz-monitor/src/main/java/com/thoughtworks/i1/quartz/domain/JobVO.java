@@ -11,14 +11,14 @@ import java.util.List;
 
 import static org.quartz.JobBuilder.newJob;
 
-public class QuartzVO {
+public class JobVO {
     private JobDetailVO detail;
     private List<TriggerVO> triggers;
 
-    public QuartzVO() {
+    public JobVO() {
     }
 
-    public QuartzVO(JobDetailVO jobDetailVO, List<TriggerVO> triggerVOs) {
+    public JobVO(JobDetailVO jobDetailVO, List<TriggerVO> triggerVOs) {
         this.detail = jobDetailVO;
         this.triggers = triggerVOs;
     }
@@ -120,12 +120,12 @@ public class QuartzVO {
         }
 
         @Override
-        public QuartzVO build() {
+        public JobVO build() {
             List triggerVOs = Lists.newArrayList();
             for (TriggerVO.TriggerVOBuilder triggerVOBuilder : triggerVOBuilders) {
                 triggerVOs.add(triggerVOBuilder.build());
             }
-            return new QuartzVO(jobDetailVOBuilder.build(), triggerVOs);
+            return new JobVO(jobDetailVOBuilder.build(), triggerVOs);
         }
     }
 }

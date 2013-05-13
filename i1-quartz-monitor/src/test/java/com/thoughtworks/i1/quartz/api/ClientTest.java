@@ -5,19 +5,16 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.thoughtworks.i1.quartz.domain.QuartzVO;
-import com.thoughtworks.i1.quartz.domain.TriggerVO;
+import com.thoughtworks.i1.quartz.domain.JobVO;
 
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import static com.thoughtworks.i1.quartz.domain.QuartzVO.QuartzVOBuilder.aQuartzVO;
+import static com.thoughtworks.i1.quartz.domain.JobVO.QuartzVOBuilder.aQuartzVO;
 
 public class ClientTest {
     public static void main(String[] args) {
-        QuartzVO quartzVO = aQuartzVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
+        JobVO jobVO = aQuartzVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("a", "herenTrigger").time(new Date(), new Date()).repeat(7, 9).end()
                 .build();

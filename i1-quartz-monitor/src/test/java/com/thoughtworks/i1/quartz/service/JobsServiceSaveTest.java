@@ -8,7 +8,7 @@ import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.commons.test.TransactionalDomainTestRunner;
 import com.thoughtworks.i1.quartz.QuartzApplication;
 import com.thoughtworks.i1.quartz.api.QuartzTestApplication;
-import com.thoughtworks.i1.quartz.domain.QuartzVO;
+import com.thoughtworks.i1.quartz.domain.JobVO;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
@@ -28,9 +28,9 @@ public class JobsServiceSaveTest {
 
             String  data = getData();
 
-            QuartzVO quartzVO = (QuartzVO)jsonToBean(data, QuartzVO.class);
-            System.out.println(quartzVO.getJobName());
-            jobService.saveJob(quartzVO);
+            JobVO jobVO = (JobVO)jsonToBean(data, JobVO.class);
+            System.out.println(jobVO.getJobName());
+            jobService.saveJob(jobVO);
 
 
             sleep(20000);

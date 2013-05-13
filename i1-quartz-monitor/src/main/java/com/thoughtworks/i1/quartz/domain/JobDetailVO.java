@@ -4,16 +4,14 @@ import com.google.common.collect.Lists;
 import com.thoughtworks.i1.commons.config.builder.Builder;
 import org.quartz.JobDetail;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JobDetailVO {
     public static final String DEFAULT_GROUP_NAME = "HEREN-JOB-GROUP";
     private String jobName;
     private String jobGroupName = DEFAULT_GROUP_NAME;
     private String jobClass;
-    private List jobData = Lists.newArrayList();
+    private List<JobDataVO> jobData = Lists.newArrayList();
 
     public JobDetailVO(JobDetail jobDetail) {
         this(jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName());
@@ -58,7 +56,7 @@ public class JobDetailVO {
         private String jobGroupName;
         private String jobClass;
 
-        private QuartzVO.QuartzVOBuilder parent;
+        private JobVO.QuartzVOBuilder parent;
         private List jobData = Lists.newArrayList();
 
         private JobDetailVOBuilder(String jobName, String jobGroupName, String jobClass) {
@@ -67,7 +65,7 @@ public class JobDetailVO {
             this.jobClass = jobClass;
         }
 
-        public JobDetailVOBuilder(QuartzVO.QuartzVOBuilder parent, String jobName, String jobGroupName, String jobClass) {
+        public JobDetailVOBuilder(JobVO.QuartzVOBuilder parent, String jobName, String jobGroupName, String jobClass) {
             this.jobName = jobName;
             this.jobGroupName = jobGroupName;
             this.jobClass = jobClass;
@@ -75,7 +73,7 @@ public class JobDetailVO {
             this.parent = parent;
         }
 
-        public JobDetailVOBuilder(QuartzVO.QuartzVOBuilder parent, JobDetail jobDetail) {
+        public JobDetailVOBuilder(JobVO.QuartzVOBuilder parent, JobDetail jobDetail) {
             this(parent, jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName());
         }
 
@@ -87,7 +85,7 @@ public class JobDetailVO {
             return new JobDetailVOBuilder(jobName, jobGroupName, jobClass);
         }
 
-        public QuartzVO.QuartzVOBuilder end(){
+        public JobVO.QuartzVOBuilder end(){
             return parent;
         }
 

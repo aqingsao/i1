@@ -4,17 +4,13 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.thoughtworks.i1.commons.test.AbstractResourceTest;
 import com.thoughtworks.i1.commons.test.ApiTestRunner;
 import com.thoughtworks.i1.commons.test.RunWithApplication;
-import com.thoughtworks.i1.quartz.domain.JobDataVO;
-import com.thoughtworks.i1.quartz.domain.QuartzVO;
-import com.thoughtworks.i1.quartz.domain.TriggerVO;
+import com.thoughtworks.i1.quartz.domain.JobVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import static com.thoughtworks.i1.quartz.domain.QuartzVO.QuartzVOBuilder.aQuartzVO;
+import static com.thoughtworks.i1.quartz.domain.JobVO.QuartzVOBuilder.aQuartzVO;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -49,15 +45,15 @@ public class JobsResourceTest  extends AbstractResourceTest {
 //        jobDataVO.setValue("http://localhost:8051/heren/api/diagnosis-clinic-dict/test");
 //        jobDataVOList.add(jobDataVO);
 //
-//        QuartzVO quartzVO = new QuartzVO.QuartzVOBuilder().createQuartzVO();
-//        quartzVO.setJobName("aa");
-//        quartzVO.setJobGroupName("herenSchedule");
-//        quartzVO.setDescription("use schedule");
-//        quartzVO.setJobClass("com.thoughtworks.i1.quartz.jobs.JobForUrl");
-//        quartzVO.setTriggers(triggerVOList);
-//        quartzVO.setJobDatas(jobDataVOList);
+//        JobVO jobVO = new JobVO.QuartzVOBuilder().createQuartzVO();
+//        jobVO.setJobName("aa");
+//        jobVO.setJobGroupName("herenSchedule");
+//        jobVO.setDescription("use schedule");
+//        jobVO.setJobClass("com.thoughtworks.i1.quartz.jobs.JobForUrl");
+//        jobVO.setTriggers(triggerVOList);
+//        jobVO.setJobDatas(jobDataVOList);
 
-        QuartzVO quartzVO = aQuartzVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
+        JobVO jobVO = aQuartzVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("a", "herenTrigger").time(new Date(), new Date()).repeat(7, 9).end()
                 .build();
