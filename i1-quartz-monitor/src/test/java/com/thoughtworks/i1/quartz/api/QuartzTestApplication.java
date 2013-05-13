@@ -1,22 +1,26 @@
 package com.thoughtworks.i1.quartz.api;
 
-import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Module;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.test.I1TestApplication;
 import com.thoughtworks.i1.quartz.QuartzApplication;
 
+import java.util.Collection;
+
 public class QuartzTestApplication extends I1TestApplication {
     @Override
     protected Configuration defaultConfiguration() {
         return Configuration.config()
+                .app().contextPath("/schedule").end()
                 .http().port(8052).end()
-                .database().with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
+                .database().persistUnit("domain").with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
                 .build();
     }
 
     @Override
-    protected Optional<QuartzApplication.QuartzModule> getCustomizedModule() {
-        return Optional.of(new QuartzApplication.QuartzModule());
+    protected Collection<? extends Module> getCustomizedModules() {
+        return ImmutableList.of(new UriModule(getUri()), new QuartzApplication.QuartzModule());
     }
 }

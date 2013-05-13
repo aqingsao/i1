@@ -1,7 +1,8 @@
 package com.thoughtworks.i1.quartz;
 
-import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.thoughtworks.i1.commons.I1Application;
 import com.thoughtworks.i1.commons.config.Configuration;
@@ -9,6 +10,8 @@ import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.quartz.service.JobService;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
+
+import java.util.Collection;
 
 public class QuartzApplication extends I1Application {
 
@@ -18,19 +21,15 @@ public class QuartzApplication extends I1Application {
     @Override
     public Configuration defaultConfiguration() {
         return Configuration.config()
+                .app().contextPath("/schedule").end()
                 .http().port(8052).end()
-                .database().with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
+                .database().persistUnit("domain").with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
                 .build();
     }
 
     @Override
-    protected Optional<QuartzModule> getCustomizedModule() {
-        return Optional.of(new QuartzModule());
-    }
-
-    @Override
-    public String getContextPath() {
-        return "/schedule";
+    protected Collection<? extends Module> getCustomizedModules() {
+        return ImmutableList.of(new QuartzModule());
     }
 
     public static void main(String[] args) throws Exception {

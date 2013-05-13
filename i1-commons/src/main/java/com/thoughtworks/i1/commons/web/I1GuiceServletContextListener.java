@@ -47,6 +47,6 @@ public class I1GuiceServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(application.getModules());
+        return Guice.createInjector(application.allModules());
     }
 }

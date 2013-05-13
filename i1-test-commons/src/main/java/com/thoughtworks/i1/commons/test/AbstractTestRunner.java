@@ -24,11 +24,13 @@ public abstract class AbstractTestRunner extends BlockJUnit4ClassRunner {
     private static boolean listenerAdded = false;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTestRunner.class);
-    private I1Application application;
+    private static I1Application application;
 
     public AbstractTestRunner(Class<?> klass) throws org.junit.runners.model.InitializationError {
         super(klass);
-        application = getApplication(klass);
+        if(application == null){
+            application = getApplication(klass);
+        }
     }
 
     private I1Application getApplication(Class<?> klass) {

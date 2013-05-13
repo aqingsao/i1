@@ -49,16 +49,21 @@ public class Configuration {
     @NotNull
     private DatabaseConfiguration database;
 
+    @NotNull
+    private ApplicationConfiguration app;
+
     public Configuration() {
         http = config().http().build();
         logging = config().logging().build();
         database = config().database().build();
+        app = config().app().build();
     }
 
-    private Configuration(HttpConfiguration http, LoggingConfiguration logging, DatabaseConfiguration database) {
+    private Configuration(HttpConfiguration http, LoggingConfiguration logging, DatabaseConfiguration database, ApplicationConfiguration app) {
         this.http = http;
         this.logging = logging;
         this.database = database;
+        this.app = app;
     }
 
     protected Configuration(Configuration configuration) {
@@ -81,6 +86,11 @@ public class Configuration {
         return database;
     }
 
+    @XmlElement
+    public ApplicationConfiguration getApp() {
+        return app;
+    }
+
     public static class ConfigurationBuilder implements Builder<Configuration> {
 
         private HttpConfiguration.HttpConfigurationBuilder http = new HttpConfiguration.HttpConfigurationBuilder(this);
@@ -88,6 +98,7 @@ public class Configuration {
         private LoggingConfiguration.LoggingConfigurationBuilder logging = new LoggingConfiguration.LoggingConfigurationBuilder(this);
 
         private DatabaseConfiguration.DatabaseConfigurationBuilder database = new DatabaseConfiguration.DatabaseConfigurationBuilder(this);
+        private ApplicationConfiguration.ApplicationConfigurationBuilder app = new ApplicationConfiguration.ApplicationConfigurationBuilder(this);
 
         ConfigurationBuilder() {
         }
@@ -100,13 +111,17 @@ public class Configuration {
             return logging;
         }
 
-        @Override
-        public Configuration build() {
-            return new Configuration(http.build(), logging.build(), database.build());
+        public ApplicationConfiguration.ApplicationConfigurationBuilder app() {
+            return app;
         }
 
         public DatabaseConfiguration.DatabaseConfigurationBuilder database() {
             return database;
+        }
+
+        @Override
+        public Configuration build() {
+            return new Configuration(http.build(), logging.build(), database.build(), app.build());
         }
     }
 }

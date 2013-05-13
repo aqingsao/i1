@@ -1,6 +1,6 @@
 package com.thoughtworks.i1.commons.test;
 
-import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.thoughtworks.i1.commons.I1Application;
@@ -8,31 +8,23 @@ import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 
 import java.net.URI;
+import java.util.Collection;
 
-public class I1TestApplication extends I1Application{
+public abstract class I1TestApplication extends I1Application{
     @Override
-    protected Configuration defaultConfiguration() {
-        return Configuration.config()
-                .http().port(8052).end()
-                .database().with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
-                .build();
+    protected Collection<? extends Module> getCustomizedModules() {
+        return ImmutableList.of(new UriModule(getUri()));
     }
 
-    @Override
-    public Module[] getModules() {
-        Module propertyModule = new PropertyModule(getPropertyFiles());
-        Module jerseyServletModule = jerseyServletModule(getApiPrefix(), getScanningPackage());
-        Module jpaPersistModule = jpaPersistModule(getPersistUnit());
-        Module uriModule = new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(URI.class).toInstance(I1TestApplication.this.getUri());
-            }
-        };
-        Optional<Module> customizedModule = getCustomizedModule();
-        if (customizedModule.isPresent()) {
-            return new Module[]{propertyModule, jerseyServletModule, jpaPersistModule, uriModule, customizedModule.get()};
+    public static class UriModule extends AbstractModule {
+        private URI uri;
+        public UriModule(URI uri){
+            this.uri = uri;
         }
-        return new Module[]{propertyModule, jerseyServletModule, jpaPersistModule, uriModule};
+
+        @Override
+        protected void configure() {
+            bind(URI.class).toInstance(uri);
+        }
     }
 }

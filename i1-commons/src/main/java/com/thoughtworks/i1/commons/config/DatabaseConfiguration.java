@@ -23,6 +23,9 @@ import static com.thoughtworks.i1.commons.config.DatabaseConfiguration.DatabaseC
 
 @XmlType
 public class DatabaseConfiguration {
+
+    @NotNull
+    private String persistUnit;
     @NotNull
     private String driver;
     @NotNull
@@ -38,7 +41,8 @@ public class DatabaseConfiguration {
     public DatabaseConfiguration() {
     }
 
-    public DatabaseConfiguration(String driver, String url, String password, String user, Map<String, String> properties, Optional<MigrationConfiguration> migration) {
+    public DatabaseConfiguration(String persistUnit, String driver, String url, String password, String user, Map<String, String> properties, Optional<MigrationConfiguration> migration) {
+        this.persistUnit = persistUnit;
         this.driver = driver;
         this.url = url;
         this.password = password;
@@ -120,6 +124,10 @@ public class DatabaseConfiguration {
         return result;
     }
 
+    public String getPersistUnit() {
+        return persistUnit;
+    }
+
     @XmlType
     public static class MigrationConfiguration {
         private boolean auto = true;
@@ -177,6 +185,7 @@ public class DatabaseConfiguration {
         private OptionalBuilder<MigrationConfigurationBuilder, MigrationConfiguration>
                 migration = new OptionalBuilder<>(new MigrationConfigurationBuilder());
         private Configuration.ConfigurationBuilder parent;
+        private String persistUnit;
 
         DatabaseConfigurationBuilder(Configuration.ConfigurationBuilder parent) {
             this.parent = parent;
@@ -219,6 +228,11 @@ public class DatabaseConfiguration {
             return this;
         }
 
+        public DatabaseConfigurationBuilder persistUnit(String persistUnit) {
+            this.persistUnit = persistUnit;
+            return this;
+        }
+
         public MigrationConfigurationBuilder migration() {
             return migration.builder();
         }
@@ -241,7 +255,7 @@ public class DatabaseConfiguration {
         }
 
         public DatabaseConfiguration build() {
-            return new DatabaseConfiguration(driver, url, password, user, properties.build(), migration.build());
+            return new DatabaseConfiguration(persistUnit, driver, url, password, user, properties.build(), migration.build());
         }
 
         public class MigrationConfigurationBuilder implements Builder<MigrationConfiguration> {

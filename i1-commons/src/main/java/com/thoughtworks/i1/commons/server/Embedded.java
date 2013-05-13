@@ -2,7 +2,6 @@ package com.thoughtworks.i1.commons.server;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.google.inject.servlet.GuiceServletContextListener;
 import com.thoughtworks.i1.commons.config.HttpConfiguration;
 
 public abstract class Embedded {

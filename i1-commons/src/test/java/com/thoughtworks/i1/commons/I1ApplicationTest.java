@@ -6,7 +6,6 @@ import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.config.DatabaseConfiguration;
 import com.thoughtworks.i1.commons.server.Embedded;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -16,20 +15,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class I1ApplicationTest {
-    private Configuration configuration;
     private Embedded server;
 
-    @Before
-    public void before() {
-        configuration = Configuration.config()
-                .http().port(8051).end()
-                .database().with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
-                .build();
-    }
-
     @After
-    public void after(){
-       server.stop();
+    public void after() {
+        if(server != null){
+            server.stop();
+        }
     }
 
     @Test
@@ -43,12 +35,7 @@ public class I1ApplicationTest {
 
     @Test
     public void should_override_api_prefix_when_given() {
-        server = new I1TestApplication() {
-            @Override
-            protected String getApiPrefix() {
-                return "/test/*";
-            }
-        }.start(false);
+        server = new I1TestApplication().setApiPrefix("/test/*").start(false);
 
         ClientResponse clientResponse = get("/", "/test/outer");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -66,12 +53,7 @@ public class I1ApplicationTest {
 
     @Test
     public void should_override_context_path_when_given() {
-        server = new I1TestApplication(){
-            @Override
-            public String getContextPath() {
-                return "/test";
-            }
-        }.start(false);
+        server = new I1TestApplication().setContextPath("/test").start(false);
 
         ClientResponse clientResponse = get("/test", "/api/outer");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -80,12 +62,7 @@ public class I1ApplicationTest {
 
     @Test
     public void should_only_load_inner_resources_when_given_scanning_package() {
-        server = new I1TestApplication(){
-            @Override
-            protected String getScanningPackage() {
-                return "com.thoughtworks.i1.commons.inner";
-            }
-        }.start(false);
+        server = new I1TestApplication().setScanningPackage("com.thoughtworks.i1.commons.inner").start(false);
 
         ClientResponse clientResponse = get("/", "/api/inner");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -96,12 +73,7 @@ public class I1ApplicationTest {
 
     @Ignore
     public void should_load_property_file_when_given() {
-        server = new I1TestApplication(){
-            @Override
-            protected String[] getPropertyFiles() {
-                return new String[]{"application.property"};
-            }
-        }.start(false);
+        server = new I1TestApplication().setPropertyFiles("application.property").start(false);
 
         ClientResponse clientResponse = get("/", "/api/inner/property");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
@@ -119,9 +91,43 @@ public class I1ApplicationTest {
     }
 
     private class I1TestApplication extends I1Application {
+        private String contextPath = "/";
+        private String[] propertyFiles = new String[0];
+        private String apiPrefix = "/api/*";
+        private String scanningPackage = "com.thoughtworks.i1";
+
+        public I1TestApplication() {
+            super();
+        }
+
+        public I1TestApplication setContextPath(String contextPath) {
+            this.contextPath = contextPath;
+            return this;
+        }
+
+        public I1TestApplication setApiPrefix(String apiPrefix) {
+            this.apiPrefix = apiPrefix;
+            return this;
+        }
+
+        public I1TestApplication setScanningPackage(String scanningPackage) {
+            this.scanningPackage = scanningPackage;
+            return this;
+        }
+
+        public I1TestApplication setPropertyFiles(String... propertyFiles) {
+            this.propertyFiles = propertyFiles;
+            return this;
+        }
+
+
         @Override
         protected Configuration defaultConfiguration() {
-            return configuration;
+            return Configuration.config()
+                    .app().contextPath(contextPath).jerseyServletModule(apiPrefix, scanningPackage).propertyFiles(propertyFiles).end()
+                    .http().port(8051).end()
+                    .database().persistUnit("domain").with(DatabaseConfiguration.H2.driver, DatabaseConfiguration.H2.tempFileDB, DatabaseConfiguration.H2.compatible("ORACLE"), DatabaseConfiguration.Hibernate.dialect("Oracle10g"), DatabaseConfiguration.Hibernate.showSql).user("sa").password("").end()
+                    .build();
         }
     }
 }
