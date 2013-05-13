@@ -20,11 +20,6 @@ public class TriggerVO {
     public TriggerVO() {
     }
 
-    public TriggerVO(SimpleTrigger trigger, Trigger.TriggerState triggerState) {
-        this(trigger.getKey().getName(), trigger.getKey().getGroup(), trigger.getStartTime(), trigger.getEndTime(),
-                trigger.getRepeatCount(), trigger.getRepeatInterval(), triggerState.name());
-    }
-
     public TriggerVO(String name, String groupName, Date startTime, Date endTime, int repeatCount, long repeatInterval, String triggerState) {
         this.triggerName = name;
         this.triggerGroupName = groupName;
@@ -89,6 +84,10 @@ public class TriggerVO {
 
     public void setRepeatInterval(long repeatInterval) {
         this.repeatInterval = repeatInterval;
+    }
+
+    public static TriggerVO fromTrigger(SimpleTrigger trigger, String triggerStateName) {
+        return new TriggerVO(trigger.getKey().getName(), trigger.getKey().getGroup(), trigger.getStartTime(), trigger.getEndTime(), trigger.getRepeatCount(), trigger.getRepeatInterval(), triggerStateName);
     }
 
     public Trigger toTrigger(JobKey jobKey) {
