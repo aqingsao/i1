@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Date;
 
-import static com.thoughtworks.i1.quartz.domain.JobVO.QuartzVOBuilder.aQuartzVO;
+import static com.thoughtworks.i1.quartz.domain.JobVO.QuartzVOBuilder.aJobVO;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -53,7 +53,7 @@ public class JobsResourceTest  extends AbstractResourceTest {
 //        jobVO.setTriggers(triggerVOList);
 //        jobVO.setJobDatas(jobDataVOList);
 
-        JobVO jobVO = aQuartzVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
+        JobVO jobVO = aJobVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("a", "herenTrigger").time(new Date(), new Date()).repeat(7, 9).end()
                 .build();

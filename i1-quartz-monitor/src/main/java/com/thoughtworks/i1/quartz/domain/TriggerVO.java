@@ -129,7 +129,7 @@ public class TriggerVO {
             return this;
         }
 
-        public TriggerVOBuilder repeat(int interval, int repeatCount) {
+        public TriggerVOBuilder repeat(long interval, int repeatCount) {
             this.repeatInterval = interval;
             this.repeatCount = repeatCount;
             return this;

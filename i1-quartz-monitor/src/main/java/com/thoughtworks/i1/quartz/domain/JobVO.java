@@ -74,7 +74,11 @@ public class JobVO {
         this.triggers.add(triggerVO);
     }
 
-    public JobDetail getJobDetail() throws ClassNotFoundException {
+    public JobDetailVO getJobDetailVO(){
+        return this.detail;
+    }
+
+    public JobDetail getJobDetail() {
         try {
             Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(getJobClass());
             String jobGroupName = getJobGroupName();
@@ -90,7 +94,7 @@ public class JobVO {
             }
             return jobBuilder.build();
         } catch (ClassNotFoundException e) {
-            throw new SystemException(e.getMessage(), e);
+            throw new SystemException(String.format("Cannot find job with name %s", e.getMessage()), e);
         }
     }
     public static class QuartzVOBuilder implements Builder {
@@ -102,7 +106,7 @@ public class JobVO {
         private QuartzVOBuilder() {
         }
 
-        public static QuartzVOBuilder aQuartzVO() {
+        public static QuartzVOBuilder aJobVO() {
             return new QuartzVOBuilder();
         }
 

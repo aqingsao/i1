@@ -58,8 +58,8 @@ public class JobService {
             for (TriggerVO triggerVO : triggerVOs) {
                 scheduler.scheduleJob(triggerVO.toTrigger(jobDetail.getKey()));
             }
-        } catch (Exception e) {
-            throw new SystemException(e.getMessage(), e);
+        } catch (SchedulerException e) {
+            throw new SystemException(String.format("Failed to save job: %s", e.getMessage()), e);
         }
     }
 
@@ -90,9 +90,9 @@ public class JobService {
         scheduler.resumeTrigger(triggerKey);
     }
 
+    @Transactional
     public void deleteJob(String jobName, String jobGroupName) throws SchedulerException {
-        JobKey jobKey = JobKey.jobKey(jobName, jobGroupName);
-        scheduler.deleteJob(jobKey);
+        scheduler.deleteJob(JobKey.jobKey(jobName, jobGroupName));
     }
 
     private List<JobDetail> getJobDetails() throws SchedulerException {
@@ -106,5 +106,9 @@ public class JobService {
             }
         }
         return jobDetails;
+    }
+
+    public Scheduler getScheduler() {
+        return scheduler;
     }
 }
