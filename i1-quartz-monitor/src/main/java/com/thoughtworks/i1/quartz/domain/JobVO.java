@@ -13,14 +13,13 @@ import static org.quartz.JobBuilder.newJob;
 
 public class JobVO {
     private JobDetailVO detail;
-    private List<TriggerVO> triggers;
+    private List<TriggerVO> triggers = Lists.newArrayList();
 
     public JobVO() {
     }
 
-    public JobVO(JobDetailVO jobDetailVO, List<TriggerVO> triggerVOs) {
+    public JobVO(JobDetailVO jobDetailVO) {
         this.detail = jobDetailVO;
-        this.triggers = triggerVOs;
     }
 
     public String getJobName() {
@@ -71,6 +70,10 @@ public class JobVO {
         this.triggers = triggers;
     }
 
+    public void addTriggerVO(TriggerVO triggerVO) {
+        this.triggers.add(triggerVO);
+    }
+
     public JobDetail getJobDetail() throws ClassNotFoundException {
         try {
             Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(getJobClass());
@@ -90,8 +93,8 @@ public class JobVO {
             throw new SystemException(e.getMessage(), e);
         }
     }
-
     public static class QuartzVOBuilder implements Builder {
+
         private JobDetailVO.JobDetailVOBuilder jobDetailVOBuilder;
 
         private List<TriggerVO.TriggerVOBuilder> triggerVOBuilders = Lists.newArrayList();
@@ -118,14 +121,14 @@ public class JobVO {
             this.triggerVOBuilders.add(triggerVOBuilder);
             return triggerVOBuilder;
         }
-
         @Override
         public JobVO build() {
-            List triggerVOs = Lists.newArrayList();
+            JobVO jobVO = new JobVO(jobDetailVOBuilder.build());
             for (TriggerVO.TriggerVOBuilder triggerVOBuilder : triggerVOBuilders) {
-                triggerVOs.add(triggerVOBuilder.build());
+                jobVO.addTriggerVO(triggerVOBuilder.build());
             }
-            return new JobVO(jobDetailVOBuilder.build(), triggerVOs);
+            return jobVO;
         }
+
     }
 }

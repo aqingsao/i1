@@ -43,37 +43,4 @@ public class JobServiceTest {
         assertThat(actual.get(0).getJobGroupName(), is("group"));
         assertThat(actual.get(0).getJobClass(), is("com.thoughtworks.i1.quartz.DummyJob"));
     }
-
-    public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new QuartzApplication.QuartzModule());
-        JobService jobService = injector.getInstance(JobService.class);
-        try{
-            Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName("com.thoughtworks.i1.quartz.jobs.JobForTest");
-            JobDetail jobDetail = newJob(jobClass)
-                    .withIdentity("jobName", "jobGroupName")
-                    .usingJobData("url", "test-url")
-                    .storeDurably(true)
-                    .build();
-            jobService.addJob(jobDetail);
-
-            Trigger trigger = newTrigger()
-                    .withIdentity("triggerName", "triggerGroupName")
-                    .withSchedule(cronSchedule("0/5 * * * * ? "))
-                    .forJob(jobDetail)
-                    .build();
-            jobService.scheduleJob(trigger);
-
-            Trigger trigger2 = newTrigger()
-                    .withIdentity("triggerName2", "triggerGroupName")
-                    .withSchedule(cronSchedule("0/3 * * * * ? "))
-                    .forJob(jobDetail)
-                    .build();
-            jobService.scheduleJob(trigger2);
-
-            sleep(20000);
-            jobService.shutdown();
-        } catch (Exception e){
-            System.out.println(e.toString());
-        }
-    }
 }

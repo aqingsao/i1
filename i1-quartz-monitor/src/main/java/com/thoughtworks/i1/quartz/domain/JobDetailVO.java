@@ -2,6 +2,7 @@ package com.thoughtworks.i1.quartz.domain;
 
 import com.google.common.collect.Lists;
 import com.thoughtworks.i1.commons.config.builder.Builder;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 
 import java.util.List;
@@ -13,19 +14,7 @@ public class JobDetailVO {
     private String jobClass;
     private List<JobDataVO> jobData = Lists.newArrayList();
 
-    public JobDetailVO(JobDetail jobDetail) {
-        this(jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName());
-        for (String key : jobDetail.getJobDataMap().getKeys()) {
-            jobData.add(new JobDataVO(key, jobDetail.getJobDataMap().get(key).toString()));
-        }
-    }
-
     public JobDetailVO(){
-
-    }
-
-    public JobDetailVO(String jobName, String jobGroupName, String jobClass){
-        this(jobName, jobGroupName, jobClass, Lists.newArrayList());
     }
 
     public JobDetailVO(String jobName, String jobGroupName, String jobClass, List jobData) {
@@ -49,6 +38,18 @@ public class JobDetailVO {
 
     public List getJobData(){
         return this.jobData;
+    }
+
+    public static JobDetailVO fromJobDetail(JobDetail jobDetail) {
+        return new JobDetailVO(jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName(), getJobDataVOs(jobDetail.getJobDataMap()));
+    }
+
+    private static List<JobDataVO> getJobDataVOs(JobDataMap jobDataMap) {
+        List<JobDataVO> jobDataVOList = Lists.newArrayList();
+        for (String key : jobDataMap.getKeys()) {
+            jobDataVOList.add(new JobDataVO(key, jobDataMap.get(key).toString()));
+        }
+        return jobDataVOList;
     }
 
     public static class JobDetailVOBuilder implements Builder{
@@ -77,12 +78,13 @@ public class JobDetailVO {
             this(parent, jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName());
         }
 
-        public static JobDetailVOBuilder aJobDetailVO(JobDetail jobDetail) {
-            return aJobDetailVO(jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName());
-        }
-
         public static JobDetailVOBuilder aJobDetailVO(String jobName, String jobGroupName, String jobClass) {
             return new JobDetailVOBuilder(jobName, jobGroupName, jobClass);
+        }
+
+        public JobDetailVOBuilder addJobData(String key, String value) {
+            this.jobData.add(new JobDataVO(key, value));
+            return this;
         }
 
         public JobVO.QuartzVOBuilder end(){
@@ -92,11 +94,6 @@ public class JobDetailVO {
         @Override
         public JobDetailVO build() {
             return new JobDetailVO(jobName, jobGroupName, jobClass, jobData);
-        }
-
-        public JobDetailVOBuilder addJobData(String key, String value) {
-            this.jobData.add(new JobDataVO(key, value));
-            return this;
         }
     }
 }
