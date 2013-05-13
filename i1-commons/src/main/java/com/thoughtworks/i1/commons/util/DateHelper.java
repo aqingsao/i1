@@ -60,6 +60,12 @@ public class DateHelper {
     public static long minutes(int minutes){
         return minutes * MINUTE_IN_MILLISECONDS;
     }
+    public static long seconds(int seconds){
+        return seconds * SECOND_IN_MILLISECONDS;
+    }
+    public static long milliSeconds(int milliSeconds){
+        return milliSeconds * MILLI_SECOND;
+    }
     public static Date formatTimestamp(Date timestamp){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date newDate = null;

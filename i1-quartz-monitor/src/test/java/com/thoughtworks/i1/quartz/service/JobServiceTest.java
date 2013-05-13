@@ -1,7 +1,10 @@
 package com.thoughtworks.i1.quartz.service;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.commons.test.TransactionalDomainTestRunner;
@@ -11,11 +14,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quartz.JobKey;
-import org.quartz.SchedulerException;
+import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -33,13 +37,14 @@ public class JobServiceTest {
     private JobService jobService;
     private JobVO savedJobWith1Trigger;
     private JobVO jobWith2Triggers;
+    private static JobResults jobResults = new JobResults();
 
     @Before
     public void before() {
-        savedJobWith1Trigger = aJobVO().jobDetail("name1", TEST_JOB_GROUP, "com.thoughtworks.i1.quartz.DummyJob").end()
+        savedJobWith1Trigger = aJobVO().jobDetail("name1", TEST_JOB_GROUP, DummyJob.class.getName()).end()
                 .addTrigger("trigger11", "triggerGroup1").time(today(), tomorrow()).repeat(minutes(1), 1).end()
                 .build();
-        jobWith2Triggers = aJobVO().jobDetail("name2", TEST_JOB_GROUP, "com.thoughtworks.i1.quartz.DummyJob").end()
+        jobWith2Triggers = aJobVO().jobDetail("name2", TEST_JOB_GROUP, DummyJob.class.getName()).end()
                 .addTrigger("trigger21", "triggerGroup2").time(today(), tomorrow()).repeat(minutes(1), 1).end()
                 .addTrigger("trigger22", "triggerGroup2").time(today(), tomorrow()).repeat(minutes(2), 1).end()
                 .build();
@@ -56,10 +61,9 @@ public class JobServiceTest {
     public void should_save_job_successfully() {
         jobService.saveJob(jobWith2Triggers);
 
-        List<JobVO> allJobs = jobService.findAllJobs();
-        Optional<JobVO> jobVO = getJobVO(allJobs, jobWith2Triggers.getJobDetailVO().getJobName(), jobWith2Triggers.getJobDetailVO().getJobGroupName());
+        Optional<JobVO> jobVO = jobService.findJob(jobWith2Triggers.getJobDetailVO().getJobName(), jobWith2Triggers.getJobDetailVO().getJobGroupName());
         assertThat(jobVO.isPresent(), is(true));
-        assertThat(jobVO.get().getJobClass(), is("com.thoughtworks.i1.quartz.DummyJob"));
+        assertThat(jobVO.get().getJobClass(), is(jobWith2Triggers.getJobDetailVO().getJobClass()));
     }
 
     @Test
@@ -74,7 +78,7 @@ public class JobServiceTest {
 
     @Test
     public void should_throw_exception_when_job_is_already_saved() throws Exception {
-        JobVO jobWithDuplicateName = aJobVO().jobDetail(savedJobWith1Trigger.getJobDetailVO().getJobName(), savedJobWith1Trigger.getJobDetailVO().getJobGroupName(), "com.thoughtworks.i1.quartz.DummyJob").end()
+        JobVO jobWithDuplicateName = aJobVO().jobDetail(savedJobWith1Trigger.getJobDetailVO().getJobName(), savedJobWith1Trigger.getJobDetailVO().getJobGroupName(), DummyJob.class.getName()).end()
                 .addTrigger("trigger31", "triggerGroup3").time(today(), tomorrow()).repeat(minutes(10), 1).end()
                 .build();
         try {
@@ -98,17 +102,126 @@ public class JobServiceTest {
         }
     }
 
-    private Optional<JobVO> getJobVO(List<JobVO> jobVOs, String name, String group) {
-        for (JobVO jobVO : jobVOs) {
-            if (jobVO.getJobName().equals(name) && jobVO.getJobGroupName().equals(group)) {
-                return Optional.of(jobVO);
-            }
-        }
-        return Optional.absent();
+    @Test
+    public void should_delete_a_job_successfully() {
+        jobService.deleteJob(savedJobWith1Trigger.getJobDetailVO().getJobName(), savedJobWith1Trigger.getJobDetailVO().getJobGroupName());
+
+        Optional<JobVO> jobVO = jobService.findJob(savedJobWith1Trigger.getJobDetailVO().getJobName(), savedJobWith1Trigger.getJobDetailVO().getJobGroupName());
+        assertThat(jobVO.isPresent(), is(false));
     }
 
     @Test
-    public void should_delete_a_job() {
+    public void should_pause_a_trigger() {
+        JobVO job = aJobVO().jobDetail("test", TEST_JOB_GROUP, SimpleJob.class.getName()).end()
+                .addTrigger("trigger31", "triggerGroup3").time(today(), tomorrow()).repeat(milliSeconds(100), 10).end()
+                .build();
+        jobService.saveJob(job);
 
+        final Date currentDate = executeInFuture(new Task() {
+            @Override
+            public void run() {
+                jobService.pasuseTrigger("trigger31", "triggerGroup3");
+            }
+        }, seconds(1));
+
+        executeInFuture(new Task() {
+            @Override
+            public void run() {
+                Optional<Date> latest = jobResults.latest();
+                assertThat(latest.isPresent(), is(true));
+                assertThat(!latest.get().after(currentDate), is(true));
+            }
+        }, seconds(1));
+    }
+
+    @Test
+    public void should_resume_a_trigger() {
+        JobVO job = aJobVO().jobDetail("test", TEST_JOB_GROUP, SimpleJob.class.getName()).end()
+                .addTrigger("trigger31", "triggerGroup3").time(today(), tomorrow()).repeat(milliSeconds(100), 10).end()
+                .build();
+        jobService.saveJob(job);
+        jobService.pasuseTrigger("trigger31", "triggerGroup3");
+
+        final Date currentDate = executeInFuture(new Task() {
+            @Override
+            public void run() {
+                jobService.resumeTrigger("trigger31", "triggerGroup3");
+            }
+        }, seconds(1));
+
+        executeInFuture(new Task() {
+            @Override
+            public void run() {
+                Optional<Date> latest = jobResults.latest();
+                assertThat(latest.isPresent(), is(true));
+                assertThat(latest.get().after(currentDate), is(true));
+            }
+        }, seconds(1));
+    }
+
+    @Test
+    public void should_delete_a_trigger() {
+        jobService.deleteTrigger("trigger11", "triggerGroup1");
+
+        Optional<JobVO> jobVO = jobService.findJob(savedJobWith1Trigger.getJobDetailVO().getJobName(), savedJobWith1Trigger.getJobDetailVO().getJobGroupName());
+        assertThat(jobVO.isPresent(), is(true));
+        assertThat(jobVO.get().getTriggers().isEmpty(), is(true));
+    }
+
+    private Date executeInFuture(Task task, long seconds) {
+        try {
+            Thread.sleep(seconds);
+        } catch (InterruptedException e) {
+        }
+        task.run();
+        return new Date();
+    }
+
+    @Test
+    public void should_find_all_jobs() {
+        List<JobVO> allJobs = jobService.findAllJobs();
+        assertThat(allJobs.size(), is(1));
+    }
+
+    public static class DummyJob implements Job {
+        private static int count = 0;
+
+        @Override
+        public void execute(JobExecutionContext context) throws JobExecutionException {
+            System.out.println(String.format("Dummy job is executed for %d times", ++count));
+        }
+    }
+
+    public static class SimpleJob implements Job {
+        @Override
+        public void execute(JobExecutionContext context) throws JobExecutionException {
+            jobResults.add(new Date());
+        }
+    }
+
+    public static class JobResults {
+
+        private List<Date> dates = Lists.newArrayList();
+
+        public void add(Date date) {
+            this.dates.add(date);
+        }
+
+        public Iterable<Date> laterThan(final Date current) {
+            return Iterables.filter(dates, new Predicate<Date>() {
+                @Override
+                public boolean apply(@Nullable Date input) {
+                    return input.after(current);
+                }
+            });
+        }
+
+        public <T> Optional<T> latest() {
+            return (Optional<T>) (dates.isEmpty() ? Optional.absent() : Optional.of(dates.get(dates.size() - 1)));
+        }
+    }
+
+    private static interface Task {
+        public void run();
     }
 }
