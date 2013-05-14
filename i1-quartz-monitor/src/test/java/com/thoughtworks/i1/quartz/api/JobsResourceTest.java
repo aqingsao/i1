@@ -5,18 +5,26 @@ import com.thoughtworks.i1.commons.test.AbstractResourceTest;
 import com.thoughtworks.i1.commons.test.ApiTestRunner;
 import com.thoughtworks.i1.commons.test.RunWithApplication;
 import com.thoughtworks.i1.quartz.domain.JobVO;
+import com.thoughtworks.i1.quartz.service.JobServiceTest;
+import org.eclipse.jetty.http.HttpHeader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.Date;
+import java.util.List;
 
+import static com.thoughtworks.i1.commons.util.DateHelper.minutes;
+import static com.thoughtworks.i1.commons.util.DateHelper.tomorrow;
+import static com.thoughtworks.i1.commons.util.DateHelper.yesterday;
 import static com.thoughtworks.i1.quartz.domain.JobVO.QuartzVOBuilder.aJobVO;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(ApiTestRunner.class)
 @RunWithApplication(QuartzTestApplication.class)
-public class JobsResourceTest  extends AbstractResourceTest {
+public class JobsResourceTest extends AbstractResourceTest {
 
     @Test
     public void should_return_empty_job_items() {
@@ -26,7 +34,18 @@ public class JobsResourceTest  extends AbstractResourceTest {
     }
 
     @Test
-    public void should_invoke_url(){
+    public void should_save_job_successfully() {
+        JobVO jobVO = aJobVO().jobDetail("jobName", "groupName", JobServiceTest.DummyJob.class.getName())
+                .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
+                .addTrigger("triggerName", "triggerGroupName").time(yesterday(), tomorrow()).repeat(minutes(10), 1).end()
+                .build();
+        ClientResponse response = post("/api/quartz-jobs/item", jobVO);
+        assertThat(response.getClientResponseStatus(), is(ClientResponse.Status.CREATED));
+        assertThat(getHeader(response, HttpHeaders.LOCATION).size(), is(1));
+    }
+
+    @Test
+    public void should_invoke_url() {
 
 //        List<TriggerVO> triggerVOList = new ArrayList<>();
 //        TriggerVO triggerVO = new TriggerVO.TriggerVOBuilder(parent, triggerName, triggerGroupName).createTriggerVO();

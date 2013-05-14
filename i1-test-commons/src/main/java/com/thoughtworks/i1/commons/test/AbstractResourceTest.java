@@ -1,9 +1,12 @@
 package com.thoughtworks.i1.commons.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.thoughtworks.i1.commons.util.JsonUtils;
 
 import javax.inject.Inject;
@@ -11,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.ArrayList;
@@ -19,9 +23,10 @@ import java.util.List;
 public abstract class AbstractResourceTest {
     @Inject
     private EntityManager entityManager;
-
     @Inject
     private URI baseUri;
+
+    private Client client;
 
     public AbstractResourceTest() {
     }
@@ -62,16 +67,25 @@ public abstract class AbstractResourceTest {
         }
         transaction.commit();
     }
+
     protected ClientResponse get(String path) {
-        WebResource webResource = Client.create().resource(uri(path));
+        WebResource webResource = getClient().resource(uri(path));
 
         return webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).get(ClientResponse.class);
     }
 
-
     protected ClientResponse post(String path, Object entity) {
-        WebResource webResource = Client.create().resource(uri(path));
+        WebResource webResource = getClient().resource(uri(path));
         return webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, entity);
+    }
+
+    private Client getClient() {
+        if (client == null) {
+            ClientConfig cc = new DefaultClientConfig();
+            cc.getClasses().add(JacksonJaxbJsonProvider.class);
+            client = Client.create(cc);
+        }
+        return client;
     }
 
     protected String toJson(Object object) {
@@ -119,5 +133,9 @@ public abstract class AbstractResourceTest {
             jsonNode.asDouble();
         }
         return jsonNode.asText();
+    }
+
+    protected List<String> getHeader(ClientResponse response, String key) {
+        return response.getHeaders().get(key);
     }
 }

@@ -5,13 +5,20 @@ import com.thoughtworks.i1.commons.config.builder.Builder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class JobDetailVO {
     public static final String DEFAULT_GROUP_NAME = "HEREN-JOB-GROUP";
     private String jobName;
     private String jobGroupName = DEFAULT_GROUP_NAME;
     private String jobClass;
+//    @XmlTransient
     private List<JobDataVO> jobData = Lists.newArrayList();
 
     public JobDetailVO(){

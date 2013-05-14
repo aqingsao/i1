@@ -59,7 +59,7 @@ public class JobService {
     }
 
     @Transactional
-    public void saveJob(JobVO jobVO) {
+    public JobVO saveJob(JobVO jobVO) {
         try {
             JobDetail jobDetail = jobVO.getJobDetail();
             scheduler.addJob(jobDetail, false);
@@ -68,6 +68,8 @@ public class JobService {
             for (TriggerVO triggerVO : triggerVOs) {
                 scheduler.scheduleJob(triggerVO.toTrigger(jobDetail.getKey()));
             }
+
+            return jobVO;
         } catch (SchedulerException e) {
             throw new SystemException(String.format("Failed to save job: %s", e.getMessage()), e);
         }

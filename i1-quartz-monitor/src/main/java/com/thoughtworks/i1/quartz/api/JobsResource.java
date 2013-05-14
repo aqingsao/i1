@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
@@ -38,14 +39,11 @@ public class JobsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveSchedule(JobVO jobVO) {
         try {
-            jobService.saveJob(jobVO);
-            List<JobVO> jobVOs = getQuartzJobs();
-            UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class).path("items");
-            Response.ResponseBuilder builder = Response.created(path.build());
-            builder.contentLocation(path.build()).entity(jobVOs);
-            return builder.build();
+            jobVO = jobService.saveJob(jobVO);
+            URI path = context.getBaseUriBuilder().path(JobsResource.class).path("items").build();
+            return Response.created(path).entity(jobVO).build();
         } catch (Exception e) {
-            LOGGER.error("save job failed!");
+            LOGGER.error(e.getMessage(), e);
             return Response.serverError().build();
         }
     }
@@ -64,7 +62,7 @@ public class JobsResource {
             builder.contentLocation(path.build());
             return (null == builder ? Response.noContent().build() : builder.build());
         } catch (Exception e) {
-            LOGGER.error("pause trigger faild!");
+            LOGGER.error(e.getMessage(), e);
             return Response.serverError().build();
         }
     }
@@ -76,14 +74,10 @@ public class JobsResource {
     public Response deleteSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
             jobService.deleteTrigger(triggerName, triggerGroupName);
-            UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
-                    .path("delete-trigger/{triggerName}/{triggerGroupName");
-            Response.ResponseBuilder builder = Response.created(path
-                    .build());
-            builder.contentLocation(path.build());
-            return (null == builder ? Response.noContent().build() : builder.build());
+            UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class).path("delete-trigger/{triggerName}/{triggerGroupName");
+            return Response.created(path.build()).contentLocation(path.build()).build();
         } catch (Exception e) {
-            LOGGER.error("delete trigger faild!");
+            LOGGER.error(e.getMessage(), e);
             return Response.serverError().build();
         }
     }
@@ -94,17 +88,11 @@ public class JobsResource {
     public Response resumeSchedule(@PathParam("triggerName") String triggerName, @PathParam("triggerGroupName") String triggerGroupName) {
         try {
             jobService.resumeTrigger(triggerName, triggerGroupName);
-            UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class)
-                    .path("resume-trigger/{triggerName}/{triggerGroupName}");
-            Response.ResponseBuilder builder = Response.created(path
-                    .build());
-            builder.contentLocation(path.build());
-            return (null == builder ? Response.noContent().build() : builder.build());
+            UriBuilder path = context.getBaseUriBuilder().path(JobsResource.class).path("resume-trigger/{triggerName}/{triggerGroupName}");
+            return Response.created(path.build()).contentLocation(path.build()).build();
         } catch (Exception e) {
-            LOGGER.error("resume trigger faild!");
+            LOGGER.error(e.getMessage(), e);
             return Response.serverError().build();
         }
     }
-
-
 }

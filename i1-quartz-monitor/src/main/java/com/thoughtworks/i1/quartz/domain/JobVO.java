@@ -7,10 +7,16 @@ import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 import static org.quartz.JobBuilder.newJob;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class JobVO {
     private JobDetailVO detail;
     private List<TriggerVO> triggers = Lists.newArrayList();

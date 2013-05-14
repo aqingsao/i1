@@ -1,8 +1,13 @@
 package com.thoughtworks.i1.quartz.domain;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.Map;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class JobDataVO {
 
     private String key;
@@ -21,17 +26,7 @@ public class JobDataVO {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
     public String getValue() {
         return value;
     }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-
 }
