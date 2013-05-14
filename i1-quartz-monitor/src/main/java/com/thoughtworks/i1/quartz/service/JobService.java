@@ -59,7 +59,7 @@ public class JobService {
     }
 
     @Transactional
-    public JobVO saveJob(JobVO jobVO) {
+    public JobVO createJob(JobVO jobVO) {
         try {
             JobDetail jobDetail = jobVO.getJobDetail();
             scheduler.addJob(jobDetail, false);
