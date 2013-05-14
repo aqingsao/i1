@@ -37,11 +37,24 @@ public class JobsResource {
     @POST
     @Path("item")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveSchedule(JobVO jobVO) {
+    public Response createJob(JobVO jobVO) {
         try {
-            jobVO = jobService.saveJob(jobVO);
+            jobVO = jobService.createJob(jobVO);
             URI path = context.getBaseUriBuilder().path(JobsResource.class).path("items").build();
             return Response.created(path).entity(jobVO).build();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return Response.serverError().build();
+        }
+    }
+
+    @DELETE
+    @Path("{jobName}/{jobGroupName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteJob(@PathParam("jobName") String jobName, @PathParam("jobGroupName") String jobGroupName) {
+        try {
+            jobService.deleteJob(jobName, jobGroupName);
+            return Response.ok().build();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return Response.serverError().build();

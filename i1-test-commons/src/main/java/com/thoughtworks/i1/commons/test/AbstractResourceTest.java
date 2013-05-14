@@ -79,6 +79,11 @@ public abstract class AbstractResourceTest {
         return webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, entity);
     }
 
+    protected ClientResponse delete(String path) {
+        WebResource webResource = getClient().resource(uri(path));
+        return webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).delete(ClientResponse.class);
+    }
+
     private Client getClient() {
         if (client == null) {
             ClientConfig cc = new DefaultClientConfig();
