@@ -36,7 +36,7 @@ public class JobsResourceTest extends AbstractResourceTest {
 
     @Before
     public void before() throws SchedulerException {
-        savedJob = aJobVO().jobDetail("jobName", "groupName", JobServiceTest.DummyJob.class.getName())
+        savedJob = aJobVO().jobDetail("jobName", "groupName", JobServiceTest.DummyJob.class.getName(),"description")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("triggerName", "triggerGroupName").time(yesterday(), tomorrow()).repeat(minutes(10), 1).end()
                 .build();
@@ -58,11 +58,8 @@ public class JobsResourceTest extends AbstractResourceTest {
 
     @Test
     public void should_save_job_successfully() {
-<<<<<<< HEAD
-        JobVO jobVO = aJobVO().jobDetail("jobName", "groupName", JobServiceTest.DummyJob.class.getName(), "description")
-=======
-        JobVO jobVO = aJobVO().jobDetail("jobName1", "groupName1", JobServiceTest.DummyJob.class.getName())
->>>>>>> f23b99bd22fe513bb5875abcc8214ef748ee05d3
+
+        JobVO jobVO = aJobVO().jobDetail("jobName1", "groupName", JobServiceTest.DummyJob.class.getName(), "description")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("triggerName1", "triggerGroupName1").time(yesterday(), tomorrow()).repeat(minutes(10), 1).end()
                 .build();
@@ -78,15 +75,18 @@ public class JobsResourceTest extends AbstractResourceTest {
         assertThat(response.getClientResponseStatus(), is(ClientResponse.Status.OK));
     }
 
-<<<<<<< HEAD
+    @Test
+    public void should_invoke_url() {
         JobVO jobVO = aJobVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl", "desc")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("a", "herenTrigger").time(new Date(), new Date()).repeat(7, 9).end()
                 .build();
         ClientResponse clientResponse = get("/api/quartz-jobs/items");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
-=======
-    private void createJob(JobVO jobVO) throws SchedulerException {
+    }
+
+
+        private void createJob(JobVO jobVO) throws SchedulerException {
         Scheduler scheduler = factory.getScheduler();
         JobDetail jobDetail = jobVO.getJobDetail();
         scheduler.addJob(jobDetail, false);
@@ -95,6 +95,5 @@ public class JobsResourceTest extends AbstractResourceTest {
         for (TriggerVO triggerVO : triggerVOs) {
             scheduler.scheduleJob(triggerVO.toTrigger(jobDetail.getKey()));
         }
->>>>>>> f23b99bd22fe513bb5875abcc8214ef748ee05d3
     }
 }

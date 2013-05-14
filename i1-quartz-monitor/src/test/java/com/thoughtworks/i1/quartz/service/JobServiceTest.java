@@ -40,15 +40,10 @@ public class JobServiceTest {
     private static JobResults jobResults = new JobResults();
 
     @Before
-<<<<<<< HEAD
-    public void before() {
-        savedJobWith1Trigger = aJobVO().jobDetail("name1", TEST_JOB_GROUP, DummyJob.class.getName(), "desc").end()
-=======
+
     public void before() throws SchedulerException {
         cleanAllJobs();
-
-        savedJobWith1Trigger = aJobVO().jobDetail("name1", TEST_JOB_GROUP, DummyJob.class.getName()).end()
->>>>>>> f23b99bd22fe513bb5875abcc8214ef748ee05d3
+        savedJobWith1Trigger = aJobVO().jobDetail("name1", TEST_JOB_GROUP, DummyJob.class.getName() ,"desc").end()
                 .addTrigger("trigger11", "triggerGroup1").time(today(), tomorrow()).repeat(minutes(1), 1).end()
                 .build();
         jobWith2Triggers = aJobVO().jobDetail("name2", TEST_JOB_GROUP, DummyJob.class.getName(), "desc").end()
