@@ -48,6 +48,19 @@ public class JobsResource {
         }
     }
 
+    @DELETE
+    @Path("{jobName}/{jobGroupName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteJob(@PathParam("jobName") String jobName, @PathParam("jobGroupName") String jobGroupName) {
+        try {
+            jobService.deleteJob(jobName, jobGroupName);
+            return Response.ok().build();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return Response.serverError().build();
+        }
+    }
+
     @GET
     @Path("pause-trigger/{triggerName}/{triggerGroupName}")
     @Consumes(MediaType.APPLICATION_JSON)
