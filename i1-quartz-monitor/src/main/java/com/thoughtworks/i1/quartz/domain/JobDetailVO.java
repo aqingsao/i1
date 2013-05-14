@@ -8,7 +8,6 @@ import org.quartz.JobDetail;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 @XmlRootElement
@@ -18,17 +17,19 @@ public class JobDetailVO {
     private String jobName;
     private String jobGroupName = DEFAULT_GROUP_NAME;
     private String jobClass;
+    private String description;
 //    @XmlTransient
-    private List<JobDataVO> jobData = Lists.newArrayList();
+    private List<JobDataVO> jobDatas = Lists.newArrayList();
 
     public JobDetailVO(){
     }
 
-    public JobDetailVO(String jobName, String jobGroupName, String jobClass, List jobData) {
+    public JobDetailVO(String jobName, String jobGroupName, String jobClass, String description, List jobDatas) {
         this.jobName = jobName;
         this.jobGroupName = jobGroupName;
         this.jobClass = jobClass;
-        this.jobData = jobData;
+        this.description = description;
+        this.jobDatas = jobDatas;
     }
 
     public String getJobName() {
@@ -43,12 +44,16 @@ public class JobDetailVO {
         return jobClass;
     }
 
-    public List getJobData(){
-        return this.jobData;
+    public String getDescription() {
+        return description;
+    }
+
+    public List getJobDatas(){
+        return this.jobDatas;
     }
 
     public static JobDetailVO fromJobDetail(JobDetail jobDetail) {
-        return new JobDetailVO(jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName(), getJobDataVOs(jobDetail.getJobDataMap()));
+        return new JobDetailVO(jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName(),jobDetail.getDescription(), getJobDataVOs(jobDetail.getJobDataMap()));
     }
 
     private static List<JobDataVO> getJobDataVOs(JobDataMap jobDataMap) {
@@ -63,30 +68,32 @@ public class JobDetailVO {
         private String jobName;
         private String jobGroupName;
         private String jobClass;
+        private String description;
 
         private JobVO.QuartzVOBuilder parent;
         private List jobData = Lists.newArrayList();
 
-        private JobDetailVOBuilder(String jobName, String jobGroupName, String jobClass) {
+        private JobDetailVOBuilder(String jobName, String jobGroupName, String jobClass, String description) {
             this.jobName = jobName;
             this.jobGroupName = jobGroupName;
             this.jobClass = jobClass;
+            this.description = description;
         }
 
-        public JobDetailVOBuilder(JobVO.QuartzVOBuilder parent, String jobName, String jobGroupName, String jobClass) {
+        public JobDetailVOBuilder(JobVO.QuartzVOBuilder parent, String jobName, String jobGroupName, String jobClass, String description) {
             this.jobName = jobName;
             this.jobGroupName = jobGroupName;
             this.jobClass = jobClass;
-
+            this.description = description;
             this.parent = parent;
         }
 
         public JobDetailVOBuilder(JobVO.QuartzVOBuilder parent, JobDetail jobDetail) {
-            this(parent, jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName());
+            this(parent, jobDetail.getKey().getName(), jobDetail.getKey().getGroup(), jobDetail.getJobClass().getName(), jobDetail.getDescription());
         }
 
-        public static JobDetailVOBuilder aJobDetailVO(String jobName, String jobGroupName, String jobClass) {
-            return new JobDetailVOBuilder(jobName, jobGroupName, jobClass);
+        public static JobDetailVOBuilder aJobDetailVO(String jobName, String jobGroupName, String jobClass, String description) {
+            return new JobDetailVOBuilder(jobName, jobGroupName, jobClass, description);
         }
 
         public JobDetailVOBuilder addJobData(String key, String value) {
@@ -100,7 +107,7 @@ public class JobDetailVO {
 
         @Override
         public JobDetailVO build() {
-            return new JobDetailVO(jobName, jobGroupName, jobClass, jobData);
+            return new JobDetailVO(jobName, jobGroupName, jobClass, description, jobData);
         }
     }
 }

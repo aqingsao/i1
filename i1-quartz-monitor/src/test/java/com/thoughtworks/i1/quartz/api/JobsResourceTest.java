@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.thoughtworks.i1.commons.test.AbstractResourceTest;
 import com.thoughtworks.i1.commons.test.ApiTestRunner;
 import com.thoughtworks.i1.commons.test.RunWithApplication;
+import com.thoughtworks.i1.commons.util.JsonUtils;
 import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.service.JobServiceTest;
 import org.eclipse.jetty.http.HttpHeader;
@@ -35,10 +36,11 @@ public class JobsResourceTest extends AbstractResourceTest {
 
     @Test
     public void should_save_job_successfully() {
-        JobVO jobVO = aJobVO().jobDetail("jobName", "groupName", JobServiceTest.DummyJob.class.getName())
+        JobVO jobVO = aJobVO().jobDetail("jobName", "groupName", JobServiceTest.DummyJob.class.getName(), "description")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("triggerName", "triggerGroupName").time(yesterday(), tomorrow()).repeat(minutes(10), 1).end()
                 .build();
+        System.out.println(toJson(jobVO));
         ClientResponse response = post("/api/quartz-jobs/item", jobVO);
         assertThat(response.getClientResponseStatus(), is(ClientResponse.Status.CREATED));
         assertThat(getHeader(response, HttpHeaders.LOCATION).size(), is(1));
@@ -72,11 +74,10 @@ public class JobsResourceTest extends AbstractResourceTest {
 //        jobVO.setTriggers(triggerVOList);
 //        jobVO.setJobDatas(jobDataVOList);
 
-        JobVO jobVO = aJobVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl")
+        JobVO jobVO = aJobVO().jobDetail("b", "herenSchedule", "com.thoughtworks.i1.quartz.jobs.JobForUrl", "desc")
                 .addJobData("url", "http://localhost:8051/heren/api/diagnosis-clinic-dict/test").end()
                 .addTrigger("a", "herenTrigger").time(new Date(), new Date()).repeat(7, 9).end()
                 .build();
-
         ClientResponse clientResponse = get("/api/quartz-jobs/items");
         assertThat(clientResponse.getClientResponseStatus(), is(ClientResponse.Status.OK));
     }

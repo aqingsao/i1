@@ -10,7 +10,6 @@ import org.quartz.JobDetail;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 import static org.quartz.JobBuilder.newJob;
@@ -32,40 +31,21 @@ public class JobVO {
         return detail.getJobName();
     }
 
-    public void setJobName(String jobName) {
-//        this.detail.set = jobName;
-    }
-
     public String getJobGroupName() {
         return detail.getJobGroupName();
     }
 
-    public void setJobGroupName(String jobGroupName) {
-//        this.jobGroupName = jobGroupName;
-    }
-
     public String getDescription() {
-        return "";
+        return detail.getDescription();
     }
 
-    public void setDescription(String description) {
-//        this.description = description;
-    }
 
     public String getJobClass() {
         return detail.getJobClass();
     }
 
-    public void setJobClass(String jobClass) {
-//        this.jobClass = jobClass;
-    }
-
     public List<JobDataVO> getJobDatas() {
-        return detail.getJobData();
-    }
-
-    public void setJobDatas(List<JobDataVO> jobDatas) {
-//        this.jobDatas = jobDatas;
+        return detail.getJobDatas();
     }
 
     public List<TriggerVO> getTriggers() {
@@ -121,8 +101,8 @@ public class JobVO {
             return this.jobDetailVOBuilder;
         }
 
-        public JobDetailVO.JobDetailVOBuilder jobDetail(String name, String group, String jobClass) {
-            this.jobDetailVOBuilder = new JobDetailVO.JobDetailVOBuilder(this, name, group, jobClass);
+        public JobDetailVO.JobDetailVOBuilder jobDetail(String name, String group, String jobClass, String description) {
+            this.jobDetailVOBuilder = new JobDetailVO.JobDetailVOBuilder(this, name, group, jobClass, description);
             return this.jobDetailVOBuilder;
         }
 

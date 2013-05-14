@@ -1,9 +1,9 @@
 var JobVO = function () {
-    this.jobDetail = [];
+    this.detail = {};
     this.triggers = [];
 };
 
-var JobDetail = function () {
+var JobDetailVO = function () {
     this.jobName = "";
     this.jobGroupName = "";
 //    this.jobClass = "com.thoughtworks.i1.quartz.jobs.JobForTest";
@@ -12,7 +12,7 @@ var JobDetail = function () {
     this.jobDatas = [];
 }   ;
 
-var Trigger = function () {
+var TriggerVO = function () {
     this.triggerName = "";
     this.triggerGroupName = "";
     this.startTime = 0;
@@ -22,25 +22,26 @@ var Trigger = function () {
     this.repeatInterval = 10000;
 };
 
-var JobData = function (key, value) {
+var JobDataVO = function (key, value) {
     this.key = key;
     this.value = value;
 };
 
-JobVO.prototype.addJobDetail = function (jobDetail) {
-    this.jobDetail.push(jobDetail)
+JobVO.prototype.addJobDetail = function (detail) {
+    this.detail = detail;
 };
 
 JobVO.prototype.addTrigger = function (trigger) {
     this.triggers.push(trigger)
 };
 
-JobDetail.prototype.addJobData = function (jobData) {
-    this.jobDatas.push(jobData);
+JobDetailVO.prototype.addJobData = function (key, value) {
+    var tempJobData = new JobDataVO(key, value);
+    this.jobDatas.push(tempJobData);
 };
 
 
-JobVO.prototype.copyJobVO = function () {
+JobVO.prototype.copyJob = function (data) {
     for (i in data) {
         this[i] = data[i];
     }

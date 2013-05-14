@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" ng-app="scheduleApp">
+<html lang="en-US" ng-app="jobApp">
 <head>
     <meta charset="utf-8">
     <title>I1 Quartz Schedule</title>
@@ -14,7 +14,7 @@
     <!--<link rel="stylesheet" href="css/modern.css">-->
     <link href="css/quartz.css" rel="stylesheet">
     <link href="css/ng-grid.css" rel="stylesheet">
-    <link href="css/jquery-ui.css" rel="stylesheet">
+    <!--<link href="css/jquery-ui.css" rel="stylesheet">-->
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
     <link rel="shortcut icon" href="ico/favicon.png">
 </head>
 
-<body ng-controller="scheduleController">
+<body ng-controller="jobController">
 
 <!--<div class="container-narrow">-->
 <div class="row-fluid">
@@ -87,13 +87,13 @@
 
                             <tr>
                                 <td>任务名称</td>
-                                <td><input id="jobName" type="text" ng-model="quartz.jobName"></td>
+                                <td><input id="jobName" type="text" ng-model="jobVO.detail.jobName"></td>
                                 <td>任务执行Class</td>
-                                <td><input id="jobClass" type="text" ng-model="quartz.jobClass"></td>
+                                <td><input id="jobClass" type="text" ng-model="jobVO.detail.jobClass"></td>
                                 <td>任务链接url</td>
                                 <td><input id="url" type="text" ng-model="url"></td>
                                 <td>任务描述</td>
-                                <td><input id="description" type="text" ng-model="quartz.description"></td>
+                                <td><input id="description" type="text" ng-model="jobVO.detail.description"></td>
                             </tr>
 
                             <table class="table table-striped table-bordered table-hover">
@@ -107,7 +107,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="trigger in quartz.triggers">
+                                <tr ng-repeat="trigger in jobVO.triggers">
                                     <td><input id="triggerName{{$index}}" type="text" ng-model="trigger.triggerName" class="triggername"></td>
                                     <td><input id="startTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].startTime" class="abouttime"></td>
                                     <td><input id="endTime{{$index}}" type="datetime-local" ng-model="triggerInfoList[$index].endTime" class="abouttime"></td>
@@ -120,11 +120,11 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <a href="" ng-click="addClo()">添加</a>
+                                        <a href="" ng-click="addTrigger()">添加</a>
                                     </td>
                                 </tr>
                                 <td>
-                                    <button class="btn btn-large btn-primary" ng-click="saveQuartz()" type="button">保存
+                                    <button class="btn btn-large btn-primary" ng-click="saveJob()" type="button">保存
                                     </button>
                                 </td>
                                 </tbody>
@@ -156,11 +156,11 @@
                                 </td>
                             </tr>
 
-                            <tbody ng-repeat="quartz in quartzList">
-                                <tr ng-repeat="trigger in quartz.triggers">
-                                    <td>{{quartz.jobName}}</td>
-                                    <td>{{quartz.jobClass}}</td>
-                                    <td>{{quartz.jobDatas[0].value}}</td>
+                            <tbody ng-repeat="job in jobs">
+                                <tr ng-repeat="trigger in job.triggers">
+                                    <td>{{job.detail.jobName}}</td>
+                                    <td>{{job.detail.jobClass}}</td>
+                                    <td>{{job.detail.jobDatas[0].value}}</td>
                                     <td>{{trigger.triggerName}}</td>
                                     <td>{{trigger.startTime | date:'yyyy-MM-dd HH:mm'}}</td>
                                     <td>{{trigger.endTime | date:'yyyy-MM-dd HH:mm'}}</td>
@@ -208,14 +208,16 @@
 <script src="js/angular.js"></script>
 <script src="js/largeLoad.js"></script>
 <script src="js/ng-grid.js"></script>
-<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<!--<script src="js/jquery-ui-1.9.2.custom.min.js"></script>-->
 
 
 <script src="commons/utils.js"></script>
 <script src="commons/directiveModule.js"></script>
-<script src="quartzjs/quartz-model.js"></script>
-<script src="quartzjs/schedule-app.js"></script>
-<script src="quartzjs/schedule-controller.js"></script>
+
+
+<script src="quartzjs/job-app.js"></script>
+<script src="quartzjs/job-controller.js"></script>
+<script src="quartzjs/job-model.js"></script>
 
 </body>
 </html>

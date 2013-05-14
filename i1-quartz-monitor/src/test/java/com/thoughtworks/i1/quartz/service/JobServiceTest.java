@@ -41,10 +41,10 @@ public class JobServiceTest {
 
     @Before
     public void before() {
-        savedJobWith1Trigger = aJobVO().jobDetail("name1", TEST_JOB_GROUP, DummyJob.class.getName()).end()
+        savedJobWith1Trigger = aJobVO().jobDetail("name1", TEST_JOB_GROUP, DummyJob.class.getName(), "desc").end()
                 .addTrigger("trigger11", "triggerGroup1").time(today(), tomorrow()).repeat(minutes(1), 1).end()
                 .build();
-        jobWith2Triggers = aJobVO().jobDetail("name2", TEST_JOB_GROUP, DummyJob.class.getName()).end()
+        jobWith2Triggers = aJobVO().jobDetail("name2", TEST_JOB_GROUP, DummyJob.class.getName(), "desc").end()
                 .addTrigger("trigger21", "triggerGroup2").time(today(), tomorrow()).repeat(minutes(1), 1).end()
                 .addTrigger("trigger22", "triggerGroup2").time(today(), tomorrow()).repeat(minutes(2), 1).end()
                 .build();
@@ -78,7 +78,7 @@ public class JobServiceTest {
 
     @Test
     public void should_throw_exception_when_job_is_already_saved() throws Exception {
-        JobVO jobWithDuplicateName = aJobVO().jobDetail(savedJobWith1Trigger.getJobDetailVO().getJobName(), savedJobWith1Trigger.getJobDetailVO().getJobGroupName(), DummyJob.class.getName()).end()
+        JobVO jobWithDuplicateName = aJobVO().jobDetail(savedJobWith1Trigger.getJobDetailVO().getJobName(), savedJobWith1Trigger.getJobDetailVO().getJobGroupName(), DummyJob.class.getName(), "desc").end()
                 .addTrigger("trigger31", "triggerGroup3").time(today(), tomorrow()).repeat(minutes(10), 1).end()
                 .build();
         try {
@@ -91,7 +91,7 @@ public class JobServiceTest {
 
     @Test
     public void should_throw_exception_when_job_class_name_cannot_be_found() throws Exception {
-        JobVO jobWithDuplicateName = aJobVO().jobDetail("test", TEST_JOB_GROUP, "job.class.undefined").end()
+        JobVO jobWithDuplicateName = aJobVO().jobDetail("test", TEST_JOB_GROUP, "job.class.undefined", "desc").end()
                 .addTrigger("trigger31", "triggerGroup3").time(today(), tomorrow()).repeat(minutes(10), 1).end()
                 .build();
         try {
@@ -112,7 +112,7 @@ public class JobServiceTest {
 
     @Test
     public void should_pause_a_trigger() {
-        JobVO job = aJobVO().jobDetail("test", TEST_JOB_GROUP, SimpleJob.class.getName()).end()
+        JobVO job = aJobVO().jobDetail("test", TEST_JOB_GROUP, SimpleJob.class.getName(), "desc").end()
                 .addTrigger("trigger31", "triggerGroup3").time(today(), tomorrow()).repeat(milliSeconds(100), 10).end()
                 .build();
         jobService.saveJob(job);
@@ -136,7 +136,7 @@ public class JobServiceTest {
 
     @Test
     public void should_resume_a_trigger() {
-        JobVO job = aJobVO().jobDetail("test", TEST_JOB_GROUP, SimpleJob.class.getName()).end()
+        JobVO job = aJobVO().jobDetail("test", TEST_JOB_GROUP, SimpleJob.class.getName(), "desc").end()
                 .addTrigger("trigger31", "triggerGroup3").time(today(), tomorrow()).repeat(milliSeconds(100), 10).end()
                 .build();
         jobService.saveJob(job);
