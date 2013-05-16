@@ -17,11 +17,12 @@ public class JobForTest implements Job {
         Date date = new Date();
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         String url = jobDataMap.getString("url");
-        try{
-            Thread.currentThread().sleep(5000);
-        } catch(InterruptedException ie){
-            ie.printStackTrace();
-        }
+//        try{
+//            Thread.currentThread().sleep(5000);
+//        } catch(InterruptedException ie){
+//            ie.printStackTrace();
+//        }
+        System.out.println("-------------"+new Date());
         System.out.println("JobForTest url = " + url + ", begin :" + date);
 
     }

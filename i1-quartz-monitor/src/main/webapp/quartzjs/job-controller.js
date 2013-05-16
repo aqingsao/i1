@@ -65,6 +65,8 @@ jobApp.controller('jobController', function jobController($scope, $http) {
                         var tempJob = new JobVO();
                         $scope.jobs.push(tempJob.copyJob(data[j]));
                     }
+                    $scope.listQuartz();
+
                 }).error(
                 function (data, status, headers, config) {
                     alert("保存失败！");
@@ -91,7 +93,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
         };
 
         $scope.addTrigger = function () {
-            $scope.job.addTrigger(new TriggerVO());
+            $scope.jobVO.addTrigger(new TriggerVO());
             $scope.triggerInfoList.push(new TriggerInfo());
         };
 
@@ -144,7 +146,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             $http.get(pauseUrl).success(
                 function (data, status, headers, config) {
                     alert("执行暂停成功！");
-
+                    $scope.listQuartz();
                 }).error(
                 function (data, status, headers, config) {
                     alert("暂停失败！");
@@ -158,6 +160,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             $http.get(resumeUrl).success(
                 function (data, status, headers, config) {
                     alert("重启执行成功！");
+                    $scope.listQuartz();
                 }
             ).error(
                 function (data, status, headers, config) {

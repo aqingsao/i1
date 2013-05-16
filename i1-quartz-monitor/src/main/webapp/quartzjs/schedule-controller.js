@@ -79,6 +79,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
                         var tempQuartz = new Quartz();
                         $scope.quartzList.push(tempQuartz.copyQuartzVO(data[j]));
                     }
+                    $scope.listQuartz();
                 }).error(
                 function (data, status, headers, config) {
 
@@ -137,7 +138,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
             $http.get(pauseUrl).success(
                 function (data, status, headers, config) {
                     alert("执行暂停成功！");
-
+                    $scope.listQuartz();
                 }).error(
                 function (data, status, headers, config) {
                     alert("暂停失败！");
@@ -151,6 +152,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
             $http.get(resumeUrl).success(
                 function (data, status, headers, config) {
                     alert("重启执行成功！");
+                    $scope.listQuartz();
                 }
             ).error(
                 function (data, status, headers, config) {
@@ -165,6 +167,7 @@ scheduleApp.controller('scheduleController', function scheduleController($scope,
             $http.get(removeUrl).success(
                 function (data, status, headers, config) {
                     alert("移除成功！");
+                    $scope.listQuartz();
                 }
             ).error(
                 function (data, status, headers, config) {

@@ -11,6 +11,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import javax.ws.rs.core.MediaType;
+import java.util.Date;
 
 public class JobForUrl implements Job {
     @Override
@@ -22,8 +23,8 @@ public class JobForUrl implements Job {
     }
 
     protected void willBeExecuteMethod(String url) {
-        System.out.println("-------url="+url);
-        System.out.println("-------into-willBeExecuteMethod----");
+        System.out.println("-------------------------------------------------------url="+url);
+//        System.out.println("-------into-willBeExecuteMethod----");
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getClasses().add(JacksonJaxbJsonProvider.class);
         Client client = Client.create(clientConfig);
@@ -31,8 +32,10 @@ public class JobForUrl implements Job {
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
 
-        System.out.println("---execute-over---------");
+        Date date = new Date();
+        System.out.println("JobForTest url = " + url + ", begin :" +    date) ;
+//        System.out.println("---execute-over---------");
         int a = clientResponse.getStatus();
-        System.out.println("--------------" + a);
+        System.out.println("------------------------------------------------------" + a);
     }
 }
