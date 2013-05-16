@@ -8,6 +8,7 @@ import com.thoughtworks.i1.quartz.domain.JobVO;
 import com.thoughtworks.i1.quartz.domain.TriggerVO;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.utils.DBConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ public class JobService {
     @Inject
     public JobService(final SchedulerFactory factory, final GuiceJobFactory jobFactory) throws SchedulerException {
         scheduler = factory.getScheduler();
+        SchedulerContext schedulerContext = scheduler.getContext();
         scheduler.setJobFactory(jobFactory);
         LOGGER.info("Starting scheduler...");
         scheduler.start();
