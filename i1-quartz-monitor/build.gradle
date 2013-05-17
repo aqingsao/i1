@@ -3,8 +3,9 @@ dependencies{
     compile "org.quartz-scheduler:quartz:$quartzVersion"
     compile "org.quartz-scheduler:quartz-oracle:$quartzVersion"
 
-//    def ojdbc6Version = '11.2.0.1.0'
-//    testCompile "com.oracle:ojdbc6:$ojdbc6Version"
+    def ojdbc6Version = '11.2.0.1.0'
+    compile "com.oracle:ojdbc6:$ojdbc6Version"
+
 }
 
 def packageName = 'schedule';
