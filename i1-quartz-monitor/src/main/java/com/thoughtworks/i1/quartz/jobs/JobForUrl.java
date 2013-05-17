@@ -30,6 +30,9 @@ public class JobForUrl implements Job {
             isNormal = 0;
             Errors errors = clientResponse.getEntity(Errors.class);
             exceptionDesc = errors.toString();
+            if(exceptionDesc.length() > 1000){
+                  exceptionDesc = exceptionDesc.substring(0, 1000);
+            }
         }
 
         Trigger trigger = context.getTrigger();
