@@ -5,6 +5,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.thoughtworks.i1.commons.Errors;
 import com.thoughtworks.i1.quartz.domain.QrtzHistory;
 import com.thoughtworks.i1.quartz.service.QrtzHistoryService;
 import org.quartz.*;
@@ -20,20 +21,29 @@ public class JobForUrl implements Job {
         JobDetail jobDetail = context.getJobDetail();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
         String url = jobDataMap.getString("url");
-        this.willBeExecuteMethod(url);
+        ClientResponse clientResponse = this.willBeExecuteMethod(url);
+
+        int isNormal = 1;
+        String exceptionDesc = "";
+        int status = clientResponse.getStatus();
+        if(status >= 400){
+            isNormal = 0;
+            Errors errors = clientResponse.getEntity(Errors.class);
+            exceptionDesc = errors.toString();
+        }
 
         Trigger trigger = context.getTrigger();
         Long endTime =  new Date().getTime();
         try{
-            QrtzHistory qrtzHistory = new QrtzHistory(context.getScheduler().getSchedulerInstanceId(),
+            QrtzHistory qrtzHistory = new QrtzHistory(context.getScheduler().getSchedulerName(),
                     trigger.getKey().getName(),
                     trigger.getKey().getGroup(),
                     trigger.getJobKey().getName(),
                     trigger.getJobKey().getGroup(),
                     startTime,
                     endTime,
-                    1,
-                    "");
+                    isNormal,
+                    exceptionDesc);
 
             QrtzHistoryService qrtzHistoryService = new QrtzHistoryService();
             qrtzHistoryService.insertQrtzHistory(qrtzHistory);
@@ -42,20 +52,15 @@ public class JobForUrl implements Job {
         }
     }
 
-    protected void willBeExecuteMethod(String url) {
-        System.out.println("-------------------------------------------------------url="+url);
-//        System.out.println("-------into-willBeExecuteMethod----");
+    protected ClientResponse willBeExecuteMethod(String url) {
+
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getClasses().add(JacksonJaxbJsonProvider.class);
         Client client = Client.create(clientConfig);
-        ClientResponse clientResponse = client.resource(url)
+        return client.resource(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
 
-        Date date = new Date();
-        System.out.println("JobForTest url = " + url + ", begin :" +    date) ;
-//        System.out.println("---execute-over---------");
-        int a = clientResponse.getStatus();
-        System.out.println("------------------------------------------------------" + a);
+
     }
 }
