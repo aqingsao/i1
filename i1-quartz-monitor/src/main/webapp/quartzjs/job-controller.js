@@ -272,17 +272,12 @@ jobApp.controller('jobController', function jobController($scope, $http) {
 
         $scope.gridOptions = {
             data: 'qrtzHistoryList',
-//            columnDefs: [
-//                {field: 'SCHED_NAME', displayName: '1111111111'},
-//                {field: 'TRIGGER_NAME', displayName: 'TRIGGER_NAME'},
-//                {field: 'TRIGGER_GROUP', displayName: 'TRIGGER_GROUP'},
-//                {field: 'JOB_NAME', displayName: 'JOB_NAME'},
-//                {field: 'JOB_GROUP', displayName: 'JOB_GROUP'},
-//                {field: 'START_TIME', displayName: 'START_TIME'},
-//                {field: 'END_TIME', displayName: 'END_TIME'},
-//                {field: 'IS_NORMAL', displayName: 'IS_NORMAL'},
-//                {field: 'EXCEPTION_DESC', displayName: 'EXCEPTION_DESC'}
-//                         ],
+            columnDefs: [
+                {field: 'START_TIME', displayName: '开始时间'},
+                {field: 'END_TIME', displayName: '结束时间'},
+                {field: 'IS_NORMAL', displayName: '是否正常'},
+                {field: 'EXCEPTION_DESC', displayName: '异常描述'}
+                         ],
             enablePaging: true,
             showFooter: true,
             pagingOptions: $scope.pagingOptions,
