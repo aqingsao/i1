@@ -91,7 +91,7 @@ public class QrtzHistory {
     }
 
     public void setIsNormal(Integer isNormal) {
-        isNormal = isNormal;
+        this.isNormal = isNormal;
     }
 
     public String getExceptionDesc() {

@@ -203,15 +203,13 @@
                                        <div ng-show="false">
                                            <table>
                                                <tr>
-                                                   <th>任务名称</th>
-                                                   <th>trigger name</th>
+                                                   <th>开始时间</th>
+                                                   <th>结束时间</th>
+                                                   <th>是否正常</th>
+                                                   <th>异常信息</th>
                                                </tr>
                                                <tr ng-repeat="qrtzHistory in qrtzHistoryList">
-                                                   <!--<td>{{qrtzHistory.schedName}}</td>-->
-                                                   <!--<td>{{qrtzHistory.triggerName}}</td>-->
-                                                   <!--<td>{{qrtzHistory.triggerGroup}}</td>-->
-                                                   <!--<td>{{qrtzHistory.jobName}}</td>-->
-                                                   <!--<td>{{qrtzHistory.jobGroup}}</td>-->
+
                                                    <td>{{qrtzHistory.startTime}}</td>
                                                    <td>{{qrtzHistory.endTime}}</td>
                                                    <td>{{qrtzHistory.isNormal}}</td>
