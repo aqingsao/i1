@@ -1,7 +1,9 @@
 package com.thoughtworks.i1.quartz.api;
 
 import com.thoughtworks.i1.quartz.domain.JobVO;
+import com.thoughtworks.i1.quartz.domain.QrtzHistory;
 import com.thoughtworks.i1.quartz.service.JobService;
+import com.thoughtworks.i1.quartz.service.QrtzHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +21,16 @@ import static org.quartz.JobBuilder.newJob;
 public class JobsResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobsResource.class);
     private JobService jobService;
+
+    private QrtzHistoryService qrtzHistoryService;
+
     @Context
     private UriInfo context;
 
     @Inject
-    public JobsResource(JobService jobService) {
+    public JobsResource(JobService jobService,QrtzHistoryService qrtzHistoryService) {
         this.jobService = jobService;
+        this.qrtzHistoryService = qrtzHistoryService;
     }
 
     @GET
@@ -108,4 +114,13 @@ public class JobsResource {
             return Response.serverError().build();
         }
     }
+
+
+    @GET
+    @Path("exception-list/{triggerName}/{triggerGroupName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<QrtzHistory> exceptionlist(@PathParam("triggerName") String triggerName,@PathParam("triggerGroupName") String triggerGroupName){
+          return  qrtzHistoryService.getQrtzHistorysByTrigger(triggerName,triggerGroupName);
+    }
+
 }

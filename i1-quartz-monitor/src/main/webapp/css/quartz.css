@@ -53,3 +53,12 @@
 .triggername{
     width: 120px;
 }
+.popover.left{
+    margin-left:-326px;
+    max-width: 700px;
+    width: 605px;
+}
+/*.quartz-content{*/
+    /*top: 56%; left: 74.9%;width:300px; border:1px solid red;*/
+
+/*}*/

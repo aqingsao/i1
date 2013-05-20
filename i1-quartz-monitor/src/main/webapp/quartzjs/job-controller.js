@@ -175,6 +175,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             $http.get(removeUrl).success(
                 function (data, status, headers, config) {
                     alert("移除成功！");
+                    $scope.listQuartz();
                 }
             ).error(
                 function (data, status, headers, config) {
@@ -183,8 +184,71 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             )
         };
 
+       //查看qrtzhistory信息
+//        $scope.value = "";
+//        $scope.detail = function(){
+//            $scope.value ='.quartz-content';
+//            $scope.listQuartzHistory();
+
+//        }
+        $scope.qrtzHistoryList = [];
+
+        $scope.getHistoryInfo = function(trigger){
+            $scope.triggerName = trigger.triggerName;
+            $scope.triggerGroupName = trigger.triggerGroupName;
+            $scope.listQuartzHistory();
+        };
+
+        $scope.listQuartzHistory = function () {
+            var url = Path.getUri("api/quartz-jobs/exception-list/" + $scope.triggerName+ "/" +$scope.triggerGroupName);
+            $http.get(url).success(
+                function (data, status, headers, config) {
+//                      alert("You are success!")
+                       $scope.qrtzHistoryList =angular.copy(data);
 
 
+                    console.debug($scope.qrtzHistoryList);
+                }).error(
+                function (data, status, headers, config) {
+
+                }
+            );
+
+        };
+
+    $scope.gridOptions = {
+        data: 'qrtzHistoryList'
+    }
 
     }
-)
+);
+
+//jobApp.filter("quartzClassChange", function () {
+//    return function (input) {
+//        return input ? "quartz-content" : "";
+//    }
+//});
+
+jobApp.directive("mypopover", function () {
+    return function(scope, element, attr) {
+        element.popover({
+            content :
+                function() {
+                var html = element.children().html();
+//                var template = angular.element(html);
+//                $compile(template)(scope);
+                return html;
+            }
+        });
+    };
+}
+
+//jobApp.directive("mypopover", function () {
+//        return function(scope, element, attr) {
+//            element.popover({
+//                content : "<div ng-grid='gridOptions'></div>"
+//            });
+//        };
+//    }
+
+);
