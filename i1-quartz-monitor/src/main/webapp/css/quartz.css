@@ -54,11 +54,19 @@
     width: 120px;
 }
 .popover.left{
-    margin-left:-326px;
-    max-width: 700px;
-    width: 618px;
+    margin-left:-49%;
+    max-width: 1000px;
+    width: 1000px;
+    /*height: 400px;*/
+    overflow: scroll;
 }
 /*.quartz-content{*/
     /*top: 56%; left: 74.9%;width:300px; border:1px solid red;*/
 
 /*}*/
+
+.gridStyle {
+    /*border: 1px solid rgb(212,212,212);*/
+    width: 900px;
+    height: 200px;
+}

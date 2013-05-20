@@ -200,24 +200,25 @@
                                        data-trigger="click"
                                        data-html="true"
                                        ng-click="getHistoryInfo(trigger)">详情
-                                       <div ng-show="false">
-                                           <table>
-                                               <tr>
-                                                   <th>开始时间</th>
-                                                   <th>结束时间</th>
-                                                   <th>是否正常</th>
-                                                   <th>异常信息</th>
-                                               </tr>
-                                               <tr ng-repeat="qrtzHistory in qrtzHistoryList">
+                                        <!--<div class="gridStyle" ng-grid="gridOptions" ng-show="false"></div>-->
+                                       <!--<div ng-show="false">-->
+                                           <!--<table>-->
+                                               <!--<tr>-->
+                                                   <!--<th>开始时间</th>-->
+                                                   <!--<th>结束时间</th>-->
+                                                   <!--<th>是否正常</th>-->
+                                                   <!--<th>异常信息</th>-->
+                                               <!--</tr>-->
+                                               <!--<tr ng-repeat="qrtzHistory in qrtzHistoryList">-->
 
-                                                   <td>{{qrtzHistory.startTime}}</td>
-                                                   <td>{{qrtzHistory.endTime}}</td>
-                                                   <td>{{qrtzHistory.isNormal}}</td>
-                                                   <td>{{qrtzHistory.exceptionDesc}}</td>
+                                                   <!--<td>{{qrtzHistory.startTime}}</td>-->
+                                                   <!--<td>{{qrtzHistory.endTime}}</td>-->
+                                                   <!--<td>{{qrtzHistory.isNormal}}</td>-->
+                                                   <!--<td>{{qrtzHistory.exceptionDesc}}</td>-->
 
-                                               </tr>
-                                           </table>
-                                       </div>
+                                               <!--</tr>-->
+                                           <!--</table>-->
+                                       <!--</div>-->
                                     </a>
                                 </td>
 
@@ -227,6 +228,7 @@
 
 
                         </table>
+
                         <!--<div class="popover fade left in" ng-class="{{'quartz-content'}}" >-->
                             <!--<div class="arrow"></div>-->
                             <!--<h3 class="popover-title">Popover on left</h3>-->
@@ -259,6 +261,7 @@
 <script src="js/largeLoad.js"></script>
 <script src="js/ng-grid.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/ng-grid.debug.js"></script>
 <!--<script src="js/jquery-ui-1.9.2.custom.min.js"></script>-->
 
 
@@ -269,6 +272,7 @@
 <script src="quartzjs/job-app.js"></script>
 <script src="quartzjs/job-controller.js"></script>
 <script src="quartzjs/job-model.js"></script>
+
 
 </body>
 </html>

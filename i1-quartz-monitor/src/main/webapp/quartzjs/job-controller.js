@@ -24,7 +24,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             endTime = "";
             repeatInterval = 0;
             repeatIntervalUnit = 0;
-        } ;
+        };
 
         $scope.triggerInfoList = [];
         $scope.triggerInfoList.push(new TriggerInfo());
@@ -133,7 +133,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             }
 
             return temp + tempUnit;
-        } ;
+        };
 
         $scope.listQuartz();
 
@@ -167,7 +167,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
                     alert("重启失败！");
                 }
             );
-        } ;
+        };
 
 //        从schedule里面移除trigger
         $scope.removeFromSchedule = function (trigger) {
@@ -184,7 +184,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             )
         };
 
-       //查看qrtzhistory信息
+        //查看qrtzhistory信息
 //        $scope.value = "";
 //        $scope.detail = function(){
 //            $scope.value ='.quartz-content';
@@ -193,18 +193,18 @@ jobApp.controller('jobController', function jobController($scope, $http) {
 //        }
         $scope.qrtzHistoryList = [];
 
-        $scope.getHistoryInfo = function(trigger){
+        $scope.getHistoryInfo = function (trigger) {
             $scope.triggerName = trigger.triggerName;
             $scope.triggerGroupName = trigger.triggerGroupName;
             $scope.listQuartzHistory();
         };
 
         $scope.listQuartzHistory = function () {
-            var url = Path.getUri("api/quartz-jobs/exception-list/" + $scope.triggerName+ "/" +$scope.triggerGroupName);
+            var url = Path.getUri("api/quartz-jobs/exception-list/" + $scope.triggerName + "/" + $scope.triggerGroupName);
             $http.get(url).success(
                 function (data, status, headers, config) {
 //                      alert("You are success!")
-                       $scope.qrtzHistoryList =angular.copy(data);
+                    $scope.qrtzHistoryList = angular.copy(data);
 
 
                     console.debug($scope.qrtzHistoryList);
@@ -216,9 +216,79 @@ jobApp.controller('jobController', function jobController($scope, $http) {
 
         };
 
-    $scope.gridOptions = {
-        data: 'qrtzHistoryList'
-    }
+
+        $scope.filterOptions = {
+            filterText: "",
+            useExternalFilter: true
+        };
+        $scope.pagingOptions = {
+            pageSizes: [10, 250, 500, 1000],
+            pageSize: 250,
+            totalServerItems: 0,
+            currentPage: 1
+        };
+        $scope.setPagingData = function (data, page, pageSize) {
+            var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
+            $scope.qrtzHistoryList = pagedData;
+            $scope.pagingOptions.totalServerItems = data.length;
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        };
+        $scope.getPagedDataAsync = function (pageSize, page, searchText) {
+            setTimeout(function () {
+                var data;
+                if (searchText) {
+                    var ft = searchText.toLowerCase();
+                    var url = Path.getUri("api/quartz-jobs/exception-list/" + $scope.triggerName + "/" + $scope.triggerGroupName);
+                    $http.get(url).success(function (largeLoad) {
+                        data = largeLoad.filter(function (item) {
+                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                        });
+                        $scope.setPagingData(data, page, pageSize);
+                    });
+                } else {
+                    var url = Path.getUri("api/quartz-jobs/exception-list/" + $scope.triggerName + "/" + $scope.triggerGroupName);
+
+                    $http.get(url).success(function (largeLoad) {
+                        $scope.setPagingData(largeLoad, page, pageSize);
+                    });
+                }
+            }, 100);
+        };
+
+        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
+        $scope.$watch('pagingOptions', function (newVal, oldVal) {
+            if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
+                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+            }
+        }, true);
+        $scope.$watch('filterOptions', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+            }
+        }, true);
+
+        $scope.gridOptions = {
+            data: 'qrtzHistoryList',
+//            columnDefs: [
+//                {field: 'SCHED_NAME', displayName: '1111111111'},
+//                {field: 'TRIGGER_NAME', displayName: 'TRIGGER_NAME'},
+//                {field: 'TRIGGER_GROUP', displayName: 'TRIGGER_GROUP'},
+//                {field: 'JOB_NAME', displayName: 'JOB_NAME'},
+//                {field: 'JOB_GROUP', displayName: 'JOB_GROUP'},
+//                {field: 'START_TIME', displayName: 'START_TIME'},
+//                {field: 'END_TIME', displayName: 'END_TIME'},
+//                {field: 'IS_NORMAL', displayName: 'IS_NORMAL'},
+//                {field: 'EXCEPTION_DESC', displayName: 'EXCEPTION_DESC'}
+//                         ],
+            enablePaging: true,
+            showFooter: true,
+            pagingOptions: $scope.pagingOptions,
+            filterOptions: $scope.filterOptions
+        };
+
 
     }
 );
@@ -229,26 +299,44 @@ jobApp.controller('jobController', function jobController($scope, $http) {
 //    }
 //});
 
-jobApp.directive("mypopover", function () {
-    return function(scope, element, attr) {
-        element.popover({
-            content :
-                function() {
-                var html = element.children().html();
-//                var template = angular.element(html);
-//                $compile(template)(scope);
-                return html;
-            }
-        });
-    };
-}
+//jobApp.directive("mypopover", function () {
+//    return function(scope, element, attr) {
+//        element.popover({
+//            content :
+//                function() {
+//                var html = element.children().html();
+////                var template = angular.element(html);
+////                $compile(template)(scope);
+//                return html;
+//            }
+//        });
+//    };
+//}
 
 //jobApp.directive("mypopover", function () {
-//        return function(scope, element, attr) {
+//        return function (scope, element, attr) {
 //            element.popover({
-//                content : "<div ng-grid='gridOptions'></div>"
+//                content: function () {
+//                    var html = element.children.html();
+////                    var template = angular.element(html);
+////                    $compile(template)(scope);
+//                    return html;
+//                }
 //            });
 //        };
 //    }
 
-);
+jobApp.directive("mypopover", ["$compile", function ($compile) {
+    return function (scope, element, attr) {
+        element.popover({
+            content: function () {
+                var template = angular.element('<div class="gridStyle" ng-grid="gridOptions"></div>');
+//                var template = angular.element('<div ng-repeat="book in books">{{book}}</div>');
+                $compile(template)(scope);
+                console.info(template);
+                return template;
+            }
+
+        });
+    };
+}]);
