@@ -7,14 +7,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/heren-v1.css" rel="stylesheet">
+    <link href="css/heren-ng-grid.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="css/modern.css">-->
     <link href="css/quartz.css" rel="stylesheet">
-    <link href="css/ng-grid.css" rel="stylesheet">
-    <!--<link href="css/jquery-ui.css" rel="stylesheet">-->
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -166,67 +162,59 @@
                             </tr>
 
                             <tbody ng-repeat="job in jobs">
-                            <tr ng-repeat="trigger in job.triggers">
-                                <td>{{job.detail.jobName}}</td>
-                                <td>{{job.detail.jobClass}}</td>
-                                <td>{{job.detail.jobDatas[0].value}}</td>
-                                <td>{{trigger.triggerName}}</td>
-                                <td>{{trigger.startTime | date:'yyyy-MM-dd HH:mm'}}</td>
-                                <td>{{trigger.endTime | date:'yyyy-MM-dd HH:mm'}}</td>
-                                <td>{{trigger.repeatCount}}</td>
-                                <td>{{getRepeatIntervalExpress(trigger.repeatInterval)}}</td>
-                                <td>{{trigger.triggerState}}</td>
-                                <td>
-                                    <button class="btn btn-large btn-primary" type="button"
-                                            ng-click="resumeTrigger(trigger)">启动
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-large btn-primary" type="button"
-                                            ng-click="pauseSchedule(trigger)">暂停
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-large btn-primary" type="button"
-                                            ng-click="removeFromSchedule(trigger)">删除
-                                    </button>
-                                </td>
-                                <td>
-                                    <a href="#"
-                                       class="btn"
-                                       data-toggle="popover"
-                                       mypopover
-                                       data-placement="left"
-                                       data-trigger="click"
-                                       data-html="true"
-                                       ng-click="getHistoryInfo(trigger)">详情
-                                        <!--<div class="gridStyle" ng-grid="gridOptions" ng-show="false"></div>-->
-                                       <!--<div ng-show="false">-->
-                                           <!--<table>-->
-                                               <!--<tr>-->
-                                                   <!--<th>开始时间</th>-->
-                                                   <!--<th>结束时间</th>-->
-                                                   <!--<th>是否正常</th>-->
-                                                   <!--<th>异常信息</th>-->
-                                               <!--</tr>-->
-                                               <!--<tr ng-repeat="qrtzHistory in qrtzHistoryList">-->
+                                <tr ng-repeat="trigger in job.triggers">
+                                    <td>{{job.detail.jobName}}</td>
+                                    <td>{{job.detail.jobClass}}</td>
+                                    <td>{{job.detail.jobDatas[0].value}}</td>
+                                    <td>{{trigger.triggerName}}</td>
+                                    <td>{{trigger.startTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                    <td>{{trigger.endTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                    <td>{{trigger.repeatCount}}</td>
+                                    <td>{{getRepeatIntervalExpress(trigger.repeatInterval)}}</td>
+                                    <td>{{trigger.triggerState}}</td>
+                                    <td>
+                                        <button class="btn btn-large btn-primary" type="button"
+                                                ng-click="resumeTrigger(trigger)">启动
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-large btn-primary" type="button"
+                                                ng-click="pauseSchedule(trigger)">暂停
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-large btn-primary" type="button"
+                                                ng-click="removeFromSchedule(trigger)">删除
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" class="btn" data-toggle="popover"
+                                           mypopover data-placement="left" data-trigger="click"
+                                           data-html="true"
+                                           ng-click="getHistoryInfo(trigger)">详情
+                                            <!--<div class="gridStyle" ng-grid="gridOptions" ng-show="false"></div>-->
+                                            <!--<div ng-show="false">-->
+                                            <!--<table>-->
+                                            <!--<tr>-->
+                                            <!--<th>开始时间</th>-->
+                                            <!--<th>结束时间</th>-->
+                                            <!--<th>是否正常</th>-->
+                                            <!--<th>异常信息</th>-->
+                                            <!--</tr>-->
+                                            <!--<tr ng-repeat="qrtzHistory in qrtzHistoryList">-->
 
-                                                   <!--<td>{{qrtzHistory.startTime}}</td>-->
-                                                   <!--<td>{{qrtzHistory.endTime}}</td>-->
-                                                   <!--<td>{{qrtzHistory.isNormal}}</td>-->
-                                                   <!--<td>{{qrtzHistory.exceptionDesc}}</td>-->
+                                            <!--<td>{{qrtzHistory.startTime}}</td>-->
+                                            <!--<td>{{qrtzHistory.endTime}}</td>-->
+                                            <!--<td>{{qrtzHistory.isNormal}}</td>-->
+                                            <!--<td>{{qrtzHistory.exceptionDesc}}</td>-->
 
-                                               <!--</tr>-->
-                                           <!--</table>-->
-                                       <!--</div>-->
-                                    </a>
-                                </td>
-
-                            </tr>
-
+                                            <!--</tr>-->
+                                            <!--</table>-->
+                                            <!--</div>-->
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
-
-
                         </table>
 
                         <!--<div class="popover fade left in" ng-class="{{'quartz-content'}}" >-->
@@ -262,17 +250,11 @@
 <script src="js/ng-grid.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/ng-grid.debug.js"></script>
-<!--<script src="js/jquery-ui-1.9.2.custom.min.js"></script>-->
-
-
 <script src="commons/utils.js"></script>
 <script src="commons/directiveModule.js"></script>
-
-
 <script src="quartzjs/job-app.js"></script>
 <script src="quartzjs/job-controller.js"></script>
 <script src="quartzjs/job-model.js"></script>
-
 
 </body>
 </html>

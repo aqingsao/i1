@@ -205,8 +205,8 @@ jobApp.controller('jobController', function jobController($scope, $http) {
                 function (data, status, headers, config) {
 //                      alert("You are success!")
                     $scope.qrtzHistoryList = angular.copy(data);
-
-
+                    //加载ng-grid数据
+                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
                     console.debug($scope.qrtzHistoryList);
                 }).error(
                 function (data, status, headers, config) {
@@ -216,14 +216,13 @@ jobApp.controller('jobController', function jobController($scope, $http) {
 
         };
 
-
         $scope.filterOptions = {
             filterText: "",
             useExternalFilter: true
         };
         $scope.pagingOptions = {
-            pageSizes: [10, 250, 500, 1000],
-            pageSize: 250,
+            pageSizes: [10,20, 50],
+            pageSize: 10,
             totalServerItems: 0,
             currentPage: 1
         };
@@ -257,10 +256,8 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             }, 100);
         };
 
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-
         $scope.$watch('pagingOptions', function (newVal, oldVal) {
-            if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
+            if (newVal !== oldVal) {
                 $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
             }
         }, true);
@@ -273,9 +270,9 @@ jobApp.controller('jobController', function jobController($scope, $http) {
         $scope.gridOptions = {
             data: 'qrtzHistoryList',
             columnDefs: [
-                {field: 'startTime', displayName: '开始时间',cellTemplate: '<div><div class="ngCellText">{{row.getProperty(col.field) | date : "yyyy-MM-dd HH:mm:ss"}}</div></div>'},
-                {field: 'endTime', displayName: '结束时间',cellTemplate: '<div><div class="ngCellText">{{row.getProperty(col.field) | date : "yyyy-MM-dd HH:mm:ss"}}</div></div>'},
-                {field: 'isNormal', displayName: '是否正常'},
+                {field: 'startTime', displayName: '开始时间',width: '190px' ,cellTemplate: '<div><div class="ngCellText">{{row.getProperty(col.field) | date : "yyyy-MM-dd HH:mm:ss"}}</div></div>'},
+                {field: 'endTime', displayName: '结束时间',width: '190px' ,cellTemplate: '<div><div class="ngCellText">{{row.getProperty(col.field) | date : "yyyy-MM-dd HH:mm:ss"}}</div></div>'},
+                {field: 'isNormal', displayName: '是否正常',width: '100px',cellTemplate: '<div><div class="ngCellText">{{row.getProperty(col.field) | isNormalFilter }}</div></div>'},
                 {field: 'exceptionDesc', displayName: '异常描述'}
                          ],
             enablePaging: true,
@@ -288,41 +285,12 @@ jobApp.controller('jobController', function jobController($scope, $http) {
     }
 );
 
-jobApp.filter("timeFilter", function () {
+jobApp.filter("isNormalFilter", function () {
     return function (input) {
-        var testDate = new Date(input);//这里必须是整数，毫秒
-        var testStr = testDate.format("yyyy年MM月dd日hh小时mm分ss秒");
-        return testStr;
+        return input == 0 ? "异常" : "正常";
     }
 });
 
-Date.prototype.format = function(format)
-{
-    var o =
-    {
-        "M+" : this.getMonth()+1, //month
-        "d+" : this.getDate(), //day
-        "h+" : this.getHours(), //hour
-        "m+" : this.getMinutes(), //minute
-        "s+" : this.getSeconds(), //second
-        "q+" : Math.floor((this.getMonth()+3)/3), //quarter
-        "S" : this.getMilliseconds() //millisecond
-    }
-
-    if(/(y+)/.test(format))
-    {
-        format = format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
-    }
-
-    for(var k in o)
-    {
-        if(new RegExp("("+ k +")").test(format))
-        {
-            format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
-        }
-    }
-    return format;
-}
 
 //jobApp.filter("quartzClassChange", function () {
 //    return function (input) {
