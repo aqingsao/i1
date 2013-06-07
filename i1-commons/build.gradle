@@ -1,3 +1,5 @@
+version="0.1.0"
+
 dependencies{
     // Use guava and guice servlet
     compile "com.google.guava:guava:$guavaVersion"
@@ -56,4 +58,44 @@ dependencies{
     // Use Jersey client as API test tool
     testCompile "com.sun.jersey:jersey-test-framework:$jerseyVersion"
     testCompile "org.eclipse.jetty:jetty-client:$jettyVersion"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'I1'
+                packaging 'jar'
+                description 'A collection of reusable Java components'
+                url 'https://github.com/aqingsao/i1'
+
+                scm {
+                    url 'scm:git@github.com:aqingsao/i1.git'
+                    connection 'scm:git@github.com:aqingsao/i1.git'
+                    developerConnection 'scm:git@github.com:aqingsao/i1.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'aqingsao'
+                        name 'Xiaoqing Zhang'
+                    }
+                }
+            }
+        }
+    }
 }

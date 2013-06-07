@@ -42,6 +42,26 @@ subprojects {
             excludeDirs += file("out")
         }
     }
+    apply plugin: 'signing'
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from 'build/docs/javadoc'
+    }
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+    artifacts {
+        archives jar
+        archives javadocJar
+        archives sourcesJar
+    }
+    signing {
+        sign configurations.archives
+    }
 
     if(project.name == 'i1-commons'){
         return;
@@ -53,7 +73,6 @@ subprojects {
 
     apply plugin: "war"
     apply plugin: "jetty"
-    apply plugin: 'maven'
 
     // Since it's a war project, we add src/main/webapp as a resource folder
     sourceSets {
