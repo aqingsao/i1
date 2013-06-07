@@ -21,7 +21,7 @@
         <listener-class>com.thoughtworks.i1.commons.web.I1GuiceServletContextListener</listener-class>
     </listener>
     <context-param>
-        <param-name>application</param-name>
+        <param-name>applicationName</param-name>
         <param-value>com.thoughtworks.i1.quartz.QuartzApplication</param-value>
     </context-param>
 </web-app>
