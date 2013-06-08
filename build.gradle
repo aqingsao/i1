@@ -1,6 +1,6 @@
 allprojects {
     group = 'com.thoughtworks.i1'
-    version = '0.1.0-SNAPSHOT'
+    version = '0.1.0'
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -63,11 +63,48 @@ subprojects {
         sign configurations.archives
     }
 
-    if(project.name == 'i1-commons'){
-        return;
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+
+//            repository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+
+                pom.project {
+                    name 'I1'
+                    packaging 'jar'
+                    description 'A collection of reusable Java components'
+                    url 'https://github.com/aqingsao/i1'
+
+                    scm {
+                        url 'scm:git@github.com:aqingsao/i1.git'
+                        connection 'scm:git@github.com:aqingsao/i1.git'
+                        developerConnection 'scm:git@github.com:aqingsao/i1.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'aqingsao'
+                            name 'Xiaoqing Zhang'
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    if(project.name == 'i1-test-commons'){
+    if(project.name == 'i1-commons' || project.name == 'i1-test-commons'){
         return;
     }
 
@@ -95,14 +132,6 @@ subprojects {
         compile project(':i1-commons')
 
         testCompile project(':i1-test-commons')
-    }
-
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                repository(url: uri('../repository'))
-            }
-        }
     }
 
     // In default we use port 8051 when we run webapp with "gradle clean jettyRun"
