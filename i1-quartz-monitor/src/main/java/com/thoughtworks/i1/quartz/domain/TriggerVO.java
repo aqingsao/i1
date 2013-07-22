@@ -5,10 +5,12 @@ import org.quartz.*;
 
 import java.util.Date;
 
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 public class TriggerVO {
 
+    private Integer triggerFlag;
     private String triggerName;
     private String triggerGroupName;
     private Date startTime;
@@ -16,6 +18,7 @@ public class TriggerVO {
     private String triggerState;
     private int repeatCount;
     private long repeatInterval;
+    private String cron;
 
     public TriggerVO() {
     }
@@ -28,6 +31,18 @@ public class TriggerVO {
         this.repeatCount = repeatCount;
         this.repeatInterval = repeatInterval;
         this.triggerState = triggerState;
+    }
+
+    public TriggerVO(Integer triggerFlag, String triggerName, String triggerGroupName, Date startTime, Date endTime, String triggerState, int repeatCount, long repeatInterval, String cron) {
+        this.triggerFlag = triggerFlag;
+        this.triggerName = triggerName;
+        this.triggerGroupName = triggerGroupName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.triggerState = triggerState;
+        this.repeatCount = repeatCount;
+        this.repeatInterval = repeatInterval;
+        this.cron = cron;
     }
 
     public String getTriggerName() {
@@ -86,24 +101,60 @@ public class TriggerVO {
         this.repeatInterval = repeatInterval;
     }
 
-    public static TriggerVO fromTrigger(SimpleTrigger trigger, String triggerStateName) {
-        return new TriggerVO(trigger.getKey().getName(), trigger.getKey().getGroup(), trigger.getStartTime(), trigger.getEndTime(), trigger.getRepeatCount(), trigger.getRepeatInterval(), triggerStateName);
+    public Integer getTriggerFlag() {
+        return triggerFlag;
     }
+
+    public void setTriggerFlag(Integer triggerFlag) {
+        this.triggerFlag = triggerFlag;
+    }
+
+    public String getCron() {
+        return cron;
+    }
+
+    public void setCron(String cron) {
+        this.cron = cron;
+    }
+
+    public static TriggerVO fromTrigger(SimpleTrigger trigger, String triggerStateName) {
+        TriggerVO triggerVO = new TriggerVO(trigger.getKey().getName(), trigger.getKey().getGroup(), trigger.getStartTime(), trigger.getEndTime(), trigger.getRepeatCount(), trigger.getRepeatInterval(), triggerStateName);
+        triggerVO.setTriggerFlag(0);
+        triggerVO.setCron("");
+        return triggerVO;
+    }
+
+    public static TriggerVO fromTrigger(CronTrigger trigger, String triggerStateName) {
+        TriggerVO triggerVO = new TriggerVO(trigger.getKey().getName(), trigger.getKey().getGroup(), null, null, 0, 0, triggerStateName);
+        triggerVO.setTriggerFlag(1);
+        triggerVO.setCron(trigger.getCronExpression());
+        return triggerVO;
+    }
+
 
     public Trigger toTrigger(JobKey jobKey) {
         String triggerGroupName = getTriggerGroupName();
-        TriggerBuilder<Trigger> triggerBuilder = newTrigger()
-                .withIdentity(getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
-                .startAt(getStartTime())
-                .endAt(getEndTime())
-                .forJob(jobKey);
-        triggerBuilder.withSchedule(
-                SimpleScheduleBuilder
-                        .simpleSchedule()
-                        .withRepeatCount(getRepeatCount())
-                        .withIntervalInMilliseconds(getRepeatInterval())
-        );
-        return triggerBuilder.build();
+        if(getTriggerFlag() == 0){
+            TriggerBuilder<Trigger> triggerBuilder = newTrigger()
+                    .withIdentity(getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
+                    .startAt(getStartTime())
+                    .endAt(getEndTime())
+                    .forJob(jobKey);
+            triggerBuilder.withSchedule(
+                    SimpleScheduleBuilder
+                            .simpleSchedule()
+                            .withRepeatCount(getRepeatCount())
+                            .withIntervalInMilliseconds(getRepeatInterval())
+            );
+            return triggerBuilder.build();
+        } else {
+            return newTrigger()
+                    .withIdentity(getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
+                    .withSchedule(cronSchedule(getCron()))
+                    .forJob(jobKey)
+                    .build() ;
+        }
+
     }
 
     public static class TriggerVOBuilder implements Builder {

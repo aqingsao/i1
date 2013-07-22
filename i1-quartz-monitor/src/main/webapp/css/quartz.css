@@ -42,6 +42,12 @@
     width: 70px;
 }
 
+.triggerFlag{
+    width: 110px;
+}
+.cron{
+    width: 110px;
+}
 .abouttime{
     width:160px;
 }

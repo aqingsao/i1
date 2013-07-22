@@ -13,6 +13,7 @@ var JobDetailVO = function () {
 }   ;
 
 var TriggerVO = function () {
+    this.triggerFlag = 0;
     this.triggerName = "";
     this.triggerGroupName = "";
     this.startTime = 0;
@@ -20,6 +21,7 @@ var TriggerVO = function () {
     this.triggerState = "";
     this.repeatCount = -1;
     this.repeatInterval = 10000;
+    this.cron = "";
 };
 
 var JobDataVO = function (key, value) {

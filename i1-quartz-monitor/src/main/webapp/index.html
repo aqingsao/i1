@@ -96,31 +96,49 @@
                                 <thead>
                                 <tr>
                                     <td>触发器名称</td>
+                                    <td>触发器模式</td>
                                     <td>开始时间</td>
                                     <td>结束时间</td>
                                     <td>重复次数</td>
                                     <td>间隔时间</td>
+                                    <td>Cron表达式</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="trigger in jobVO.triggers">
                                     <td><input id="triggerName{{$index}}" type="text" ng-model="trigger.triggerName"
                                                class="triggername"></td>
+                                    <td>
+                                        <select id="triggerFlag{{$index}}"
+                                                ng-model="trigger.triggerFlag"
+                                                ng-options="triggerFlag.key as triggerFlag.value for triggerFlag in triggerFlags"
+                                                ng-change="showTriggerFlag($index)"
+                                                class="triggerFlag">
+                                        </select>
+                                    </td>
                                     <td><input id="startTime{{$index}}" type="datetime-local"
-                                               ng-model="triggerInfoList[$index].startTime" class="abouttime"></td>
+                                               ng-model="triggerInfoList[$index].startTime" class="abouttime"
+                                            ng-show="getTriggerFlag($index)"></td>
                                     <td><input id="endTime{{$index}}" type="datetime-local"
-                                               ng-model="triggerInfoList[$index].endTime" class="abouttime"></td>
+                                               ng-model="triggerInfoList[$index].endTime" class="abouttime"
+                                               ng-show="getTriggerFlag($index)"></td>
                                     <td><input id="repeatCount{{$index}}" type="text" ng-model="trigger.repeatCount"
+                                               ng-show="getTriggerFlag($index)"
                                                class="repeatCount"></td>
                                     <td>
                                         <input id="repeatInterval{{$index}}" type="text"
-                                               ng-model="triggerInfoList[$index].repeatInterval" class="interval">
+                                               ng-model="triggerInfoList[$index].repeatInterval" class="interval"
+                                               ng-show="getTriggerFlag($index)">
                                         <select id="repeatIntervalUnit{{$index}}"
                                                 ng-model="triggerInfoList[$index].repeatIntervalUnit"
                                                 ng-options="unit.key as unit.value for unit in units"
-                                                class="repeatIntervalUnits">
+                                                class="repeatIntervalUnits"
+                                                ng-show="getTriggerFlag($index)">
                                         </select>
                                     </td>
+                                    <td><input id="cron{{$index}}" type="text" ng-model="trigger.cron"
+                                               ng-show="!getTriggerFlag($index)"
+                                               class="cron"></td>
                                     <td>
                                         <a href="" ng-click="addTrigger()">添加</a>
                                     </td>
@@ -146,6 +164,7 @@
                                 <th>结束时间</th>
                                 <th>重复次数</th>
                                 <th>间隔时间</th>
+                                <th>Cron表达式</th>
                                 <th>触发器状态</th>
                                 <th>
                                     启动
@@ -171,6 +190,7 @@
                                     <td>{{trigger.endTime | date:'yyyy-MM-dd HH:mm'}}</td>
                                     <td>{{trigger.repeatCount}}</td>
                                     <td>{{getRepeatIntervalExpress(trigger.repeatInterval)}}</td>
+                                    <td>{{trigger.cron}}</td>
                                     <td>{{trigger.triggerState}}</td>
                                     <td>
                                         <button class="btn btn-large btn-primary" type="button"

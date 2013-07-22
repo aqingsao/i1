@@ -142,9 +142,17 @@ public class JobService {
 
     private JobVO getJobVO(JobDetail jobDetail) throws SchedulerException {
         JobVO jobVO = new JobVO(fromJobDetail(jobDetail));
-        for (SimpleTrigger trigger : (List<SimpleTrigger>) scheduler.getTriggersOfJob(jobDetail.getKey())) {
-            jobVO.addTriggerVO(fromTrigger(trigger, scheduler.getTriggerState(trigger.getKey()).name()));
+        List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobDetail.getKey());
+        for (Trigger trigger : triggersOfJob) {
+             if(trigger.getClass().isInstance(SimpleTrigger.class)) {
+                 SimpleTrigger simpleTrigger = (SimpleTrigger)trigger;
+                 jobVO.addTriggerVO(fromTrigger(simpleTrigger, scheduler.getTriggerState(simpleTrigger.getKey()).name()));
+             } else {
+                 CronTrigger cronTrigger = (CronTrigger)trigger;
+                 jobVO.addTriggerVO(fromTrigger(cronTrigger, scheduler.getTriggerState(cronTrigger.getKey()).name()));
+             }
         }
+
         return jobVO;
     }
 }

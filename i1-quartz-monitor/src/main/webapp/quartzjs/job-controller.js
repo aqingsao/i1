@@ -19,6 +19,11 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             {"key": 3, "value": "天"}
         ];
 
+        $scope.triggerFlags = [
+            {"key": 0, "value": "Simple模式"},
+            {"key": 1, "value": "Cron表达式"}
+        ];
+
         var TriggerInfo = function () {
             startTime = "";
             endTime = "";
@@ -34,6 +39,19 @@ jobApp.controller('jobController', function jobController($scope, $http) {
         $scope.jobVO = new JobVO();
         $scope.jobVO.addJobDetail(new JobDetailVO());
         $scope.jobVO.addTrigger(new TriggerVO());
+
+        $scope.getTriggerFlag = function(index){
+            console.debug("index=" + index);
+
+            if($scope.jobVO.triggers[index].triggerFlag === 0){
+                return true;
+            }
+            return false;
+        };
+
+        $scope.showTriggerFlag = function(triggerFlag){
+            console.debug("triggerFlag=" + triggerFlag);
+        };
 
         $scope.saveJob = function () {
 
@@ -73,6 +91,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
                 }
             );
         };
+
 
 
         $scope.listQuartz = function () {
