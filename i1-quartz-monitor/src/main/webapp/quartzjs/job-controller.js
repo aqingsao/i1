@@ -18,7 +18,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             {"key": 2, "value": "小时"},
             {"key": 3, "value": "天"}
         ];
-
+        //模式选择
         $scope.triggerFlags = [
             {"key": 0, "value": "Simple模式"},
             {"key": 1, "value": "Cron表达式"}
@@ -53,6 +53,7 @@ jobApp.controller('jobController', function jobController($scope, $http) {
             console.debug("triggerFlag=" + triggerFlag);
         };
 
+        //保存处理
         $scope.saveJob = function () {
 
             $scope.jobVO.detail.addJobData("url", $scope.url);

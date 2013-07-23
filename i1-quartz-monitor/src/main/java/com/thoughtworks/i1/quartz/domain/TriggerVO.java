@@ -125,7 +125,7 @@ public class TriggerVO {
     }
 
     public static TriggerVO fromTrigger(CronTrigger trigger, String triggerStateName) {
-        TriggerVO triggerVO = new TriggerVO(trigger.getKey().getName(), trigger.getKey().getGroup(), null, null, 0, 0, triggerStateName);
+        TriggerVO triggerVO = new TriggerVO(trigger.getKey().getName(), trigger.getKey().getGroup(), trigger.getStartTime(), trigger.getEndTime(), 0, 0, triggerStateName);
         triggerVO.setTriggerFlag(1);
         triggerVO.setCron(trigger.getCronExpression());
         return triggerVO;
@@ -151,6 +151,8 @@ public class TriggerVO {
             return newTrigger()
                     .withIdentity(getTriggerName(), triggerGroupName.length() == 0 ? "HEREN-TRIGGER-GROUP" : triggerGroupName)
                     .withSchedule(cronSchedule(getCron()))
+                    .startAt(getStartTime())
+                    .endAt(getEndTime())
                     .forJob(jobKey)
                     .build() ;
         }

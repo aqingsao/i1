@@ -144,7 +144,7 @@ public class JobService {
         JobVO jobVO = new JobVO(fromJobDetail(jobDetail));
         List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobDetail.getKey());
         for (Trigger trigger : triggersOfJob) {
-             if(trigger.getClass().isInstance(SimpleTrigger.class)) {
+             if(trigger instanceof SimpleTrigger) {
                  SimpleTrigger simpleTrigger = (SimpleTrigger)trigger;
                  jobVO.addTriggerVO(fromTrigger(simpleTrigger, scheduler.getTriggerState(simpleTrigger.getKey()).name()));
              } else {
