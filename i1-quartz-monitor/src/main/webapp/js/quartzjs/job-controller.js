@@ -1,16 +1,5 @@
 jobApp.controller('jobController', function jobController($scope, $http) {
-        $scope.serverShow = false;
         $scope.jobDetailShow = true;
-        $scope.triggerShow = false;
-        $scope.listenerShow = false;
-
-        $scope.changeContent = function () {
-            $scope.serverShow = false;
-            $scope.jobDetailShow = false;
-            $scope.triggerShow = false;
-            $scope.listenerShow = false;
-            $scope.cronpressShow = false;
-        };
 
         $scope.units = [
             {"key": 0, "value": "秒"},
