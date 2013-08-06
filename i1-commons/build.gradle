@@ -27,7 +27,7 @@ dependencies{
 
     // Use javaee-api, including javax.validation...
 //    compile "javax:javaee-api:6.0"
-    compile 'javax.servlet:javax.servlet-api:3.0.1'
+//    compile 'javax.servlet:javax.servlet-api:3.0.1'
     // Use javax validation: JSR303
     compile 'javax.validation:validation-api:1.0.0.GA'
     // Use javax persistence: JSR317

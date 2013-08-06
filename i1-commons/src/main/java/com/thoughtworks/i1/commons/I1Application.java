@@ -1,5 +1,6 @@
 package com.thoughtworks.i1.commons;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
@@ -7,10 +8,12 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.thoughtworks.i1.commons.config.Configuration;
 import com.thoughtworks.i1.commons.server.Embedded;
+import com.thoughtworks.i1.commons.web.I1AssetServlet;
 import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 
 import javax.inject.Singleton;
@@ -68,6 +71,7 @@ public abstract class I1Application {
         modules.add(new I1JerseyServletModule(getConfiguration().getApp().getApiPrefix(), getConfiguration().getApp().getScanningPackage()));
         modules.add(new PropertyModule(getConfiguration().getApp().getPropertyFiles()));
         modules.add(new JpaPersistModule(getConfiguration().getDatabase().getPersistUnit()).properties(getConfiguration().getDatabase().toProperties()));
+        modules.add(new I1AssertModule());
         modules.addAll(getCustomizedModules());
 
         return modules.toArray(new Module[0]);
@@ -121,6 +125,21 @@ public abstract class I1Application {
                     .put(PROPERTY_PACKAGES, on(";").skipNulls().join(packages)).build());
             // we only open entityManager when user is accessing api
             filter(prefix).through(PersistFilter.class);
+        }
+    }
+
+    public static class I1AssertModule extends ServletModule {
+        @Override
+        protected void configureServlets() {
+            String htmlInfo = "html,js,css,fonts,img,index.html";
+            Iterable<String> iterable = Splitter.on(',').split(htmlInfo);
+            for(String html : iterable){
+                if(html.equals("index.html")){
+                    serve("/" + html).with(new I1AssetServlet(html));
+                } else {
+                    serve("/" + html + "/*").with(new I1AssetServlet(html));
+                }
+            }
         }
     }
 }

@@ -11,10 +11,12 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.thoughtworks.i1.commons.SystemException;
 import com.thoughtworks.i1.commons.config.HttpConfiguration;
 import com.thoughtworks.i1.commons.util.Duration;
+import com.thoughtworks.i1.commons.web.I1AssetServlet;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.slf4j.Logger;
@@ -33,7 +35,7 @@ public class EmbeddedJetty extends Embedded {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedJetty.class);
     private final HttpConfiguration configuration;
     private Server server;
-    public static final String RESOURCE_BASE = new File(EmbeddedJetty.class.getClassLoader().getResource(".").getPath()).getAbsolutePath();
+//    public static final String RESOURCE_BASE = new File(EmbeddedJetty.class.getClassLoader().getResource(".").getPath()).getAbsolutePath();
     private Injector injector;
     private String contextPath;
 
@@ -48,9 +50,10 @@ public class EmbeddedJetty extends Embedded {
         this.contextPath = contextPath;
         ServletContextHandler handler = new ServletContextHandler(server, contextPath, shareNothing ? NO_SESSIONS : SESSIONS);
         handler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
-        handler.addServlet(DefaultServlet.class, "/*");
+        handler.addServlet(new ServletHolder(new I1AssetServlet("index.html")), "/*");
+//        handler.addServlet(DefaultServlet.class, "/*");
         handler.setContextPath(this.contextPath);
-        handler.setInitParameter("org.eclipse.jetty.servlet.Default.resourceBase", RESOURCE_BASE);
+//        handler.setInitParameter("org.eclipse.jetty.servlet.Default.resourceBase", RESOURCE_BASE);
 
         this.injector = Guice.createInjector(modules);
         handler.addEventListener(new GuiceServletContextListener() {
