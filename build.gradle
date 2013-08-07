@@ -60,7 +60,7 @@ subprojects {
         archives sourcesJar
     }
     signing {
-        sign configurations.archives
+//        sign configurations.archives
     }
 
     uploadArchives {
